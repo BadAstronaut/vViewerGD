@@ -1,0 +1,295 @@
+import { ViewerEvent } from "@speckle/viewer";
+import { getStreamCommits, getUserData } from "./speckleUtils.js";
+import { get } from "svelte/store";
+import { speckleViewer, finishLoading } from "../../stores/toolStore";
+
+const token = import.meta.env.VITE_SPECKLE_TOCKEN;
+export async function fetchUserData() {
+  let userData = null;
+  //console.log("us");
+  let us = await getUserData(token).then((user) => {
+    let userName = user.data.user.name;
+    let serverInfo = user.data.serverInfo.name;
+    userData = [userName, serverInfo];
+    //console.log(userData)
+    return userData;
+  });
+}
+export async function selectElementsById(listOfIds) { }
+
+export async function reloadViewerGetObjectsByIds(
+  viewerI,
+  speckleStream,
+  ids,
+  additionalStream
+) {
+  //console.log("reloading...")
+  const stm = fetchStreamData;
+  const v = viewerI;
+  const branch = await fetchStreamData(speckleStream);
+  //console.log("branch in reloadv", branch);
+  await v.unloadAll();
+  const obj = objUrl(speckleStream, branch.commits.items[0].referencedObject);
+  // const lightsBranch =await fetchStreamDataFromCommit(speckleStream,additionalStream)
+  // const lightsObj = objUrl(
+  //   speckleStream,
+  //   lightsBranch[0].referencedObject
+  // );
+
+  //console.log('speckle obj light',lightsObj);
+  await v.loadObject(obj, token);
+  //await v.loadObject(lightsObj, token);
+  //console.log(this.$refs.view)
+  //console.log(`Loaded latest commit from branch "${branch.name}"`);
+  v.zoom(1);
+
+  await v.init();
+  let p = Promise.resolve(v);
+  p.then(() => {
+    finishLoading.set(true);
+  })
+
+  const speckObjects = v.getDataTree();
+  const objects = speckObjects.findAll((uui, obj) => {
+    return obj.speckle_type === "Objects.BuiltElements.Revit.FamilyInstance";
+  });
+  //console.log(objects);
+
+  //filter by fixed property value
+  let filterSpeckObj = objects.filter((sO) => {
+    //console.log("im sooo",sO.userData.parameters);
+    let lights = filterElementsByParameterContainsName(
+      sO,
+      "Digital Twin Type ID",
+      "ELE-LUM-MOD"
+    );
+    //console.log('this are alights', lights);
+    return lights;
+  });
+  // let speckleLocation = filterSpeckObj.map( (ob)=>{
+  //   return handleBeaconOrigin(ob.userData)
+  // })
+  return [filterSpeckObj];
+}
+
+export async function reloadViewer(speckleStream) {
+  //console.log("reloading...")
+  const v = get(speckleViewer).speckleViewer;
+  if (v) {
+    
+    const branch = await fetchStreamData(speckleStream);
+      //console.log("branch in reloadv", v.on(LoadComplete));
+      //@ts-ignore
+      await v.unloadAll();
+      const obj = objUrl(speckleStream, branch.commits.items[0].referencedObject);
+  
+      //console.log('speckle obj light',lightsObj);
+      await v.loadObject(obj, token);
+      //console.log(this.$refs.view)
+      //console.log(`Loaded latest commit from branch "${branch.name}"`);
+      v.zoom(1);
+  
+      await v.init();
+      //console.log(objects);
+    
+  }
+
+}
+
+//pass a Type property name and a list of values. return all properties of matching values
+export async function getPropertiesByTypeParameter(pName, pValueList) {
+  const v = get(speckleViewer).speckleViewer;
+  //console.log(v);
+  // @ts-ignore
+  const speckObjects = v.getDataTree();
+  let objtList = [];
+  pValueList.forEach((pVal) => {
+    const objects = speckObjects.findAll((uui, obj) => {
+      if ("parameters" in obj) {
+        //this bit checks if parameter exist and filter revit instances
+        if (
+          pName in obj.parameters &&
+          obj.speckle_type != "Objects.BuiltElements.Revit.RevitElementType"
+        ) {
+          //console.log("family", obj.speckle_type);
+          return obj.parameters[pName].value === pVal;
+        }
+      }
+    });
+    objtList.push(objects);
+  });
+
+  //console.log("treeObjets to walk", speckObjects);
+  return objtList;
+}
+//give list of 
+
+
+//X ray functionality it will take a list of categories,
+//and list of current selected elements
+export function xrayByCategory(catList) {
+  const v = get(speckleViewer).speckleViewer;
+  let sElements = [];
+  // @ts-ignore
+  const speckObjects = v.getDataTree();
+
+  catList.forEach((catName) => {
+    const objects = speckObjects.findAll((uui, obj) => {
+      //console.log(obj)
+      let speckT = obj.speckle_type.split(".").pop();
+      //console.log(speckT)
+      return speckT === catName;
+
+      console.log(objects);
+    });
+    if (objects.length > 0) {
+      objects.forEach((el) => {
+        sElements.push(el.id);
+      });
+    }
+    console.log(sElements);
+    // @ts-ignore
+    v.isolateObjects(sElements);
+  });
+}
+
+//this will get you all the elements of a type if you pass a revit category and type name
+
+export function getElementsByFamType(familyName, typeName) {
+  const v = get(speckleViewer).speckleViewer;
+  // @ts-ignore
+  const speckObjects = v.getDataTree();
+  const objects = speckObjects.findAll((uui, obj) => {
+    //console.log(obj)
+    return obj.family === familyName;
+  });
+  //console.log(objects);
+  //filter by fixed property value
+  let filterSpeckObj = objects.filter((sO) => {
+    //console.log(sO);
+    if (sO.type == typeName) {
+      return sO;
+    }
+  });
+  return filterSpeckObj;
+  //console.log(filterSpeckObj);
+}
+//this will filter the elements and return the one that has property value
+export function filterElementsByParameterContainsName(
+  speckElement,
+  pName,
+  pValue
+) {
+  //check if the property exists
+  let speckElementsOut = [];
+  let elementsWithParameters = [speckElement.parameters].forEach(
+    (parameter) => {
+      let p;
+      //console.log(parameter['8c57ae69-89f5-4891-a83b-5efcd57bddde'])
+      try {
+        p = Object.keys(parameter).filter((kp) => {
+          if (kp.includes(pName) && parameter[pName].value.includes(pValue)) {
+            //console.log(speckElement);
+            speckElementsOut.push(speckElement);
+          }
+        });
+      } catch (error) {
+        //console.log(error);
+      }
+    }
+  );
+
+  if (speckElementsOut.length != 0) {
+    return speckElementsOut;
+  }
+}
+//color elements by list id and color code
+export function changeElementColorByIds(listOfIds, color) {
+  const v = get(speckleViewer).speckleViewer;
+  //reset isolated elements
+
+  //construct object
+  let queryObject = [{
+    objectIds: listOfIds,
+    color: color
+  }]
+  // @ts-ignore
+  v.setUserObjectColors(queryObject);
+  // @ts-ignore
+  v.isolateObjects(listOfIds);
+
+}
+
+export function handleBeaconOrigin(speckleObj) {
+  let byBasePoint = speckleObj.basePoint != undefined ? true : false;
+  let byLine = speckleObj.baseLine != undefined ? true : false;
+  if (byBasePoint) {
+    let point = speckleObj.basePoint;
+    let xCoor = point.x / unitHandler(point);
+    let yCoor = point.y / unitHandler(point);
+    let zCoor = point.z / unitHandler(point);
+    return [xCoor, yCoor, zCoor];
+  }
+  if (byLine) {
+    //code by line case.
+  }
+}
+
+function unitHandler(speckleObj) {
+  const units = { mm: 1000, cm: 100, m: 1 };
+  const divider = units[speckleObj.units];
+  return divider;
+}
+
+//Helpers-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+async function fetchStreamData(speckleStream) {
+  let streamData = null;
+  let branch = null;
+  const b = await getStreamCommits(speckleStream, 1, null, token).then(
+    (str) => {
+      streamData = str.data.stream;
+      //console.log(stream)
+      // Split the branches into "main" and everything else
+      //console.log(str);
+      let mainBranch = streamData.branches.items.find((b) => b.name == "main");
+      branch = mainBranch;
+      //console.log('Branch:',branch)
+    }
+  );
+
+  return branch;
+}
+//fetch data from a particular commit
+async function fetchStreamDataFromCommit(speckleStream, commitId) {
+  let streamData = null;
+  let branch = null;
+  const b = await getStreamCommits(speckleStream, 1, null, token).then(
+    (str) => {
+      streamData = str.data.stream;
+      //console.log(stream)
+      // Split the branches into "main" and everything else
+      //console.log(streamData.branches.items)
+      let mainBranch = streamData.branches.items.find((b) => b.name == "main");
+      branch = mainBranch.commits.items.filter((c) => {
+        //console.log("looking commit",c.referencedObject)
+        return c.referencedObject == commitId;
+      });
+      //console.log('Branch:',branch)
+    }
+  );
+
+  return branch;
+}
+
+function objUrl(streamId, objId) {
+  return `https://speckle.xyz/streams/${streamId}/objects/${objId}`;
+}
+
+async function reload(streamId) {
+  //document.getElementById("reloadButton").classList.add("is-loading")
+
+  await this.fetchStreamData(); // Fetch the stream data
+  await this.reloadViewer(); // Reload the viewer once the stream data has been fetched
+
+  //document.getElementById("reloadButton").classList.remove("is-loading")
+}

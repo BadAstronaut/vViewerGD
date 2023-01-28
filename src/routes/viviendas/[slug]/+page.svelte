@@ -1,0 +1,142 @@
+<script>
+	/** @type {import('./$types').PageData} */
+	import { ViewerEvent } from '@speckle/viewer';
+	import SpeckleViewer from '$lib/components/SpeckleViewer.svelte';
+	import KpiCard from '$lib/components/KpiCard.svelte';
+	import { get } from 'svelte/store';
+	import { reloadViewer } from '$lib/speckle/speckleHandler';
+	import { speckleStream, speckleViewer } from '../../../stores/toolStore';
+
+	export let data;
+	let speckleStramToPass = '';
+	let speckleViewerRunning = '';
+	let loadCompleted = false;
+
+	speckleViewer.subscribe((sv) => {
+		speckleViewerRunning = sv;
+		console.log('from the store', get(speckleViewer));
+	});
+	speckleStream.subscribe((v) => {
+		speckleStramToPass = v;
+		let viewer = get(speckleViewer).speckleViewer;
+		if (viewer != null) {
+			reloadViewer(speckleStramToPass);
+			viewer.on('load-complete', (arg) => {
+				console.log('load comple from page', viewer);
+			});
+		}
+	});
+
+	const wait = () => new Promise((res) => setTimeout(res, 2000));
+</script>
+
+<div class="panel-left">
+	<div class="kpi-panel-left">
+		<KpiCard> </KpiCard>
+		<KpiCard> </KpiCard>
+		<KpiCard> </KpiCard>
+
+
+	</div>
+	
+	<p>panel a</p>
+</div>
+
+<div class="center-panel">
+	<div class="panel-top">
+		<p>panel b</p>
+	</div>
+	{#await wait()}
+		<span aria-busy="true">Loading...</span>
+	{:then a}
+		<div class="viewer-container">
+			<SpeckleViewer speckleStream={speckleStramToPass} />
+		</div>
+	{/await}
+
+	<div class="panel-bottom">
+		<p>panel b</p>
+	</div>
+</div>
+
+<div class="panel-right">
+	<p>panel a</p>
+</div>
+
+<style>
+	:root {
+		--primary: #546e7a;
+	}
+	.center-panel {
+		flex-grow: 2;
+		margin: 0;
+		padding: 0;
+		min-height: inherit;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: start;
+	}
+	.viewer-container {
+		margin: 0px;
+		flex-grow: 2;
+		width: 100%;
+		overflow: hidden;
+		border-style: double;
+		border-color: aqua;
+	}
+	.kpi-panel-left {
+		margin: 0px;
+		width: 100%;
+		height: 40vh;
+		overflow: hidden;
+		/* border-style: double;
+		border-color: aqua; */
+		display: flex;
+		flex-direction: row;
+		align-content: flex-start;
+		flex-wrap: wrap;
+	}
+
+	.panel-left {
+		background-color: #546e7a25;
+		width: 20vw;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.panel-top {
+		background-color: #c9d8df;
+		height: 20vh;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+	.panel-bottom{
+		background-color: #f1f7bb;
+		height: 20vh;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+	.panel-right{
+		background-color: #e0bee9;
+		width: 20vw;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+</style>
