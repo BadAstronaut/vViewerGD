@@ -2,6 +2,7 @@
 	/** @type {import('./$types').PageData} */
 	import { ViewerEvent } from '@speckle/viewer';
 	import SpeckleViewer from '$lib/components/SpeckleViewer.svelte';
+	import DragWindow from '$lib/components/DragWindow.svelte';
 	import KpiCard from '$lib/components/KpiCard.svelte';
 	import { get } from 'svelte/store';
 	import { reloadViewer } from '$lib/speckle/speckleHandler';
@@ -50,6 +51,7 @@
 		<span aria-busy="true">Loading...</span>
 	{:then a}
 		<div class="viewer-container">
+			<DragWindow title = 'Test 0001'></DragWindow>
 			<SpeckleViewer speckleStream={speckleStramToPass} />
 		</div>
 	{/await}
