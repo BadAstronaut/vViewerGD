@@ -10,7 +10,7 @@
     } from "$lib/speckle/speckleHandler";
 
     //import { speckleViewer} from "$app/stores/toolStore";
-    import {speckleViewer, finishLoading} from "../../stores/toolStore";
+    import {speckleViewer, finishLoading, currentSelection} from "../../stores/toolStore";
     export let speckleStream;
     //const speckleViewer = toolStore.speckleViewer
     //console.log(toolStore.speckleViewer)
@@ -53,7 +53,7 @@
       console.log(v);
       v.on(ViewerEvent.ObjectClicked ,(args)=>{
         if (args) {
-          console.log(args.hits[0].object);
+          console.log(args.hits[0],"clicked");
           //this changed not sure why  args.userData.id
           const clieckedElement = args.hits[0].object.id
           v.selectObjects([clieckedElement])

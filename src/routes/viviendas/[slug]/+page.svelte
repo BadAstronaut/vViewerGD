@@ -4,6 +4,7 @@
 	import SpeckleViewer from '$lib/components/SpeckleViewer.svelte';
 	import DragWindow from '$lib/components/DragWindow.svelte';
 	import KpiCard from '$lib/components/KpiCard.svelte';
+	import DImage from '../../../lib/components/DImage.svelte';
 	import { get } from 'svelte/store';
 	import { reloadViewer } from '$lib/speckle/speckleHandler';
 	import { speckleStream, speckleViewer } from '../../../stores/toolStore';
@@ -39,7 +40,7 @@
 
 
 	</div>
-	
+	<DImage></DImage>
 	<p>panel a</p>
 </div>
 

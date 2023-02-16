@@ -1,7 +1,8 @@
 <script>
 import pico from "@picocss/pico"
-</script>
 
+
+</script>
 <nav class="layout">
   <a prefetch href="/">Mod Habitar</a>
   <a prefetch href="/viviendas/vivienda-1">Vivienda 1</a>
