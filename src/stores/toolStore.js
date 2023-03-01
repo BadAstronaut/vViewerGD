@@ -19,3 +19,14 @@ export const draggables = writable([
 ])
 
 export const currentSelection = writable(null)
+
+export const selectionPropertiesOfInterest = readable([
+    { 
+        name: 'family', 
+        value:true
+    },
+    { 
+        name: 'units', 
+        value:true
+    },
+])

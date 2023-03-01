@@ -10,7 +10,7 @@
 	//variation will be a number positive or negative, if positive color green if negative color red
 	export let kpiVariation = 0.05;
 	let kpiVariationObject = getKPIVariation(kpiVariation);
-	console.log(kpiVariationObject);
+	//console.log(kpiVariationObject);
 </script>
 
 <div class="kpi-card">

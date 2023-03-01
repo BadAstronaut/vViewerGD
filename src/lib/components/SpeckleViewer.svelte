@@ -53,10 +53,10 @@
       console.log(v);
       v.on(ViewerEvent.ObjectClicked ,(args)=>{
         if (args) {
-          console.log(args.hits[0],"clicked");
+          //console.log(args,"clicked");
           //this changed not sure why  args.userData.id
-          const clieckedElement = args.hits[0].object.id
-          v.selectObjects([clieckedElement])
+          const clieckedElement = args.hits[0].object
+          v.selectObjects([clieckedElement.id])
           
           // @ts-ignore
           currentSelection.set([clieckedElement])

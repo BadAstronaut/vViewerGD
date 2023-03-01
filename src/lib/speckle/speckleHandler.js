@@ -4,6 +4,7 @@ import { get } from "svelte/store";
 import { speckleViewer, finishLoading } from "../../stores/toolStore";
 
 const token = import.meta.env.VITE_SPECKLE_TOCKEN;
+
 export async function fetchUserData() {
   let userData = null;
   //console.log("us");

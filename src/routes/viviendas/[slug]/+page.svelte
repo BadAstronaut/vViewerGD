@@ -5,14 +5,22 @@
 	import DragWindow from '$lib/components/DragWindow.svelte';
 	import KpiCard from '$lib/components/KpiCard.svelte';
 	import DImage from '../../../lib/components/DImage.svelte';
+	import ModelPropertyTable from '$lib/components/ModelPropertyTable.svelte';
 	import { get } from 'svelte/store';
 	import { reloadViewer } from '$lib/speckle/speckleHandler';
-	import { speckleStream, speckleViewer } from '../../../stores/toolStore';
+	import { speckleStream, speckleViewer, currentSelection } from '../../../stores/toolStore';
 
 	export let data;
 	let speckleStramToPass = '';
 	let speckleViewerRunning = '';
 	let loadCompleted = false;
+
+	let selectedElement = [];
+
+	currentSelection.subscribe((v) => {
+		selectedElement = v;
+		console.log('selected element', selectedElement);
+	});
 
 	speckleViewer.subscribe((sv) => {
 		speckleViewerRunning = sv;
@@ -63,7 +71,7 @@
 </div>
 
 <div class="panel-right">
-	<p>panel a</p>
+	<ModelPropertyTable />
 </div>
 
 <style>
@@ -133,13 +141,13 @@
 		justify-content: center;
 	}
 	.panel-right{
-		background-color: #e0bee9;
+		background-color: lightgoldenrodyellow;
 		width: 20vw;
 		margin: 0;
 		padding: 0;
 		display: flex;
 		flex-direction: row;
-		align-items: center;
+		align-items: top;
 		justify-content: center;
 	}
 </style>
