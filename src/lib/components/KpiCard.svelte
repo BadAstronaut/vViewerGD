@@ -1,5 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
+	//import gsap from 'gsap';
+	import gsap from 'gsap';
 	import { get } from 'svelte/store';
 	import { getKPIVariation } from '$lib/dataModeling/dashboardUtilities.js';
 	//use this icons https://www.svgrepo.com/collection/duotone-circled-icons/
@@ -9,11 +11,43 @@
 	export let kpiUnit = '°';
 	//variation will be a number positive or negative, if positive color green if negative color red
 	export let kpiVariation = 0.05;
+
+	let hoverIconAnimation = null;
 	let kpiVariationObject = getKPIVariation(kpiVariation);
+
+	//implement on mount function 
+	onMount(() => {
+		return () => gsap.killTweensOf("img");
+	});
+	//implement on destroy function
+
+
+	function handleMouseOver(args) {
+		let svgImageElement = args.srcElement.children[0].children[1];
+		//console.log('mouse over', svgImageElement)
+		hoverIconAnimation = gsap.fromTo(
+			svgImageElement,
+			{ scale: 1 },
+			{ scale: 1.3, duration: 0.5, ease: "back.out" }
+		);
+		hoverIconAnimation.yoyo(true).repeat(-1);
+	}
+
+	function handleMouseLeave(args) {
+
+		let svgImageElement = args.srcElement.children[0].children[1];
+		//console.log('mouse leave', svgImageElement)
+		if (hoverIconAnimation != null){
+			hoverIconAnimation.revert()
+			hoverIconAnimation.kill()
+		}
+	}
+
+
 	//console.log(kpiVariationObject);
 </script>
 
-<div class="kpi-card">
+<div class="kpi-card" on:mouseenter={handleMouseOver} on:mouseleave= {handleMouseLeave}>
 	<div class="title">
 		<h5>{title}</h5>
 		<img src={icon} alt="icon" />
@@ -65,6 +99,10 @@
 		display: flex;
 		flex-direction: column;
 		margin: 5px;
+		z-index: 2;
+	}
+	.kpi-card:hover {
+		box-shadow: 0px 4px 4px darkgray
 	}
 	.title {
 		display: flex;
