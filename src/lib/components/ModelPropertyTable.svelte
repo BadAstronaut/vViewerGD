@@ -2,6 +2,8 @@
     import { get, writable } from 'svelte/store';
     import { onMount } from 'svelte';
     import { selectionPropertiesOfInterest, currentSelection } from '../../stores/toolStore';
+	import tippy from 'tippy.js';
+	import 'tippy.js/dist/tippy.css';
 
 	let columns = ['Property', 'Value'];
     //read values from selectionPropertiesOfInterest
@@ -11,6 +13,11 @@
 
     let bimRows = [];
 
+	//create an onMount function 
+	onMount(() => {
+		
+	});
+
     //listen to changes tin currentSelection only if the currentSelection is not null
     currentSelection.subscribe((data) => {
         console.log('data..............', data);
@@ -19,18 +26,32 @@
             let selectedElement = data[0];
             //filter the first element of array of objects based on the propertiesToRender array of objects
             let filteredData = filterData(selectedElement);
-            console.log('filteredData', [filteredData]);
             
             bimRows = filteredData;
+
+			//try to add tooltips 
+			//kindda works but its renders old information 
+			
+			const rows = document.querySelectorAll('tr.bimPropTabletRow');
+			console.log('rows......', rows)
+			rows.forEach(row => {
+				tippy(row, {
+					content: row.childNodes[1].innerText,
+					placement: 'right',
+					arrow: false,
+					theme: 'light',
+					delay: [200, 0]
+				});
+				});
+
+			
+			
         }
         else
         {
             bimRows = [];
         }
     });
-
-
-
     
 
 	let data = [
@@ -66,9 +87,13 @@
         return propValPairs;
         
     }
+
+	// tippi test 
+	console.log(columns, 'columns');
+	
 </script>
 
-<table>
+<table >
 	<tr>
 		{#each columns as column}
 			<th>{column}</th>
@@ -76,48 +101,43 @@
 	</tr>
 
 	{#each bimRows as row}
-		<tr>
+		<tr class="bimPropTabletRow">
 			{#each row as cell}
 				<td contenteditable="false" bind:innerHTML={cell} />
 			{/each}
-			<!-- <button on:click={() => deleteRow(row)}>
-				X
-			</button> -->
 		</tr>
 	{/each}
 
-	<tr class="new">
-		{#each newRow as column}
-			<td contenteditable="true" bind:innerHTML={column} />
-		{/each}
-		<!-- <button on:click={addRow}>
-	add
-</button> -->
-	</tr>
 </table>
-
 <style>
     table {
         border-collapse: collapse; /* collapse borders */
         width: 100%; /* set table width to 100% */
         border: 1px solid #ccc; /* add border color #ccc */
-        font-family: arial, sans-serif; /* set font for table */
+		display: table;
+		table-layout: fixed;
+		height: min-content;
     }
     th {
         border: none; /* remove table row border */
-		height: 32px; /* set row height */
-		font-size: 16px; /* set font size */
-    }
-	tr {
-		border: none; /* remove table row border */
-		height: 32px; /* set row height */
 		font-size: 14px; /* set font size */
-        max-height: 32px;
+		
+    }
+	td {
+		border: none; /* remove table row border */
+		font-size: 12px; /* set font size */
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		display: table-cell;
+		height: 18px;
 	}
 
 	/* Set different background colors for even and odd rows */
 	tr:nth-child(even) {
 		background-color: #f5f5f5;
+
+		
 	}
 
 	/* Add hover effect */

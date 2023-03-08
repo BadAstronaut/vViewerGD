@@ -4,9 +4,9 @@ import pico from "@picocss/pico"
 
 </script>
 <nav class="layout">
-  <a prefetch href="/">Mod Habitar</a>
-  <a prefetch href="/viviendas/vivienda-1">Vivienda 1</a>
-  <a prefetch href="/viviendas/vivienda-2">Vivienda 2</a>
+  <a data-sveltekit-preload-data="tap" href="/">Mod Habitar</a>
+  <a data-sveltekit-preload-data="tap" href="/viviendas/vivienda-1">Vivienda 1</a>
+  <a data-sveltekit-preload-data="tap" href="/viviendas/vivienda-2">Vivienda 2</a>
 </nav>
 
 <main>

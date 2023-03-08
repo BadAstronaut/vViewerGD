@@ -26,15 +26,19 @@
 		speckleViewerRunning = sv;
 		console.log('from the store', get(speckleViewer));
 	});
+
+	
 	speckleStream.subscribe((v) => {
 		speckleStramToPass = v;
 		let viewer = get(speckleViewer).speckleViewer;
+		console.log('viewer from page', data);
 		if (viewer != null) {
 			reloadViewer(speckleStramToPass);
 			viewer.on('load-complete', (arg) => {
-				console.log('load comple from page', viewer);
+				console.log('load comple from page.............', data);
 			});
 		}
+		
 	});
 
 	const wait = () => new Promise((res) => setTimeout(res, 2000));
@@ -148,6 +152,5 @@
 		display: flex;
 		flex-direction: row;
 		align-items: top;
-		justify-content: center;
 	}
 </style>

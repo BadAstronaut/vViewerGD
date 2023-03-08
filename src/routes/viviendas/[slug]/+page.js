@@ -3,7 +3,6 @@ import {speckleStream} from "../../../stores/toolStore";
  
 /** @type {import('./$types').PageLoad} */
 export function load({ params }) {
-  console.log("parameters",speckleStream)
   if (params.slug === 'vivienda-1') {
     
     const vivienda = {
