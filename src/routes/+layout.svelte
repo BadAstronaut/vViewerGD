@@ -33,7 +33,7 @@ nav {
 	}
 
 	:global(html) {
-		background: lightblue;
+		background: #e5e5e5;
 		/* scrollbar-gutter: stable; */
 		overflow: hidden;
 		overflow-y: scroll;

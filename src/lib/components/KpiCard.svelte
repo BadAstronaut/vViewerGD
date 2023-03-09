@@ -1,4 +1,5 @@
 <script>
+	import './../../css/styles.css'
 	import { onMount } from 'svelte';
 	//import gsap from 'gsap';
 	import gsap from 'gsap';
@@ -47,7 +48,7 @@
 	//console.log(kpiVariationObject);
 </script>
 
-<div class="kpi-card" on:mouseenter={handleMouseOver} on:mouseleave= {handleMouseLeave}>
+<div class="neomorfic-div neomorfic-div-hover kpi-card" on:mouseenter={handleMouseOver} on:mouseleave= {handleMouseLeave}>
 	<div class="title">
 		<h5>{title}</h5>
 		<img src={icon} alt="icon" />
@@ -91,18 +92,12 @@
 	}
 
 	.kpi-card {
-		background-color: #ffffff;
 		width: 45%;
 		height: 60px;
-		box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-		border-radius: 5px;
 		display: flex;
 		flex-direction: column;
 		margin: 5px;
 		z-index: 2;
-	}
-	.kpi-card:hover {
-		box-shadow: 0px 4px 4px darkgray
 	}
 	.title {
 		display: flex;
@@ -110,8 +105,11 @@
 		align-items: center;
 		justify-content: space-between;
 		width: 100%;
-		padding: 0 10px;
+		padding: 0 10px 0px ;
 		max-height: 30%;
+	}
+	img {
+		margin-top: 5px;
 	}
 	.values-center {
 		display: flex;

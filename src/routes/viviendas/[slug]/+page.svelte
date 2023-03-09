@@ -53,7 +53,6 @@
 
 	</div>
 	<DImage></DImage>
-	<p>panel a</p>
 </div>
 
 <div class="center-panel">
@@ -69,9 +68,7 @@
 		</div>
 	{/await}
 
-	<div class="panel-bottom">
-		<p>panel b</p>
-	</div>
+
 </div>
 
 <div class="panel-right">
@@ -98,10 +95,9 @@
 		width: 100%;
 		overflow: hidden;
 		border-style: double;
-		border-color: aqua;
+		border-color: whitesmoke;
 	}
 	.kpi-panel-left {
-		margin: 0px;
 		width: 100%;
 		height: 40vh;
 		overflow: hidden;
@@ -111,12 +107,14 @@
 		flex-direction: row;
 		align-content: flex-start;
 		flex-wrap: wrap;
+		gap: 10px;
+		justify-content: space-between;
 	}
 
 	.panel-left {
-		background-color: #546e7a25;
+		background-color:transparent;
 		width: 20vw;
-		margin: 0;
+		margin: 10px;
 		padding: 0;
 		display: flex;
 		flex-direction: column;

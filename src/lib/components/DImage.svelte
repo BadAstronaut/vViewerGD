@@ -1,4 +1,5 @@
 <script>
+	import './../../css/styles.css'
 	import { onMount } from 'svelte';
 	import 'aframe';
 
@@ -66,7 +67,7 @@
 	}
 </script>
 
-<div class="threeD-container">
+<div class="neomorfic-div threeD-container">
 	<div class="threeD-image-nav">
 		<button class="secondary outline threeD-nav-button" on:click={() => changeImage('prev')}>
 			<img class="threeD-icon" src={prevIcon} alt="->" />
@@ -91,6 +92,10 @@
 		flex-direction: column;
 		justify-content: space-between;
 		align-items: center;
+		background-color: transparent;
+	}
+	.threeD-container:not(.neomorfic-div):hover{
+		background-color: transparent;
 	}
 	.aframe-container {
 		width: 100%;
@@ -98,7 +103,6 @@
 		margin-top: 10px;
 		padding: 5px;
 		border-radius: 5px;
-		box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	}
 	p {
 		margin: 0%;
@@ -108,9 +112,10 @@
 	.threeD-image-nav {
 		display: flex;
 		width: 100%;
-		height: 10px;
+		height: 15px;
 		justify-content: space-between;
 		align-items: center;
+		margin-top: 5px;
 	}
 	.threeD-nav-button {
 		height: 15px;
