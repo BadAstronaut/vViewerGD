@@ -1,0 +1,31 @@
+@use 'sass:color';
+
+@use '@material/theme/color-palette';
+
+// Svelte Colors!
+@use '@material/theme/index' as theme with (
+  $primary: #8d93a7,
+  $secondary: #676778,
+  $surface: #fff,
+  $background: #e5e5e5,
+  $error: color-palette.$red-900
+		/* scrollbar-gutter: stable; */
+);
+
+h1, h2, h3, h4, h5, h6, body, p, td, tr, th{
+  font-family: 'Poppins', sans-serif;
+  color: #8d93a7;
+}
+
+html,
+body {
+  background-color: theme.$surface;
+  color: theme.$on-surface;
+}
+
+a {
+  color: #40b3ff;
+}
+a:visited {
+  color: color.scale(#40b3ff, $lightness: -35%);
+}

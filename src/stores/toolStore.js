@@ -16,6 +16,7 @@ export const draggables = writable([
     // other items can go here
     //walmart items
     { id:'WmtSensors', name: 'Panel Digital Twin Walmart', active:false },
+    { id:'SensorDetailPanel', name: 'Sensor Detail Panel', active:true },
 ])
 
 export const currentSelection = writable(null)

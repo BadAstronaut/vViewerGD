@@ -7,6 +7,8 @@
 
 	export let dragId;
 	export let title;
+	export let windowWidth;
+	export let windowHeight;
 
 	//coordinates for point
 	let point1 = [0, 0, 0];
@@ -24,18 +26,18 @@
 			let viewer = get(speckleViewer).speckleViewer;
 			v = viewer;
 			boundElement = viewer.container;
-			console.log(viewer, 'bound');
-			createLine(point1, point2, viewer);
-			console.log(drawLine, 'drawline');
-			gsap.to(drawLine.scale, {
-				x: 3,
-				duration: 1,
-				repeat: '-1',
-				yoyo: true,
-				onUpdate: () => {
-					viewer.requestRender();
-				}
-			});
+			//console.log(viewer, 'bound');
+			//createLine(point1, point2, viewer);
+			//console.log(drawLine, 'drawline');
+			// gsap.to(drawLine.scale, {
+			// 	x: 3,
+			// 	duration: 1,
+			// 	repeat: '-1',
+			// 	yoyo: true,
+			// 	onUpdate: () => {
+			// 		viewer.requestRender();
+			// 	}
+			// });
 		} else {
 			parentLoaded = false;
 		}
@@ -115,10 +117,18 @@
 
 	//you will need a store for this windows. and
 	//some code like this https://svelte.dev/repl/28996f04783542ceafed7cc6a85128b9?version=3.23.0
+	function customStylingLoader(){
+		//return css in line style for the component 
+		return `
+			width:${windowWidth}em;
+			height:${windowHeight};
+			
+		`
+	}
 </script>
 
 {#if parentLoaded}
-	<div class="drag-div" use:draggable={{ bounds: 'parent', onDragStart: getDragWindowCoordinates }}>
+	<div class="drag-div" style={customStylingLoader()} use:draggable={{ bounds: 'parent'}}>
 		<div class="dragg-area">
 			<p class="title">{title}</p>
 			<button class="close" on:click={closeWin}>

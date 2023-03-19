@@ -9,7 +9,7 @@
 	import { get } from 'svelte/store';
 	import { reloadViewer } from '$lib/speckle/speckleHandler';
 	import { speckleStream, speckleViewer, currentSelection } from '../../../stores/toolStore';
-
+	import DragWindowLoader from '$lib/components/DragWindowLoader.svelte';
 	export let data;
 	let speckleStramToPass = '';
 	let speckleViewerRunning = '';
@@ -63,7 +63,7 @@
 		<span aria-busy="true">Loading...</span>
 	{:then a}
 		<div class="viewer-container">
-			<DragWindow title = 'Test 0001'></DragWindow>
+			<DragWindowLoader />
 			<SpeckleViewer speckleStream={speckleStramToPass} />
 		</div>
 	{/await}

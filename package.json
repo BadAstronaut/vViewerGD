@@ -7,17 +7,27 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"lint": "prettier --plugin-search-dir . --check .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"format": "prettier --plugin-search-dir . --write .",
+		"prepare": "npm run smui-theme",
+		"smui-theme": "smui-theme compile static/smui.css -i src/theme"
 	},
 	"devDependencies": {
+		"@ionic/core": "^6.6.2",
 		"@picocss/pico": "^1.5.6",
+		"@smui/button": "^7.0.0-beta.0",
+		"@smui/tab": "^7.0.0-beta.0",
+		"@smui/tab-bar": "^7.0.0-beta.0",
 		"@speckle/viewer": "^2.11.4",
-		"@sveltejs/adapter-auto": "^1.0.0",
+		"@sveltejs/adapter-static": "^2.0.1",
 		"@sveltejs/kit": "^1.0.0",
 		"aframe": "^1.4.1",
+		"chart.js": "^4.2.1",
+		"chartjs-plugin-zoom": "^2.0.0",
 		"gsap": "^3.11.4",
+		"ionic-svelte": "^0.5.72",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
+		"smui-theme": "^7.0.0-beta.0",
 		"svelte": "^3.54.0",
 		"three": "^0.149.0",
 		"tippy.js": "^6.3.7",
@@ -25,6 +35,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@neodrag/svelte": "^2.0.3"
+		"@neodrag/svelte": "^2.0.3",
+		"@sveltejs/adapter-auto": "^2.0.0"
 	}
 }
