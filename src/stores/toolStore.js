@@ -21,6 +21,8 @@ export const draggables = writable([
 
 export const currentSelection = writable(null)
 
+export const daluxSafetyDataActiveProject = writable(null)
+
 export const selectionPropertiesOfInterest = readable([
     { 
         name: 'family', 

@@ -1,5 +1,6 @@
 <script>
 	/** @type {import('./$types').PageData} */
+	import { onMount } from 'svelte';
 	import { ViewerEvent } from '@speckle/viewer';
 	import SpeckleViewer from '$lib/components/SpeckleViewer.svelte';
 	import DragWindow from '$lib/components/DragWindow.svelte';
@@ -21,18 +22,19 @@
 
 	let selectedElement = [];
 
-	currentSelection.subscribe((v) => {
+	//implement onMount function 
+	onMount(async () => {
+		currentSelection.subscribe((v) => {
 		selectedElement = v;
 		//console.log('selected element', selectedElement);
-	});
+		});
 
-	speckleViewer.subscribe((sv) => {
+		speckleViewer.subscribe((sv) => {
 		speckleViewerRunning = sv;
 		//console.log('from the store', get(speckleViewer));
-	});
+		});
 
-	
-	speckleStream.subscribe((v) => {
+		speckleStream.subscribe((v) => {
 		speckleStramToPass = v;
 		let viewer = get(speckleViewer).speckleViewer;
 		//console.log('viewer from page', data);
@@ -44,6 +46,9 @@
 		}
 		
 	});
+
+	})
+
 
 	const wait = () => new Promise((res) => setTimeout(res, 2000));
 </script>
@@ -148,12 +153,12 @@
 		justify-content: center;
 	}
 	.panel-right{
-		background-color: lightgoldenrodyellow;
+		background-color: transparent;
 		width: 20vw;
 		margin: 0;
 		padding: 0;
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
 		align-items: top;
 	}
 </style>
