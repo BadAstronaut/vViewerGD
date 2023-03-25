@@ -8,7 +8,7 @@ export function load({ params }) {
     const vivienda = {
       title: 'Vivienda 1',
       content: 'Vivienda 2 Welcome to our blog. Lorem ipsum dolor sit amet...',
-      speckleStream: 'df75193f4d'
+      speckleStream: 'df75193f4d',
     };
     speckleStream.set(vivienda.speckleStream)
     return vivienda
@@ -25,3 +25,6 @@ export function load({ params }) {
  
   throw error(404, 'Not found /:');
 }
+
+
+

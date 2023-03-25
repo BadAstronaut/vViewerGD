@@ -1,16 +1,24 @@
 .neomorfic-div {
-  background-color: #F0F0F0; /* Background color of the div */
+  background-color: rgb(236, 240, 243,0.25); /* Background color of the div */
   box-shadow: 4px 4px 10px 0 rgba(94,104,121,0.388),
     -4px -4px 10px 0px rgba(255, 255, 255, 0.65);
   border-radius: 5px;
 
 }	
 .neomorfic-div-hover:hover {
-  background-color: #F0F0F0; /* Background color of the div */
+  background-color: rgb(236, 240, 243,0.25); /* Background color of the div */
   box-shadow:inset -2px -2px 4px rgba(255, 255, 255, 0.65),inset 2px 2px 4px rgba(94,104,121,0.388);
   border-radius: 5px;
 
 }	
+
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.21);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5.6px);
+  -webkit-backdrop-filter: blur(5.6px);
+}
 
 h1, h2, h3, h4, h5, h6, body, p, td, tr, th{
   font-family: 'Poppins', sans-serif;

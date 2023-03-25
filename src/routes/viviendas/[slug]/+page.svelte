@@ -6,11 +6,15 @@
 	import KpiCard from '$lib/components/KpiCard.svelte';
 	import DImage from '../../../lib/components/DImage.svelte';
 	import ModelPropertyTable from '$lib/components/ModelPropertyTable.svelte';
+	import DaluxSafetyData from '$lib/components/dalux/DaluxSafetyData.svelte';
 	import { get } from 'svelte/store';
 	import { reloadViewer } from '$lib/speckle/speckleHandler';
 	import { speckleStream, speckleViewer, currentSelection } from '../../../stores/toolStore';
 	import DragWindowLoader from '$lib/components/DragWindowLoader.svelte';
+	
 	export let data;
+
+	//console.log('data from page', data);
 	let speckleStramToPass = '';
 	let speckleViewerRunning = '';
 	let loadCompleted = false;
@@ -19,19 +23,19 @@
 
 	currentSelection.subscribe((v) => {
 		selectedElement = v;
-		console.log('selected element', selectedElement);
+		//console.log('selected element', selectedElement);
 	});
 
 	speckleViewer.subscribe((sv) => {
 		speckleViewerRunning = sv;
-		console.log('from the store', get(speckleViewer));
+		//console.log('from the store', get(speckleViewer));
 	});
 
 	
 	speckleStream.subscribe((v) => {
 		speckleStramToPass = v;
 		let viewer = get(speckleViewer).speckleViewer;
-		console.log('viewer from page', data);
+		//console.log('viewer from page', data);
 		if (viewer != null) {
 			reloadViewer(speckleStramToPass);
 			viewer.on('load-complete', (arg) => {
@@ -73,6 +77,7 @@
 
 <div class="panel-right">
 	<ModelPropertyTable />
+	<DaluxSafetyData />
 </div>
 
 <style>

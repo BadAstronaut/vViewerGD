@@ -1,10 +1,16 @@
 <script>
+    import {sphereByIDList} from '$lib/animation/SphereByIDList';
+    import { get } from 'svelte/store';
+    import '/src/css/styles.css'
     import Tab, { Label } from '@smui/tab';
     import TabBar from '@smui/tab-bar';
     import Button from '@smui/button';
     import DetailSensorCard from './DetailSensorCard.svelte';
+    import { draggables, speckleViewer, finishLoading } from '/src/stores/toolStore';
+
     let active = 'Home';
     let tabs = ['Temp.', 'Hum.'];
+    let parentLoaded = false;
     let rawDataObject = [
         {
             sensorId: "NLW01",
@@ -36,10 +42,33 @@
         }
         
     ]
+    
+    finishLoading.subscribe((v) => {
+		if (v) {
+			parentLoaded = true;
+			let viewer = get(speckleViewer).speckleViewer;
+			v = viewer;
+            let sphere= sphereByIDList(viewer, "67ffed8adbcaba8ccaa8021b8897dfec")
+			console.log(sphere.geometry, 'sphere to animate');
+			//createLine(point1, point2, viewer);
+			//console.log(drawLine, 'drawline');
+			// gsap.to(drawLine.scale, {
+			// 	x: 3,
+			// 	duration: 1,
+			// 	repeat: '-1',
+			// 	yoyo: true,
+			// 	onUpdate: () => {
+			// 		viewer.requestRender();
+			// 	}
+			// });
+		} else {
+			parentLoaded = false;
+		}
+	});
 
 </script>
 
-<div class="sensor-detail-panel">
+<div class="sensor-detail-panel glassmorphism">
     <div>
         <!--
           Note: tabs must be unique. (They cannot === each other.)
@@ -79,7 +108,6 @@
 .sensor-detail-panel{
     width: 100%;
     height: 100%;
-    background-color: #fff;
     border-radius: 5px;
     padding: 10px;
     box-sizing: border-box;
