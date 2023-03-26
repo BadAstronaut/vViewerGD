@@ -12,6 +12,8 @@
       iotHolder = data;
     });
 
+    
+    export let chartData;
     export let ChartType;
     let fontFamily = 'Poppins';
     let chartValues = [20, 10, 5, 2, 20, 30, 45];
@@ -31,7 +33,7 @@
 								backgroundColor: 'rgb(255, 99, 132)',
 								borderColor: 'rgb(255, 99, 132)',
                 borderWidth:2,
-                pointRadius:2,
+                pointRadius:0.5,
 								data: chartValues,
                 fill:true,
                 tension: 0.1
@@ -96,33 +98,69 @@
 	  });
     let iotvals;
     let iotlabs;
-    $: if (chart) {
-      
-      if (ChartType =="C") {
-        //iotvals = iotHolder.chartData.temperature.values;
-        iotvals = chartValues;
-        //iotlabs = iotHolder.chartData.temperature.labels;
-        iotlabs = chartLabels;
-        //console.log("holding",iotlabs);
-        chart.data.datasets[0].data = iotvals; // update the data
+    $: if (chart && chartData) {
+
+      console.log(chartData, 'entering chart data');
+      chartData.forEach(ds => {
+          if (ds.type == "temperature") {
+            chartValues =ds.values;
+            chartLabels = transformLabels(ds.labels);
+            chart.update();
+          } else if (ds.label == "humidity") {
+            
+          }
+          
+        });
+
+        chart.data.datasets[0].data = chartValues; // update the data
+        chart.data.labels = chartLabels; // update the data
         chart.data.datasets[0].backgroundColor = "rgb(79, 173, 175,0.5)"; // update the data
         chart.data.datasets[0].borderColor = "rgb(79, 173, 175,0.7)"; // update the data
-        chart.data.labels = iotlabs; // update the data
         //console.log(chart.data.labels);
         chart.update(); // notify chart.js to render the new data
-      } else if (ChartType =="humidity") {
-        iotvals = iotHolder.chartData.humidity.values;
-        iotlabs = iotHolder.chartData.humidity.labels;
-        //console.log("holding",iotlabs);
-        chart.data.datasets[0].data = iotvals; // update the data
-        chart.data.datasets[0].label = "Humedad"; // update the data
-        chart.data.datasets[0].backgroundColor = "rgb(56, 121, 149, 0.5)"; // update the data
-        chart.data.datasets[0].borderColor = "rgb(56, 121, 149, 0.7)"; // update the data
-        chart.data.labels = iotlabs; // update the data
-        //console.log(chart.data.labels);
-        chart.update(); // notify chart.js to render the new data
-      }
+
+      
+      // if (ChartType =="temperature") {
+      //   //iotvals = iotHolder.chartData.temperature.values;
+      //   iotvals = chartValues;
+      //   //iotlabs = iotHolder.chartData.temperature.labels;
+      //   iotlabs = chartLabels;
+      //   //console.log("holding",iotlabs);
+      //   chart.data.datasets[0].data = iotvals; // update the data
+      //   chart.data.datasets[0].backgroundColor = "rgb(79, 173, 175,0.5)"; // update the data
+      //   chart.data.datasets[0].borderColor = "rgb(79, 173, 175,0.7)"; // update the data
+      //   chart.data.labels = iotlabs; // update the data
+      //   //console.log(chart.data.labels);
+      //   chart.update(); // notify chart.js to render the new data
+      // } else if (ChartType =="humidity") {
+      //   iotvals = iotHolder.chartData.humidity.values;
+      //   iotlabs = iotHolder.chartData.humidity.labels;
+      //   //console.log("holding",iotlabs);
+      //   chart.data.datasets[0].data = iotvals; // update the data
+      //   chart.data.datasets[0].label = "Humedad"; // update the data
+      //   chart.data.datasets[0].backgroundColor = "rgb(56, 121, 149, 0.5)"; // update the data
+      //   chart.data.datasets[0].borderColor = "rgb(56, 121, 149, 0.7)"; // update the data
+      //   chart.data.labels = iotlabs; // update the data
+      //   //console.log(chart.data.labels);
+      //   chart.update(); // notify chart.js to render the new data
+      // }
     
+  }
+
+  //create a function to transform an array of epoc seconds to dates to be used as labels in chartjs
+  function transformLabels(labels) {
+    let newLabels = [];
+    labels.forEach((label) => {
+      let date = new Date(label);
+      let day = date.getDate();
+      let month = date.getMonth() + 1;
+      let year = date.getFullYear();
+      let hour = date.getHours();
+      let minutes = date.getMinutes();
+      let newLabel = `${day}/${month}-${hour}:${minutes}`;
+      newLabels.push(newLabel);
+    });
+    return newLabels;
   }
 
 </script>

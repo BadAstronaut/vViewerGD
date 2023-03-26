@@ -1,18 +1,48 @@
 <script>
 //import on mount
 import '/src/css/styles.css'
-import { onMount } from "svelte";
+import LinearProgress from '@smui/linear-progress';
+import { onMount} from "svelte";
+import { get } from 'svelte/store';
 import LineChart from '$lib/components/charts/LineChart.svelte';
+import {baseIoTUnits} from '/src/stores/iotStore';
 
 //variables 
 export let sensorObj;
+export let sensorId;
 export let units;
+
 let maxVal;
 let minVal;
 let average;
-let sensorId;
 let sensorData;
 let lastUpdated = '2021-05-05 12:00:00';
+let iotData ;
+let unitVal ;
+
+let tempVal = {
+            sensorId: "NLW01",
+            sensorData: [],
+            staticTempVals:{
+                min: 0,
+                max: 10,
+                avg: 4,
+            },
+            staticHumVals:{
+                min: 0,
+                max: 10,
+                avg: 4,
+            },
+        }
+
+let finishLoadingData = false;
+
+//implement fetch function to load sensor data from endpoint async 
+async function fetchSensorData (_sensorId) {
+   const r =await fetch(`/api/iotSensors/iotGetSensorById/?sensorId=${_sensorId}`)
+  .then(response => response.json())
+  return r
+}
 
 let temp = {
             sensorId: "NLW01",
@@ -24,24 +54,39 @@ let temp = {
             },
         }
 //on mount function
-onMount(() => {
+onMount(async() => {
   //get the sensor store object
-  console.log(sensorObj, "sensor object ");
-  if (sensorObj) {
-    console.log("this is sensorObj", sensorObj);
-    sensorId = sensorObj.sensorId;
-    sensorData = sensorObj.sensorData;
-    maxVal = sensorObj.staticTempVals.max;
-    minVal = sensorObj.staticTempVals.min;
-    average = sensorObj.staticTempVals.avg;
+  console.log(sensorId, "sensor object ");
+  unitVal = get(baseIoTUnits)[units];
+    //console.log(unitVal['temperature'], "unit val.......");
+  if(sensorId){
+
+    iotData = await fetchSensorData(sensorId);
+    finishLoadingData = true;
+    console.log(iotData, "iot data");
+    maxVal = iotData.maxT;
+    minVal = iotData.minT;
+    average = iotData.weeklyHChange;
+    sensorData = iotData.rawData;
 
   }
+
+  // if (sensorObj) {
+  //   console.log("this is sensorObj", sensorObj);
+  //   //sensorId = sensorObj.sensorId;
+  //   sensorData = sensorObj.sensorData;
+  //   maxVal = sensorObj.staticTempVals.max;
+  //   minVal = sensorObj.staticTempVals.min;
+  //   average = sensorObj.staticTempVals.avg;
+
+  // }
   
 });
 </script>
 
 <div class="detail-sensor-card neomorfic-div">
- <div class="key-data-div">
+  {#if finishLoadingData}
+  <div class="key-data-div">
     <div class="sensor-kpis">
         <p>Sensor: {sensorId}</p>
         <p>Last Updated: {lastUpdated}</p>
@@ -49,21 +94,27 @@ onMount(() => {
     <div class="sensor-kpis">
         <div class="kpi" style="border-right: 1px solid #f9f9fb">
             <p>Max Value:</p>
-            <p class= "kpi-val">{maxVal} {units}</p>
+            <p class= "kpi-val">{maxVal} {unitVal}</p>
         </div>
         <div class="kpi" style="border-right: 1px solid #f9f9fb">
             <p>Min Value:</p>
-            <p class= "kpi-val">{minVal} {units}</p>
+            <p class= "kpi-val">{minVal} {unitVal}</p>
         </div>
         <div class="kpi">
-            <p>Avg Value:</p>
-            <p class= "kpi-val">{average} {units}</p>
+            <p>Var. Semanal:</p>
+            <p class= "kpi-val">{average} {unitVal}</p>
         </div>
     </div>
  </div>
  <div class="chart-div">
-    <LineChart ChartType={units} />
+    <LineChart chartData={sensorData} ChartType={'temperature'} />
  </div>
+  {:else}
+    <div class="loading-data">
+      <LinearProgress style='width: 75%;' indeterminate />
+    </div>
+    
+  {/if}
 </div>
 
 <style>
@@ -77,6 +128,14 @@ onMount(() => {
   margin-top: 25px;
   margin: 1px;
   z-index: 1;
+}
+.loading-data{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 2em;
 }
 p {
   font-size: 10px;

@@ -8,6 +8,7 @@
     import DetailSensorCard from './DetailSensorCard.svelte';
     import { draggables, speckleViewer, finishLoading } from '/src/stores/toolStore';
 
+
     let active = 'Home';
     let tabs = ['Temp.', 'Hum.'];
     let parentLoaded = false;
@@ -84,7 +85,9 @@
         -->
         {#if active === 'Temp.'}
             <!-- <LineChart ChartType={"temperature"} /> -->
-            <DetailSensorCard sensorObj={rawDataObject[0]} units="C"></DetailSensorCard>
+            <DetailSensorCard sensorObj={rawDataObject[0]} sensorId={"NLW01"} units={'temperature'}></DetailSensorCard>
+            <DetailSensorCard sensorObj={rawDataObject[0]} sensorId={"NLW03"} units={'temperature'}></DetailSensorCard>
+
         {:else if active === 'Hum.'}
             <!-- <LineChart ChartType={"humidity"} /> -->
         {/if}

@@ -65,9 +65,9 @@
 </div>
 
 <div class="center-panel">
-	<div class="panel-top">
+	<!-- <div class="panel-top">
 		<p>panel b</p>
-	</div>
+	</div> -->
 	{#await wait()}
 		<span aria-busy="true">Loading...</span>
 	{:then a}
@@ -81,7 +81,7 @@
 </div>
 
 <div class="panel-right">
-	<ModelPropertyTable />
+	<!--we will refactor thiswith new table  <ModelPropertyTable /> -->
 	<DaluxSafetyData />
 </div>
 

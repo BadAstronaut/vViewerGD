@@ -4,6 +4,9 @@ import pico from "@picocss/pico"
 
 </script>
 <nav class="layout">
+	
+<!-- add logoCTEC as a a logo in the top left corner of the nav bar -->
+  <img class="logo" src="/logoCTEC.png" alt="logoCTEC" width="70" height="auto">
   <a data-sveltekit-preload-data="tap" href="/">Mod Habitar</a>
   <a data-sveltekit-preload-data="tap" href="/viviendas/vivienda-1">Vivienda 1</a>
   <a data-sveltekit-preload-data="tap" href="/viviendas/vivienda-2">Vivienda 2</a>
@@ -31,6 +34,13 @@ nav {
 		letter-spacing: 0.1px;
 		font-weight: 500;
 	}
+	.logo {
+		position: absolute;
+		top: -5px;
+		left: 0;
+		padding: 5px;
+
+	}
 
 	:global(html) {
 		/* scrollbar-gutter: stable; */
@@ -55,7 +65,7 @@ nav {
 	footer {
 		text-align: center;
 		margin: 0.4rem 0;
-		color: rgba(255, 255, 255, 0.4);
+		color: rgba(94,104,121,0.388);
 		padding: 0;
 		max-height: 30px;
 	}
