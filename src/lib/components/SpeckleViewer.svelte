@@ -60,6 +60,7 @@
           
           // @ts-ignore
           currentSelection.set([clieckedElement])
+          console.log(clieckedElement,"clicked!")
         } else { 
           v.resetSelection();
           // @ts-ignore

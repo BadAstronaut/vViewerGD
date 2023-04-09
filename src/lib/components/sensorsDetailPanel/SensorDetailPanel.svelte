@@ -1,5 +1,5 @@
 <script>
-    import {sphereByIDList} from '$lib/animation/SphereByIDList';
+    //import {sphereByIDList} from '$lib/animation/SphereByIDList';
     import { get } from 'svelte/store';
     import '/src/css/styles.css'
     import Tab, { Label } from '@smui/tab';
@@ -49,8 +49,8 @@
 			parentLoaded = true;
 			let viewer = get(speckleViewer).speckleViewer;
 			v = viewer;
-            let sphere= sphereByIDList(viewer, "67ffed8adbcaba8ccaa8021b8897dfec")
-			console.log(sphere.geometry, 'sphere to animate');
+            //let sphere= sphereByIDList(viewer, "67ffed8adbcaba8ccaa8021b8897dfec")
+			//console.log(sphere.geometry, 'sphere to animate');
 			//createLine(point1, point2, viewer);
 			//console.log(drawLine, 'drawline');
 			// gsap.to(drawLine.scale, {

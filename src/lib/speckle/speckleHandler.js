@@ -16,7 +16,17 @@ export async function fetchUserData() {
     return userData;
   });
 }
-export async function selectElementsById(listOfIds) { }
+export  function selectElementsById(id) { 
+  const v = get(speckleViewer).speckleViewer;
+  const speckDT=v.getDataTree();
+  //this bit was key in making it work. the data tree 
+  const objPredicate  = (uui, obj) => {
+    return obj.id === id;
+  }
+  const speckleObjectList = speckDT.findFirst(objPredicate);
+
+  return speckleObjectList;
+}
 
 export async function reloadViewerGetObjectsByIds(
   viewerI,
