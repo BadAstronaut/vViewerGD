@@ -2,10 +2,15 @@
 import ToolBarButton from "./ToolBarButton.svelte";
 import { get } from "svelte/store";
 import {sphereByIDList} from "/src/lib/animation/SphereByIDList.js";
-import {activeIoTIndicators, speckleViewer, finishLoading} from "/src/stores/toolStore.js";
+import {activeIoTIndicators, speckleViewer, finishLoading, passportProps} from "/src/stores/toolStore.js";
+import {selectElementsByPropNameValue, resetViewerFilters} from "/src/lib/speckle/speckleHandler.js"
 
 
 let sensorDataIcon ='/icons/cloud-computing.svg';
+let colorByProperty ='/icons/traffic-lights.svg';
+let filterOff ='/icons/filter-off.svg';
+
+
 
 
 let tempObjectIds = ["ee07ac99d4cfd23c59ef94bda65bdbe0","ccb4b5e5bf2ae2bfb1524e62462155d2"];
@@ -21,11 +26,32 @@ function showSensorAnimation(){
     
 }
 
+//create a function that isole and filter ofjects based on propertyes 
+function colorByPropertyFunction(){
+    const activeV = get(speckleViewer);
+    const passport = get(passportProps);
+    const specklePropName = "passportID";
+    if(activeV.speckleViewer && get(finishLoading)){
+        //need to get all the speckle elements that have the property of passport and filter them
+        const Selements = selectElementsByPropNameValue(specklePropName,passport.passportID)
+        //console.log("activeV",Selements);
+
+    }
+    
+}
+function removeFilterViewer (){
+    resetViewerFilters();
+}
+
 
 </script>
 
 <div class="utility-bar" > 
 <ToolBarButton icon={sensorDataIcon} toExecute={showSensorAnimation} active={false} />
+<ToolBarButton icon={colorByProperty} toExecute={colorByPropertyFunction} active={false} />
+<ToolBarButton icon={filterOff} toExecute={removeFilterViewer} active={false} />
+
+
 </div>
 
 <style>

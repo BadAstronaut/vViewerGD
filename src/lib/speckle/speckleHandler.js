@@ -1,7 +1,7 @@
 import { ViewerEvent } from "@speckle/viewer";
 import { getStreamCommits, getUserData } from "./speckleUtils.js";
 import { get } from "svelte/store";
-import { speckleViewer, finishLoading } from "../../stores/toolStore";
+import { speckleViewer, finishLoading, speckleStream, speckleDatatree } from "../../stores/toolStore";
 
 const token = import.meta.env.VITE_SPECKLE_TOCKEN;
 
@@ -16,16 +16,57 @@ export async function fetchUserData() {
     return userData;
   });
 }
-export  function selectElementsById(id) { 
+export function selectElementsById(id) {
   const v = get(speckleViewer).speckleViewer;
-  const speckDT=v.getDataTree();
+  const speckDT = v.getDataTree();
   //this bit was key in making it work. the data tree 
-  const objPredicate  = (uui, obj) => {
+  const objPredicate = (uui, obj) => {
     return obj.id === id;
   }
   const speckleObjectList = speckDT.findFirst(objPredicate);
 
   return speckleObjectList;
+}
+//select elements by property value
+export function selectElementsByPropNameValue(propNAme, propValue) {
+  const v = get(speckleViewer).speckleViewer;
+  const speckledataTree = get(speckleDatatree);
+  const sStream = get(speckleStream);
+  const color = 0x66c0b7;
+
+  //refactor later to call this on viewer load and store it in a store
+  // const dataTree=v.getDataTree();
+  // const objects = dataTree.findAll((guid, obj) => {
+  //   return obj.type === 'Wallmix. e=15 cm'
+  // })
+  if (speckledataTree !== null && v.speckleViewer !== null) {
+    const objects = speckledataTree.findAll((guid, obj) => {
+      return obj.type === 'Wallmix. e=15 cm'
+    })
+    //build the stream url for the firt object of the data tree 
+    console.log(speckledataTree, "objects", objects, v);
+    const obj = objUrl(sStream, objects[0].id);
+
+
+    //get the ids of the object array 
+    const ids = objects.map((obj) => {
+      return obj.id;
+    });
+
+    changeElementColorByIds(ids, color);
+    return objects;
+
+
+  }
+
+}
+
+export async function resetViewerFilters (){
+  const v = get(speckleViewer).speckleViewer;
+  if (v !== null) {
+    await v.resetFilters();
+    v.requestRender();
+  }
 }
 
 export async function reloadViewerGetObjectsByIds(
@@ -58,6 +99,7 @@ export async function reloadViewerGetObjectsByIds(
   let p = Promise.resolve(v);
   p.then(() => {
     finishLoading.set(true);
+    speckleDatatree.set(v.getDataTree());
   })
 
   const speckObjects = v.getDataTree();
@@ -87,22 +129,22 @@ export async function reloadViewer(speckleStream) {
   //console.log("reloading...")
   const v = get(speckleViewer).speckleViewer;
   if (v) {
-    
+
     const branch = await fetchStreamData(speckleStream);
-      //console.log("branch in reloadv", v.on(LoadComplete));
-      //@ts-ignore
-      await v.unloadAll();
-      const obj = objUrl(speckleStream, branch.commits.items[0].referencedObject);
-  
-      //console.log('speckle obj light',lightsObj);
-      await v.loadObject(obj, token);
-      //console.log(this.$refs.view)
-      //console.log(`Loaded latest commit from branch "${branch.name}"`);
-      v.zoom(1);
-  
-      await v.init();
-      //console.log(objects);
-    
+    //console.log("branch in reloadv", v.on(LoadComplete));
+    //@ts-ignore
+    await v.unloadAll();
+    const obj = objUrl(speckleStream, branch.commits.items[0].referencedObject);
+
+    //console.log('speckle obj light',lightsObj);
+    await v.loadObject(obj, token);
+    //console.log(this.$refs.view)
+    //console.log(`Loaded latest commit from branch "${branch.name}"`);
+    v.zoom(1);
+
+    await v.init();
+    //console.log(objects);
+
   }
 
 }
@@ -215,7 +257,7 @@ export function filterElementsByParameterContainsName(
   }
 }
 //color elements by list id and color code
-export function changeElementColorByIds(listOfIds, color) {
+export function changeElementColorByIds(listOfIds, color=0xff0000) {
   const v = get(speckleViewer).speckleViewer;
   //reset isolated elements
 

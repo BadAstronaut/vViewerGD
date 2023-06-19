@@ -10,7 +10,7 @@
     } from "$lib/speckle/speckleHandler";
 
     //import { speckleViewer} from "$app/stores/toolStore";
-    import {speckleViewer, finishLoading, currentSelection} from "../../stores/toolStore";
+    import {speckleViewer, finishLoading, currentSelection, speckleDatatree} from "../../stores/toolStore";
     export let speckleStream;
     //const speckleViewer = toolStore.speckleViewer
     //console.log(toolStore.speckleViewer)
@@ -74,6 +74,8 @@
       })
       // @ts-ignore
       speckleViewer.set({'speckleViewer':v})
+
+      // import the data tree store and save it in here 
       //console.log("viewer store set",get(speckleViewer) )
       v.setLightConfiguration({
         azimuth: 0.55,
@@ -88,7 +90,7 @@
       //console.log("viewer here", v);
       //let branch =  fetchStreamData(speckleStreams.NLW01);
       let userD = fetchUserData();
-      //Espacio Colaborativo
+      //Espacio Colaborativo 
       const speckObj = reloadViewerGetObjectsByIds(
         v,
         speckleStream,
@@ -97,18 +99,19 @@
   
       );
   
-      const pResolve = Promise.resolve(speckObj);
-      pResolve.then((res) => {
-        //coor.push(res[1][0])
-        //speckleObjects.set({ speckleEls: res });
-        //console.log('objets',get(speckleObjects));
+      // const pResolve = Promise.resolve(speckObj);
+      // pResolve.then((res) => {
+      //   //coor.push(res[1][0])
+      //   //speckleObjects.set({ speckleEls: res });
+      //   //console.log('objets',get(speckleObjects));
   
-        // addGeo();
-        // animate();
-        // getSpeckleLocation();
-        //console.log("Data Tree:", spheres);
-      });
+      //   // addGeo();
+      //   // animate();
+      //   // getSpeckleLocation();
+      //   //console.log("Data Tree:", spheres);
+      // })
     });
+
   
     function getSpeckleLocation() {
       //i have a Revit Element ID.

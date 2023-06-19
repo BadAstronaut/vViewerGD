@@ -13,6 +13,8 @@ export const finishLoading = writable(false);
 
 export const speckleStream = writable('xxxx')
 
+export const speckleDatatree = writable(null);
+
 export const draggables = writable([
     { id:'Sensor', name: 'Temperatura', active:false},
     { id:'SensorHum', name: 'Humedad', active:false},
@@ -37,3 +39,9 @@ export const selectionPropertiesOfInterest = readable([
         value:true
     },
 ])
+
+export const passportProps = writable({
+    passportID: "999-999",
+    greenRate: 0.5,
+    greenStatus: "Bueno",
+})
