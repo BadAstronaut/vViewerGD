@@ -57,3 +57,9 @@ export const speckleParqueProtos = writable([])
 export const viewerLotes = writable([])
 
 export const viewerProtos = writable([])
+
+export const currentLote = writable(null)
+
+export const currentProto = writable(null)
+
+export const sidebar_show = writable(false)

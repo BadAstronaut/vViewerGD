@@ -59,7 +59,7 @@ function extractParamData(speckleObjects, params, type){
             
             }})
         if(type === "Lote"){
-            _viewerObj.loteId = obj.type
+            _viewerObj.LoteID = obj.type
         }
         else if(type === "Proto"){
            

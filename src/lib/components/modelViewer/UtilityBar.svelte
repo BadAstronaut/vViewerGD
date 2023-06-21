@@ -111,7 +111,7 @@ function removeFilterViewer (){
       backdrop-filter: blur(3px);
       -webkit-backdrop-filter: blur(3px);
       width: 2.5em;
-      margin-top: 15px;
+      margin-top: 2em;
       gap: 5px;
       padding-left: 5px;
       padding-bottom: 10px;
