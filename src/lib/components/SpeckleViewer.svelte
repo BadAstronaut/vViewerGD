@@ -22,35 +22,11 @@
     let spheres = [];
     let v;
     let coor = [];
-
-  
-  
-    // prototypeModel.subscribe((data)=>{
-    //   idUpdate = data.sensorId;
-    //   //console.log(v,"speckel data ");
-    //   if (v) {
-    //     reloadViewerGetObjectsByIds(v,speckleStreams[idUpdate]);
-    //   }
-  
-    // });
-    // speckleObjects.subscribe((obj)=>{
-    //   if (v ) {
-    //     console.log(obj.speckleEls)
-    //     let objectUniverse=obj.speckleEls.map((f)=>{
-    //       console.log('did my selection changed',f.id)
-    //       return f.id
-    //     })
-    //     console.log(objectUniverse)
-    //     v.selectObjects(objectUniverse);
-    //   }
-      
-      
-    // })
     
     onMount(() => {
       //console.log('viewer dynamic update' , speckleStreams[idUpdate]);
       v = new Viewer(viewerVal);
-      console.log(v);
+      //console.log(v);
       v.on(ViewerEvent.ObjectClicked ,(args)=>{
         if (args) {
           //console.log(args,"clicked");
@@ -79,7 +55,7 @@
       //console.log("viewer store set",get(speckleViewer) )
       v.setLightConfiguration({
         azimuth: 0.55,
-        castShadow: false,
+        castShadow: true,
         color: 16777215,
         elevation: 1.33,
         enabled: true,
@@ -87,10 +63,12 @@
         intensity: 9,
         radius: 0,
       });
-      //console.log("viewer here", v);
+      //console.log("viewer here.....", speckleStream);
       //let branch =  fetchStreamData(speckleStreams.NLW01);
       let userD = fetchUserData();
+      //console.log("user data");
       //Espacio Colaborativo 
+      //console.log("user data lost", v);
       const speckObj = reloadViewerGetObjectsByIds(
         v,
         speckleStream,
@@ -98,29 +76,9 @@
         []
   
       );
-  
-      // const pResolve = Promise.resolve(speckObj);
-      // pResolve.then((res) => {
-      //   //coor.push(res[1][0])
-      //   //speckleObjects.set({ speckleEls: res });
-      //   //console.log('objets',get(speckleObjects));
-  
-      //   // addGeo();
-      //   // animate();
-      //   // getSpeckleLocation();
-      //   //console.log("Data Tree:", spheres);
-      // })
+
     });
 
-  
-    function getSpeckleLocation() {
-      //i have a Revit Element ID.
-      //1 I need the Speckle element that has that id
-      //2 I need to get the basepoint properties of that speckle object
-      let filterB = { type: "NLW01_SA001" };
-      const sensorRevitId = "f25a8ea80f73e368311f1887adda3162";
-      //console.log(v.sceneManager.allObjects);
-    }
   </script>
   
   <div bind:this={viewerVal} class="viewer" />
@@ -131,5 +89,6 @@
       opacity: 0.9;
       box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
       min-height: 100%;
+      min-width: 100%;
     }
   </style>

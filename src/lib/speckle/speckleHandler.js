@@ -27,6 +27,11 @@ export function selectElementsById(id) {
 
   return speckleObjectList;
 }
+
+export function colorById(objectIds, color){
+  const v = get(speckleViewer).speckleViewer;
+  v.setUserObjectColors(objectIds,color)
+}
 //select elements by property value
 export function selectElementsByPropNameValue(propNAme, propValue) {
   const v = get(speckleViewer).speckleViewer;
@@ -61,7 +66,7 @@ export function selectElementsByPropNameValue(propNAme, propValue) {
 
 }
 
-export async function resetViewerFilters (){
+export async function resetViewerFilters() {
   const v = get(speckleViewer).speckleViewer;
   if (v !== null) {
     await v.resetFilters();
@@ -81,56 +86,37 @@ export async function reloadViewerGetObjectsByIds(
   const branch = await fetchStreamData(speckleStream);
   //console.log("branch in reloadv", branch);
   await v.unloadAll();
-  const obj = objUrl(speckleStream, branch.commits.items[0].referencedObject);
-  // const lightsBranch =await fetchStreamDataFromCommit(speckleStream,additionalStream)
-  // const lightsObj = objUrl(
-  //   speckleStream,
-  //   lightsBranch[0].referencedObject
-  // );
+  if (branch) {
+    const obj = objUrl(speckleStream, branch.commits.items[0].referencedObject);
+    console.log("obj", obj);
+    await v.loadObject(obj, token);
+    v.zoom(1);
 
-  //console.log('speckle obj light',lightsObj);
-  await v.loadObject(obj, token);
-  //await v.loadObject(lightsObj, token);
-  //console.log(this.$refs.view)
-  //console.log(`Loaded latest commit from branch "${branch.name}"`);
-  v.zoom(1);
+    await v.init();
+    let p = Promise.resolve(v);
+    p.then(() => {
+      finishLoading.set(true);
+      speckleDatatree.set(v.getDataTree());
+    })
 
-  await v.init();
-  let p = Promise.resolve(v);
-  p.then(() => {
-    finishLoading.set(true);
-    speckleDatatree.set(v.getDataTree());
-  })
+    const speckObjects = v.getDataTree();
+    const objects = speckObjects.findAll((uui, obj) => {
+      return obj.speckle_type === "Objects.BuiltElements.Revit.FamilyInstance";
+    });
 
-  const speckObjects = v.getDataTree();
-  const objects = speckObjects.findAll((uui, obj) => {
-    return obj.speckle_type === "Objects.BuiltElements.Revit.FamilyInstance";
-  });
-  //console.log(objects);
+    return [objects];
+  }
 
-  //filter by fixed property value
-  let filterSpeckObj = objects.filter((sO) => {
-    //console.log("im sooo",sO.userData.parameters);
-    let lights = filterElementsByParameterContainsName(
-      sO,
-      "Digital Twin Type ID",
-      "ELE-LUM-MOD"
-    );
-    //console.log('this are alights', lights);
-    return lights;
-  });
-  // let speckleLocation = filterSpeckObj.map( (ob)=>{
-  //   return handleBeaconOrigin(ob.userData)
-  // })
-  return [filterSpeckObj];
+
 }
 
 export async function reloadViewer(speckleStream) {
   //console.log("reloading...")
   const v = get(speckleViewer).speckleViewer;
-  if (v) {
+  const branch = await fetchStreamData(speckleStream);
+  if (v && branch) {
 
-    const branch = await fetchStreamData(speckleStream);
+
     //console.log("branch in reloadv", v.on(LoadComplete));
     //@ts-ignore
     await v.unloadAll();
@@ -176,7 +162,17 @@ export async function getPropertiesByTypeParameter(pName, pValueList) {
   return objtList;
 }
 //give list of 
+export function filterByCategoryNames(DT, categoryNames) {
+  const objects = DT.findAll((uui, obj) => {
+    if (obj.category && obj.speckle_type == "Objects.BuiltElements.Revit.RevitElementType:Objects.BuiltElements.Revit.RevitSymbolElementType" ) {
+      const catName = obj.category;
+      //console.log("-------",obj, );
+      return categoryNames.includes(catName);
+    }
 
+  });
+  return objects;
+}
 
 //X ray functionality it will take a list of categories,
 //and list of current selected elements
@@ -257,7 +253,7 @@ export function filterElementsByParameterContainsName(
   }
 }
 //color elements by list id and color code
-export function changeElementColorByIds(listOfIds, color=0xff0000) {
+export function changeElementColorByIds(listOfIds, color = 0xff0000, hide = false) {
   const v = get(speckleViewer).speckleViewer;
   //reset isolated elements
 
@@ -268,9 +264,10 @@ export function changeElementColorByIds(listOfIds, color=0xff0000) {
   }]
   // @ts-ignore
   v.setUserObjectColors(queryObject);
-  // @ts-ignore
-  v.isolateObjects(listOfIds);
-
+  if (hide) {
+    // @ts-ignore
+    v.isolateObjects(listOfIds);
+  }
 }
 
 export function handleBeaconOrigin(speckleObj) {
@@ -301,12 +298,19 @@ async function fetchStreamData(speckleStream) {
   const b = await getStreamCommits(speckleStream, 1, null, token).then(
     (str) => {
       streamData = str.data.stream;
-      //console.log(stream)
+      //console.log(streamData, "stream bug ...................");
       // Split the branches into "main" and everything else
-      //console.log(str);
-      let mainBranch = streamData.branches.items.find((b) => b.name == "main");
-      branch = mainBranch;
-      //console.log('Branch:',branch)
+      //console.log(streamData, "stream bug ...................");
+      if (streamData) {
+
+        let mainBranch = streamData.branches.items.find((b) => b.name == "main");
+        branch = mainBranch;
+        //console.log('Branch:', branch)
+      }
+      else {
+        //fix later not sure why this happens
+        console.log('No stream data fix later...', speckleStream)
+      }
     }
   );
 

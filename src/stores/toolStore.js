@@ -45,3 +45,15 @@ export const passportProps = writable({
     greenRate: 0.5,
     greenStatus: "Bueno",
 })
+
+export const lotesProps = writable(["type", "Area", "Estado","Servicios"]) 
+export const protosProps = writable(["LoteID", "Nombre", "Empresas","Fecha Ingreso", "Fecha Egreso", "Contacto", "Planos de Proyecto"])   
+
+
+export const speckleParqueLotes = writable([])
+
+export const speckleParqueProtos = writable([])
+
+export const viewerLotes = writable([])
+
+export const viewerProtos = writable([])

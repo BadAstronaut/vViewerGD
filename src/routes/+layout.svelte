@@ -7,9 +7,9 @@ import pico from "@picocss/pico"
 	
 <!-- add logoCTEC as a a logo in the top left corner of the nav bar -->
   <img class="logo" src="/logoCTEC.png" alt="logoCTEC" width="70" height="auto">
-  <a data-sveltekit-preload-data="tap" href="/">Mod Habitar</a>
+  <!-- <a data-sveltekit-preload-data="tap" href="/">Mod Habitar</a>
   <a data-sveltekit-preload-data="tap" href="/viviendas/vivienda-1">Vivienda 1</a>
-  <a data-sveltekit-preload-data="tap" href="/viviendas/vivienda-2">Vivienda 2</a>
+  <a data-sveltekit-preload-data="tap" href="/viviendas/vivienda-2">Vivienda 2</a> -->
 </nav>
 
 <main>
@@ -18,11 +18,11 @@ import pico from "@picocss/pico"
 
 
 
-<footer class="layout">© CTEC 2023</footer>
+<footer class="layout">©Vero Viewer 0.1</footer>
 
 <style>
 nav {
-		background: hsla(0, 3%, 77%, 0.4);
+		position: absolute;
 		padding-top: 0.5rem;
 		padding-bottom: 0.5rem;
 	}
@@ -57,7 +57,7 @@ nav {
 	main {
 		display: flex;
 		flex-direction: row;
-		min-height:calc(100vh - 4rem) ;
+		min-height:calc(100vh - 2rem) ;
 		align-items: stretch;
 		
 	}

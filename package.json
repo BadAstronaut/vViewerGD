@@ -22,6 +22,7 @@
 		"@smui/tab-bar": "^7.0.0-beta.0",
 		"@smui/tooltip": "^7.0.0-beta.0",
 		"@speckle/viewer": "^2.11.4",
+		"@sveltejs/adapter-auto": "^2.1.0",
 		"@sveltejs/adapter-static": "^2.0.1",
 		"@sveltejs/kit": "^1.0.0",
 		"aframe": "^1.4.1",
@@ -40,7 +41,6 @@
 	"type": "module",
 	"dependencies": {
 		"@neodrag/svelte": "^2.0.3",
-		"@sveltejs/adapter-auto": "^2.0.0",
 		"google-auth-library": "^8.7.0",
 		"googleapis": "^114.0.0"
 	}
