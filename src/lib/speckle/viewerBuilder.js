@@ -38,7 +38,7 @@ function getViewerObjects(){
     
     viewerLotes.set(loteViewerObjects)
     viewerProtos.set(protoViewerObjects)
-    //console.log("loteViewerObjects",protoViewerObjects)
+    //console.log("loteViewerObjects",loteViewerObjects)
 }
 
 function extractParamData(speckleObjects, params, type){
@@ -59,7 +59,8 @@ function extractParamData(speckleObjects, params, type){
             
             }})
         if(type === "Lote"){
-            _viewerObj.LoteID = obj.type
+            //console.log("lot]]]]]]]]]]]]]e",obj)
+            _viewerObj.LoteID = obj.definition.type
         }
         else if(type === "Proto"){
            

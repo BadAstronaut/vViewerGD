@@ -19,7 +19,7 @@
 		currentProto,
 	} from '../stores/toolStore';
 	import { buildViewerData } from '$lib/speckle/viewerBuilder';
-	import UtilityBar from '/src/lib/components/modelViewer/UtilityBar.svelte';
+	import UtilityBar from '$lib/components/modelViewer/UtilityBar.svelte';
 	import Sidebar from '$lib/components/sidebarModal/Sidebar.svelte';
 
 	export let data;
@@ -55,10 +55,15 @@
 						currentLote.set(selectedLote);
 					}
 				} else {
+					console.log('not found hiding sidebar');
 					_sidebar_show = false;
 					currentLote.set(null);
 					currentProto.set(null);
 				}
+			} else {
+				_sidebar_show = false;
+				currentLote.set(null);
+				currentProto.set(null);
 			}
 		});
 
@@ -75,7 +80,7 @@
 				viewer.on('load-complete', (arg) => {
 					speckleDatatree.set(viewer.getDataTree());
 					const dtBuilder = buildViewerData();
-					console.log('load comple from page.............', get(speckleParqueLotes));
+					console.log('load comple from page.............', viewer.getDataTree());
 
 					finishLoading.set(true);
 				});

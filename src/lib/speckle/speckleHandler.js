@@ -127,8 +127,8 @@ export async function reloadViewer(speckleStream) {
     //console.log(this.$refs.view)
     //console.log(`Loaded latest commit from branch "${branch.name}"`);
     v.zoom(1);
-
-    await v.init();
+    //should not be necesary to start the viewer in here
+    //await v.init();
     //console.log(objects);
 
   }
@@ -164,9 +164,10 @@ export async function getPropertiesByTypeParameter(pName, pValueList) {
 //give list of 
 export function filterByCategoryNames(DT, categoryNames) {
   const objects = DT.findAll((uui, obj) => {
-    if (obj.category && obj.speckle_type == "Objects.BuiltElements.Revit.RevitElementType:Objects.BuiltElements.Revit.RevitSymbolElementType" ) {
+    //console.log("-------",obj, );
+    if (obj.category && obj.speckle_type == "Objects.Other.Revit.RevitInstance" ) {
       const catName = obj.category;
-      //console.log("-------",obj, );
+      console.log("-------",obj, );
       return categoryNames.includes(catName);
     }
 

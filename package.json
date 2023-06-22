@@ -21,7 +21,7 @@
 		"@smui/tab": "^7.0.0-beta.0",
 		"@smui/tab-bar": "^7.0.0-beta.0",
 		"@smui/tooltip": "^7.0.0-beta.0",
-		"@speckle/viewer": "^2.11.4",
+		"@speckle/viewer": "^2.14.7",
 		"@sveltejs/adapter-auto": "^2.1.0",
 		"@sveltejs/adapter-static": "^2.0.1",
 		"@sveltejs/kit": "^1.0.0",
@@ -34,14 +34,12 @@
 		"prettier-plugin-svelte": "^2.8.1",
 		"smui-theme": "^7.0.0-beta.0",
 		"svelte": "^3.54.0",
-		"three": "^0.149.0",
 		"tippy.js": "^6.3.7",
 		"vite": "^4.0.0"
 	},
 	"type": "module",
 	"dependencies": {
 		"@neodrag/svelte": "^2.0.3",
-		"google-auth-library": "^8.7.0",
-		"googleapis": "^114.0.0"
+		"google-auth-library": "^8.7.0"
 	}
 }

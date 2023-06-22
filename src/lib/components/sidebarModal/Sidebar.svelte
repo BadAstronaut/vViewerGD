@@ -1,6 +1,6 @@
 <script>
 	import { fly } from 'svelte/transition';
-    import { onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { reloadViewer } from '$lib/speckle/speckleHandler';
 	import {
@@ -8,63 +8,99 @@
 		viewerProtos,
 		viewerLotes,
 		sidebar_show,
-        currentSelection,
-        currentLote,
-        currentProto,
+		currentSelection,
+		currentLote,
+		currentProto
 	} from '/src/stores/toolStore';
 	import { SpriteMaterial } from 'three';
 
 	export let show = false;
 	let modal_show = false;
-    let proto = get(currentProto);
-    let lote = get(currentLote);
+	let proto = get(currentProto);
+	let lote = get(currentLote);
 
-    currentLote.subscribe((v) => {
-        lote = v;
-        proto = null;
-    });
-    currentProto.subscribe((v) => {
-        const loteId= v?.LoteID;
-        //get lote with teh same loteId
-        const _lote = get(viewerLotes).find((item) => item.LoteID === loteId);
-        const lote = _lote ? _lote : null;
-        console.log("-------", lote)
-        proto = v;
-    });
+	currentLote.subscribe((v) => {
+		lote = v;
+		console.log('-------', lote);
+		proto = null;
+	});
+	currentProto.subscribe((v) => {
+		const loteId = v?.LoteID;
+		//get lote with teh same loteId
+		const _lote = get(viewerLotes).find((item) => item.LoteID === loteId);
+		const lote = _lote ? _lote : null;
+		console.log('-------', lote);
+		proto = v;
+	});
 
-
-
-	
+	function truncateString(str, maxLength) {
+        let truncatedString = "";
+		if (str.length <= maxLength) {
+			truncatedString= str;
+		} else {
+			//check if its string if it is get the first 15 characters
+            if (typeof str === "string") {
+                truncatedString = str.substring(0, maxLength) + "...";
+            } else {
+                truncatedString = str
+            }
+		}
+        return truncatedString;
+	}
 </script>
 
 {#if show}
 	<nav transition:fly={{ x: 250, opacity: 1 }}>
-        
-        {#if lote}
-        <div class="side-container">
-            <span>Prototipo :{lote.LoteID}</span>
-        </div>
-        {/if}
+		{#if lote}
+        <span>Info Lote: {lote.LoteID}</span>
+			<div class="side-container">
+				{#each Object.entries(lote) as [propName, propValue]}
+					<div class="row-container">
+						<span>{propName} : </span>
+						<span>{truncateString(propValue,20)}</span>
+					</div>
+				{/each}
+			</div>
+		{/if}
 
-        {#if proto}
-        <div class="side-container">
-            <span>Prototipo :{proto.Nombre}</span>
-        </div>
-        {/if}
+		{#if proto}
+        <span>Info Proto: {proto.Nombre}</span>
+			<div class="side-container">
+                {#each Object.entries(proto) as [propName, propValue]}
+					<div class="row-container">
+						<span>{propName} : </span>
+						<span>{truncateString(propValue,20)}</span>
+					</div>
+				{/each}
+			</div>
+		{/if}
 	</nav>
 {/if}
 
 <style>
-    .side-container{
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        border: 1px solid black;
-        justify-content: flex-start;
+	.row-container {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-start;
+		width: 100%;
         gap: 5px;
-        height: 50%;
-        width: 100%;
-    }
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		border-radius: 5px;
+        padding-left: 5px;
+	}
+	.side-container {
+		display: flex;
+		flex-direction: column;
+		align-items: start;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		border-radius: 5px;
+		padding: 10px;
+		justify-content: flex-start;
+		gap: 5px;
+		height: 50%;
+		width: 100%;
+	}
 	nav {
 		position: absolute;
 		top: 0;
@@ -77,7 +113,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: start;
-        justify-content: flex-start;
+		justify-content: flex-start;
 		z-index: 3;
 		border-radius: 5px;
 		/* From https://css.glass */

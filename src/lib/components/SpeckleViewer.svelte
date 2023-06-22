@@ -9,8 +9,7 @@
       reloadViewer
     } from "$lib/speckle/speckleHandler";
 
-    //import { speckleViewer} from "$app/stores/toolStore";
-    import {speckleViewer, finishLoading, currentSelection, speckleDatatree} from "../../stores/toolStore";
+    import {speckleViewer, finishLoading, currentSelection, speckleDatatree, currentLote, currentProto, sidebar_show} from "../../stores/toolStore";
     export let speckleStream;
     //const speckleViewer = toolStore.speckleViewer
     //console.log(toolStore.speckleViewer)
@@ -41,6 +40,9 @@
           v.resetSelection();
           // @ts-ignore
           currentSelection.set([])
+          currentLote.set(null)
+          currentProto.set(null)
+          
         }
         //console.log(v.needsRender);
         

@@ -24,7 +24,7 @@ function setTop(){
     if(activeV.speckleViewer && get(finishLoading)){
         activeV.speckleViewer.setView('top',true);
         activeV.speckleViewer.zoom([],0.75)
-        console.log(activeV, "cosonle log ");
+        //console.log(activeV, "cosonle log ");
         //console.log("showing sensor animation",get(activeIoTIndicators));
     }
 }
@@ -35,7 +35,7 @@ function setHome(){
     if(activeV.speckleViewer && get(finishLoading)){
         activeV.speckleViewer.setView('3D', true);
         activeV.speckleViewer.zoom([],0.5)
-        console.log(activeV, "cosonle log ");
+        //console.log(activeV, "cosonle log ");
         //console.log("showing sensor animation",get(activeIoTIndicators));
     }
 }
