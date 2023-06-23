@@ -8,8 +8,13 @@ const config = {
 		alias: {
 		  process: "process/browser"
 		}
-	}
+	},
+	ssr: {
+		noExternal: [
+		  // Add the npm package that contains invalid code here
+		  '@speckle/viewer',
+		],
+	  },
 };
 
 export default config;
-

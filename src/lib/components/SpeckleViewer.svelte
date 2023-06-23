@@ -1,6 +1,8 @@
 <script>
     import { Viewer, ViewerEvent } from "@speckle/viewer";
     import { onMount } from "svelte";
+    import * as THREE from 'three';
+    import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
     import { get } from "svelte/store";
     import {
       fetchUserData,
@@ -21,6 +23,7 @@
     let spheres = [];
     let v;
     let coor = [];
+    let labelRenderer ;
     
     onMount(() => {
       //console.log('viewer dynamic update' , speckleStreams[idUpdate]);
@@ -45,9 +48,6 @@
           
         }
         //console.log(v.needsRender);
-        
-         
-        
   
       })
       // @ts-ignore
@@ -70,7 +70,7 @@
       let userD = fetchUserData();
       //console.log("user data");
       //Espacio Colaborativo 
-      //console.log("user data lost", v);
+      console.log("user data lost", v);
       const speckObj = reloadViewerGetObjectsByIds(
         v,
         speckleStream,
@@ -78,8 +78,35 @@
         []
   
       );
+      //console.log("speckleObj",v.speckleRenderer._scene);
+      twoDCard(v);
 
     });
+
+    function twoDCard(v){
+      const scene = v.speckleRenderer._scene
+      const earthDiv = document.createElement( 'div' );
+				earthDiv.className = 'label';
+				earthDiv.textContent = 'Eartttttttttth';
+				earthDiv.style.backgroundColor = 'transparent';
+
+				const earthLabel = new CSS2DObject( earthDiv );
+				earthLabel.position.set( 1.5, 0, 0 );
+				earthLabel.center.set( 100, 100 );
+        earthLabel.scale.set( 100, 100, 100 );
+				scene.add( earthLabel );
+				earthLabel.layers.set(3);
+        
+
+        console.log (earthLabel)
+
+        //labelRenderer = new CSS2DRenderer();
+				//labelRenderer.setSize( window.innerWidth, window.innerHeight );
+				//labelRenderer.domElement.style.position = 'absolute';
+				//labelRenderer.domElement.style.top = '0px';
+				//document.body.appendChild( labelRenderer.domElement );
+        v.requestRender();
+    }
 
   </script>
   

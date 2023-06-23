@@ -1,9 +1,8 @@
 <script>
-	/** @type {import('./$types').PageData} */
-	import { onMount } from 'svelte';
-	import { ViewerEvent } from '@speckle/viewer';
-	import SpeckleViewer from '$lib/components/SpeckleViewer.svelte';
-	import { get } from 'svelte/store';
+// 	/** @type {import('./$types').PageData} */
+ 	import { onMount } from 'svelte';
+ 	import SpeckleViewer from '$lib/components/SpeckleViewer.svelte';
+ 	import { get } from 'svelte/store';
 	import { reloadViewer } from '$lib/speckle/speckleHandler';
 	import {
 		speckleStream,
@@ -45,17 +44,18 @@
 				const viewerDataIds = [...viewerProtosDataIds, ...viewerLotesDataIds];
 				//console.log(viewerDataIds.includes(selectedElement[0]?.id), viewerDataIds)
 				if (viewerDataIds.includes(selectedElement[0]?.id)) {
+					console.log('found showing sidebar', selectedElement[0]?.id);
 					_sidebar_show = true;
 					const selectedProto = viewerProtosData.find((item) => item.id === selectedElement[0]?.id);
 					const selectedLote = viewerLotesData.find((item) => item.id === selectedElement[0]?.id);
-					console.log(selectedProto, selectedLote,"========");
+					//console.log(selectedProto, selectedLote,"========");
 					if (selectedProto) {
 						currentProto.set(selectedProto);
 					} else if (selectedLote) {
 						currentLote.set(selectedLote);
 					}
 				} else {
-					console.log('not found hiding sidebar');
+					//console.log('not found hiding sidebar');
 					_sidebar_show = false;
 					currentLote.set(null);
 					currentProto.set(null);
@@ -80,21 +80,24 @@
 				viewer.on('load-complete', (arg) => {
 					speckleDatatree.set(viewer.getDataTree());
 					const dtBuilder = buildViewerData();
-					console.log('load comple from page.............', viewer.getDataTree());
+					//console.log('load comple from page.............', viewer.getDataTree());
 
 					finishLoading.set(true);
 				});
 			}
 		});
 	});
+
 </script>
 
-<UtilityBar />
-<div class="speckle-viewer-area">
-	<SpeckleViewer speckleStream={speckleStramToPass} />
-</div>
 
-<Sidebar bind:show={_sidebar_show} />
+<UtilityBar />
+
+<div class="speckle-viewer-area">
+<SpeckleViewer speckleStream={speckleStramToPass} />
+</div> 
+
+ <Sidebar bind:show={_sidebar_show} /> 
 
 <style>
 	.speckle-viewer-area {

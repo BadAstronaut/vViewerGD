@@ -1,7 +1,8 @@
 {
-	"name": "svelte-modh",
+	"name": "vViewer",
 	"version": "0.0.1",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
@@ -34,10 +35,10 @@
 		"prettier-plugin-svelte": "^2.8.1",
 		"smui-theme": "^7.0.0-beta.0",
 		"svelte": "^3.54.0",
+		"three": "^0.153.0",
 		"tippy.js": "^6.3.7",
 		"vite": "^4.0.0"
 	},
-	"type": "module",
 	"dependencies": {
 		"@neodrag/svelte": "^2.0.3",
 		"google-auth-library": "^8.7.0"

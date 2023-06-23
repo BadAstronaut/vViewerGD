@@ -105,6 +105,8 @@ export async function reloadViewerGetObjectsByIds(
     });
 
     return [objects];
+  } else {
+    return null;
   }
 
 
@@ -167,7 +169,7 @@ export function filterByCategoryNames(DT, categoryNames) {
     //console.log("-------",obj, );
     if (obj.category && obj.speckle_type == "Objects.Other.Revit.RevitInstance" ) {
       const catName = obj.category;
-      console.log("-------",obj, );
+      //console.log("-------",obj, );
       return categoryNames.includes(catName);
     }
 

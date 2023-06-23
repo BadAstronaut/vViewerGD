@@ -20,56 +20,60 @@
 	let lote = get(currentLote);
 
 	currentLote.subscribe((v) => {
-		lote = v;
-		console.log('-------', lote);
-		proto = null;
+		if (v) {
+			lote = v;
+			console.log('-------', lote);
+			proto = null;
+		}
 	});
 	currentProto.subscribe((v) => {
-		const loteId = v?.LoteID;
-		//get lote with teh same loteId
-		const _lote = get(viewerLotes).find((item) => item.LoteID === loteId);
-		const lote = _lote ? _lote : null;
-		console.log('-------', lote);
-		proto = v;
+		if (v) {
+			const loteId = v?.LoteID;
+			//get lote with teh same loteId
+			const _lote = get(viewerLotes).find((item) => item.LoteID === loteId);
+			const lote = _lote ? _lote : null;
+			console.log('-------', lote);
+			proto = v;
+		}
 	});
 
 	function truncateString(str, maxLength) {
-        let truncatedString = "";
+		let truncatedString = '';
 		if (str.length <= maxLength) {
-			truncatedString= str;
+			truncatedString = str;
 		} else {
 			//check if its string if it is get the first 15 characters
-            if (typeof str === "string") {
-                truncatedString = str.substring(0, maxLength) + "...";
-            } else {
-                truncatedString = str
-            }
+			if (typeof str === 'string') {
+				truncatedString = str.substring(0, maxLength) + '...';
+			} else {
+				truncatedString = str;
+			}
 		}
-        return truncatedString;
+		return truncatedString;
 	}
 </script>
 
 {#if show}
 	<nav transition:fly={{ x: 250, opacity: 1 }}>
 		{#if lote}
-        <span>Info Lote: {lote.LoteID}</span>
+			<span>Info Lote: {lote.LoteID}</span>
 			<div class="side-container">
 				{#each Object.entries(lote) as [propName, propValue]}
 					<div class="row-container">
 						<span>{propName} : </span>
-						<span>{truncateString(propValue,20)}</span>
+						<span>{truncateString(propValue, 20)}</span>
 					</div>
 				{/each}
 			</div>
 		{/if}
 
 		{#if proto}
-        <span>Info Proto: {proto.Nombre}</span>
+			<span>Info Proto: {proto.Nombre}</span>
 			<div class="side-container">
-                {#each Object.entries(proto) as [propName, propValue]}
+				{#each Object.entries(proto) as [propName, propValue]}
 					<div class="row-container">
 						<span>{propName} : </span>
-						<span>{truncateString(propValue,20)}</span>
+						<span>{truncateString(propValue, 20)}</span>
 					</div>
 				{/each}
 			</div>
@@ -84,10 +88,10 @@
 		align-items: center;
 		justify-content: flex-start;
 		width: 100%;
-        gap: 5px;
+		gap: 5px;
 		border: 1px solid rgba(0, 0, 0, 0.1);
 		border-radius: 5px;
-        padding-left: 5px;
+		padding-left: 5px;
 	}
 	.side-container {
 		display: flex;

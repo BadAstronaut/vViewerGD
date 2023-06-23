@@ -1,4 +1,3 @@
-import { Viewer } from '@speckle/viewer';
 import { readable, writable } from 'svelte/store';
 
 
