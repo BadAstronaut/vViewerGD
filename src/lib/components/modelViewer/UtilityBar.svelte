@@ -2,7 +2,7 @@
 import ToolBarButton from "./ToolBarButton.svelte";
 import { get } from "svelte/store";
 import {sphereByIDList} from "/src/lib/animation/SphereByIDList.js";
-import {activeIoTIndicators, speckleViewer, finishLoading, viewerLotes, speckleParqueLotes} from "/src/stores/toolStore.js";
+import {activeIoTIndicators, speckleViewer, finishLoading, viewerLotes, speckleParqueLotes, colorValueDisponibility} from "/src/stores/toolStore.js";
 import {selectElementsByPropNameValue, resetViewerFilters} from "/src/lib/speckle/speckleHandler.js"
 
 
@@ -15,12 +15,12 @@ let filterOff ='/icons/filter-off.svg';
 
 
 
-
 let tempObjectIds = ["ee07ac99d4cfd23c59ef94bda65bdbe0","ccb4b5e5bf2ae2bfb1524e62462155d2"];
+
 //this function will create the spheres to be assign and hide the elements
 function setTop(){
     const activeV = get(speckleViewer);
-    //console.log("activeV",activeV);
+    console.log("activeV",activeV);
     console.log(activeV, get(finishLoading), "cosonle log ");
     if(activeV.speckleViewer && get(finishLoading)){
         activeV.speckleViewer.setView('top',true);
@@ -60,17 +60,18 @@ function colorByPropertyAvailability(){
                 reservados.push(lote.id)
             }
         });
+        const colors = get(colorValueDisponibility)
         const dispQueryObject = {
             objectIds: disponibles,
-            color: 0x6fc066
+            color:colors.colorDisponible
         }
         const ocupQueryObject = {
             objectIds: ocupados,
-            color: 0xc0666f
+            color: colors.colorOcupado
         }
         const resQueryObject = {
             objectIds: reservados,
-            color: 0x666fc0
+            color: colors.colorReservado
         }
         console.log("states of color disponible and ocupado",disponibles, ocupados);
         activeV.setUserObjectColors([ocupQueryObject,dispQueryObject])

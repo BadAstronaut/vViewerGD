@@ -17,8 +17,9 @@
 		currentLote,
 		currentProto
 	} from '../stores/toolStore';
-	import { buildViewerData } from '$lib/speckle/viewerBuilder';
+	
 	import UtilityBar from '$lib/components/modelViewer/UtilityBar.svelte';
+	import DonoutKpiChart from '$lib/components/charts/DonoutKpiChart.svelte';
 	import Sidebar from '$lib/components/sidebarModal/Sidebar.svelte';
 
 	export let data;
@@ -28,6 +29,7 @@
 	let loadCompleted = false;
 	let _sidebar_show = get(sidebar_show);
 	let selectedElement = [];
+	let _viewerLotes = [];
 
 	//implement onMount function
 	onMount(async () => {
@@ -70,32 +72,31 @@
 			speckleViewerRunning = sv;
 			//console.log('from the store', get(speckleViewer));
 		});
-		speckleStream.subscribe((v) => {
-			speckleStramToPass = v;
-			let viewer = get(speckleViewer).speckleViewer;
-			//console.log('viewer from page', v);
-			if (viewer != null) {
-				reloadViewer(speckleStramToPass);
-				viewer.on('load-complete', (arg) => {
-					speckleDatatree.set(viewer.getDataTree());
-					const dtBuilder = buildViewerData();
-					//console.log('load comple from page.............', viewer.getDataTree());
-
-					finishLoading.set(true);
-				});
-			}
-		});
+		
+		// speckleStream.subscribe((v) => {
+		// 	speckleStramToPass = v;
+		// 	let viewer = get(speckleViewer).speckleViewer;
+		// 	console.log('viewer from page', v);
+		// 	if (viewer != null) {
+		// 		//reloadViewer(speckleStramToPass);
+		// 		viewer.on('load-complete', (arg) => {
+		// 			speckleDatatree.set(viewer.getDataTree());
+		// 			const dtBuilder = buildViewerData();
+					
+		// 		});
+		// 	}
+		// });
 	});
+
 </script>
 
 <UtilityBar />
 
+<SpeckleViewer speckleStream={$speckleStream} />
 
-<SpeckleViewer speckleStream={speckleStramToPass} />
-
+<DonoutKpiChart  dataProp={'Estado'} tittle="Disponibilidad:" />
 
 <Sidebar bind:show={_sidebar_show} />
 
 <style>
-
 </style>

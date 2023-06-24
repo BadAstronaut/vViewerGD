@@ -62,3 +62,9 @@ export const currentLote = writable(null)
 export const currentProto = writable(null)
 
 export const sidebar_show = writable(false)
+
+export const colorValueDisponibility = writable({
+    colorDisponible: 0x6fc066,
+    colorOcupado: 0xc0666f,
+    colorReservado: 0x666fc0,
+})

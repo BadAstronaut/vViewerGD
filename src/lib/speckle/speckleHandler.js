@@ -2,7 +2,7 @@ import { ViewerEvent } from "@speckle/viewer";
 import { getStreamCommits, getUserData } from "./speckleUtils.js";
 import { get } from "svelte/store";
 import { speckleViewer, finishLoading, speckleStream, speckleDatatree } from "../../stores/toolStore";
-
+import { buildViewerData } from '$lib/speckle/viewerBuilder';
 const token = import.meta.env.VITE_SPECKLE_TOCKEN;
 
 export async function fetchUserData() {
@@ -80,7 +80,7 @@ export async function reloadViewerGetObjectsByIds(
   ids,
   additionalStream
 ) {
-  //console.log("reloading...")
+
   const stm = fetchStreamData;
   const v = viewerI;
   const branch = await fetchStreamData(speckleStream);
@@ -90,20 +90,19 @@ export async function reloadViewerGetObjectsByIds(
     const obj = objUrl(speckleStream, branch.commits.items[0].referencedObject);
     console.log("obj", obj);
     await v.loadObject(obj, token);
-    v.zoom(1);
+    v.zoom(0.7);
 
     await v.init();
     let p = Promise.resolve(v);
     p.then(() => {
-      finishLoading.set(true);
+      speckleViewer.set({'speckleViewer':v})
       speckleDatatree.set(v.getDataTree());
+      buildViewerData();
+      finishLoading.set(true);
+      console.log("speckleViewer-----", get(speckleDatatree));
     })
-
     const speckObjects = v.getDataTree();
-    const objects = speckObjects.findAll((uui, obj) => {
-      return obj.speckle_type === "Objects.BuiltElements.Revit.FamilyInstance";
-    });
-
+    const objects = "ok"
     return [objects];
   } else {
     return null;
@@ -113,26 +112,14 @@ export async function reloadViewerGetObjectsByIds(
 }
 
 export async function reloadViewer(speckleStream) {
-  //console.log("reloading...")
   const v = get(speckleViewer).speckleViewer;
   const branch = await fetchStreamData(speckleStream);
   if (v && branch) {
-
-
-    //console.log("branch in reloadv", v.on(LoadComplete));
     //@ts-ignore
     await v.unloadAll();
     const obj = objUrl(speckleStream, branch.commits.items[0].referencedObject);
-
-    //console.log('speckle obj light',lightsObj);
     await v.loadObject(obj, token);
-    //console.log(this.$refs.view)
-    //console.log(`Loaded latest commit from branch "${branch.name}"`);
     v.zoom(1);
-    //should not be necesary to start the viewer in here
-    //await v.init();
-    //console.log(objects);
-
   }
 
 }

@@ -45,14 +45,10 @@
           currentSelection.set([])
           currentLote.set(null)
           currentProto.set(null)
-          
         }
         //console.log(v.needsRender);
-  
       })
       // @ts-ignore
-      speckleViewer.set({'speckleViewer':v})
-
       // import the data tree store and save it in here 
       //console.log("viewer store set",get(speckleViewer) )
       v.setLightConfiguration({
@@ -70,7 +66,6 @@
       let userD = fetchUserData();
       //console.log("user data");
       //Espacio Colaborativo 
-      console.log("user data lost", v);
       const speckObj = reloadViewerGetObjectsByIds(
         v,
         speckleStream,
@@ -79,7 +74,7 @@
   
       );
       //console.log("speckleObj",v.speckleRenderer._scene);
-      twoDCard(v);
+      //twoDCard(v);
 
     });
 
