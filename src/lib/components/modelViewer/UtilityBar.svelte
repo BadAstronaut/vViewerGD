@@ -172,9 +172,7 @@ function colorByPropertySector(){
 		backdrop-filter: blur(3px);
 		-webkit-backdrop-filter: blur(3px);
       width: 3em;
-      height: inherit;
+      height: 96vh;
       gap: 5px;
-      top: 2rem;
-
     }
 </style>

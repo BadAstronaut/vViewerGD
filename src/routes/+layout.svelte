@@ -77,7 +77,7 @@
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		justify-content: flex-end;
 		align-items: flex-start;
 
 
