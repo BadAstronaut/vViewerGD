@@ -117,7 +117,7 @@
       border-radius: 5px;
       opacity: 0.9;
       box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-      min-height: 100%;
+      min-height: 100vh;
       min-width: 100%;
     }
   </style>

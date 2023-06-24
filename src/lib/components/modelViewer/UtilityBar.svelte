@@ -7,6 +7,7 @@ import {selectElementsByPropNameValue, resetViewerFilters} from "/src/lib/speckl
 
 
 let setTopView ='/icons/top.svg';
+let colorBySector = '/icons/brand-google-maps.svg';
 let homeView ='/icons/home-2.svg';
 
 let colorByProperty ='/icons/traffic-lights.svg';
@@ -86,6 +87,64 @@ function removeFilterViewer (){
     resetViewerFilters();
 }
 
+//create a function to color elements based on the Sector property 
+function colorByPropertySector(){
+    const activeV = get(speckleViewer).speckleViewer;
+    const specklePropName = "Sector";
+    const sector1 = []
+    const sector2 = []
+    const sector3 = []
+    const sector4 = []
+    const sector5 = []
+    if(activeV && get(finishLoading)){
+        const lotes = get(viewerLotes)
+        //get groups of elements ids based on the state property
+        //console.log("lotes",lotes);
+        lotes.forEach(lote => {
+            //console.log("lote",lote.Sector == 2);
+            if(lote.Sector == 1){
+                sector1.push(lote.id)
+            }else if(lote.Sector == 2){
+                sector2.push(lote.id)
+            }else if(lote.Sector == 3){
+                sector3.push(lote.id)
+            }else if(lote.Sector == 4){
+                sector4.push(lote.id)
+            }else if(lote.Sector == 5){
+                sector5.push(lote.id)
+            }
+        });
+        const sector1QueryObject = {
+            objectIds: sector1,
+            color: 0x7baffe
+        }
+        const sector2QueryObject = {
+            objectIds: sector2,
+            color: 0x936fd9
+        }
+        const sector3QueryObject = {
+            objectIds: sector3,
+            color: 0xfed633
+        }
+        const sector4QueryObject = {
+            objectIds: sector4,
+            color: 0x36d392
+        }
+        const sector5QueryObject = {
+            objectIds: sector5,
+            color: 0x359ecd
+        }
+        //console.log("states of color disponible and ocupado",disponibles, ocupados);
+        activeV.setUserObjectColors([sector1QueryObject,sector2QueryObject,sector3QueryObject,sector4QueryObject,sector5QueryObject])
+        //activeV.setUserObjectColors([dispQueryObject])
+
+        //need to get all the speckle elements that have the property of passport and filter them
+        //const Selements = selectElementsByPropNameValue(specklePropName,passport.passportID)
+        //console.log("activeV",Selements);
+
+    }
+}
+
 
 </script>
 
@@ -93,7 +152,9 @@ function removeFilterViewer (){
 <ToolBarButton icon={setTopView} toExecute={setTop} active={false} />
 <ToolBarButton icon={homeView} toExecute={setHome} active={false} />
 <ToolBarButton icon={colorByProperty} toExecute={colorByPropertyAvailability} active={false} />
+<ToolBarButton icon={colorBySector} toExecute={colorByPropertySector} active={false} />
 <ToolBarButton icon={filterOff} toExecute={removeFilterViewer} active={false} />
+
 
 
 </div>

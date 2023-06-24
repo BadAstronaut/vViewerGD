@@ -1,8 +1,8 @@
 <script>
-// 	/** @type {import('./$types').PageData} */
- 	import { onMount } from 'svelte';
- 	import SpeckleViewer from '$lib/components/SpeckleViewer.svelte';
- 	import { get } from 'svelte/store';
+	// 	/** @type {import('./$types').PageData} */
+	import { onMount } from 'svelte';
+	import SpeckleViewer from '$lib/components/SpeckleViewer.svelte';
+	import { get } from 'svelte/store';
 	import { reloadViewer } from '$lib/speckle/speckleHandler';
 	import {
 		speckleStream,
@@ -15,7 +15,7 @@
 		viewerLotes,
 		sidebar_show,
 		currentLote,
-		currentProto,
+		currentProto
 	} from '../stores/toolStore';
 	import { buildViewerData } from '$lib/speckle/viewerBuilder';
 	import UtilityBar from '$lib/components/modelViewer/UtilityBar.svelte';
@@ -31,8 +31,7 @@
 
 	//implement onMount function
 	onMount(async () => {
-		
-		//handle sidebar show and hide 
+		//handle sidebar show and hide
 		currentSelection.subscribe((v) => {
 			selectedElement = v;
 			const viewerProtosData = get(viewerProtos);
@@ -87,25 +86,16 @@
 			}
 		});
 	});
-
 </script>
-
 
 <UtilityBar />
 
-<div class="speckle-viewer-area">
-<SpeckleViewer speckleStream={speckleStramToPass} />
-</div> 
 
- <Sidebar bind:show={_sidebar_show} /> 
+<SpeckleViewer speckleStream={speckleStramToPass} />
+
+
+<Sidebar bind:show={_sidebar_show} />
 
 <style>
-	.speckle-viewer-area {
-		width: 100%;
-		height: full;
-	}
-	.sidebar {
-		position: relative;
-		width: 50rem;
-	}
+
 </style>
