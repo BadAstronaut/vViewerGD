@@ -109,7 +109,7 @@
 		position: absolute;
 		top: 0;
 		right: 0;
-		height: 95vh;
+		height: 100vh;
 		padding: 2rem 1rem 0.6rem;
 		box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
 		overflow-y: auto;
@@ -124,7 +124,6 @@
 		background: rgba(255, 255, 255, 0.7);
 		backdrop-filter: blur(3px);
 		-webkit-backdrop-filter: blur(3px);
-		margin-top: 1vh;
 		gap: 5px;
 	}
 </style>

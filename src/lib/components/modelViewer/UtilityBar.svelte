@@ -149,13 +149,11 @@ function colorByPropertySector(){
 </script>
 
 <div class="utility-bar" > 
-<ToolBarButton icon={setTopView} toExecute={setTop} active={false} />
-<ToolBarButton icon={homeView} toExecute={setHome} active={false} />
-<ToolBarButton icon={colorByProperty} toExecute={colorByPropertyAvailability} active={false} />
-<ToolBarButton icon={colorBySector} toExecute={colorByPropertySector} active={false} />
-<ToolBarButton icon={filterOff} toExecute={removeFilterViewer} active={false} />
-
-
+<ToolBarButton icon={setTopView} toExecute={setTop} active={false} commandName = "Set Top View"/>
+<ToolBarButton icon={homeView} toExecute={setHome} active={false} commandName = "Set Home View"/>
+<ToolBarButton icon={colorByProperty} toExecute={colorByPropertyAvailability} active={false} commandName = "Color por Ocupado, Disponible Reservado"/>
+<ToolBarButton icon={colorBySector} toExecute={colorByPropertySector} active={false} commandName = "Color por Sectores"/>
+<ToolBarButton icon={filterOff} toExecute={removeFilterViewer} active={false} commandName = "Filter Reset"/>
 
 </div>
 
@@ -165,16 +163,18 @@ function colorByPropertySector(){
       display: flex;
       flex-direction: column;
       align-items: center;
+        justify-content: flex-start;
       z-index: 3;
       border-radius: 5px;
       /* From https://css.glass */
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(3px);
-      -webkit-backdrop-filter: blur(3px);
-      width: 2.5em;
-      margin-top: 2em;
+      /* From https://css.glass */
+		background: rgba(255, 255, 255, 0.7);
+		backdrop-filter: blur(3px);
+		-webkit-backdrop-filter: blur(3px);
+      width: 3em;
+      height: inherit;
       gap: 5px;
-      padding-left: 5px;
-      padding-bottom: 10px;
+      top: 2rem;
+
     }
 </style>

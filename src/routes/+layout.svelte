@@ -74,15 +74,23 @@
 		overflow-y: scroll;
 	}
 	main {
-		height: 100% ;
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: flex-start;
+
+
 	}
 
 	footer {
 		text-align: center;
-		margin: 0;
-		padding: 0;
+		position: absolute;
 		color: rgba(94, 104, 121, 0.388);
 		padding: 0;
-		max-height: 1em;
+		bottom: 0;
+		left: 50%;
+		max-height: 4vh;
+		z-index: 1000;
 	}
 </style>
