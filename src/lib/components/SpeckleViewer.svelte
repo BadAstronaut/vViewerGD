@@ -69,9 +69,9 @@
 			intensity: 9,
 			radius: 0
 		});
-		//console.log("viewer here.....", speckleStream);
+		console.log("viewer here.....", speckleStream);
 		//let branch =  fetchStreamData(speckleStreams.NLW01);
-		let userD = fetchUserData();
+		//let userD = fetchUserData();
 		//console.log("user data");
 		//Espacio Colaborativo
 		const speckObj = reloadViewerGetObjectsByIds(v, speckleStream, [], []);
@@ -86,26 +86,26 @@
 		earthDiv.className = 'label';
 		earthDiv.textContent = 'Earttttttt9999999999999999999999999999ttth';
 		earthDiv.style.backgroundColor = 'Black';
-    earthDiv.style.color = 'white';
-    earthDiv.style.padding = '5px';
-    earthDiv.style.borderRadius = '5px';
-    earthDiv.style.fontSize = '120px';
-    earthDiv.style.fontFamily = 'sans-serif';
-    earthDiv.style.fontWeight = 'bold';
-    earthDiv.style.textAlign = 'center';
-    earthDiv.style.width = '100px';
-    earthDiv.style.height = '100px';
-    earthDiv.style.border = '1px solid black';
+		earthDiv.style.color = 'white';
+		earthDiv.style.padding = '5px';
+		earthDiv.style.borderRadius = '5px';
+		earthDiv.style.fontSize = '120px';
+		earthDiv.style.fontFamily = 'sans-serif';
+		earthDiv.style.fontWeight = 'bold';
+		earthDiv.style.textAlign = 'center';
+		earthDiv.style.width = '100px';
+		earthDiv.style.height = '100px';
+		earthDiv.style.border = '1px solid black';
 
 		const earthLabel = new CSS2DObject(earthDiv);
 		earthLabel.position.set(10, 1, 0);
 		earthLabel.scale.set(50, 50, 50);
 		earthLabel.layers.set(2);
 
-    const sphere  = ThreeSphere({x:0,y:0,z:0})
+		const sphere = ThreeSphere({ x: 0, y: 0, z: 0 });
 		scene.add(earthLabel);
-    console.log('sphere',sphere);
-    sphere.position.set(0,10,1)
+		console.log('sphere', sphere);
+		sphere.position.set(0, 10, 1);
 		//scene.add(sphere);
 
 		console.log('scene data tree', viewerVal.parentNode);
