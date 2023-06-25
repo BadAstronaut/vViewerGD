@@ -13,7 +13,7 @@
 		"smui-theme": "smui-theme compile static/smui.css -i src/theme"
 	},
 	"engines": {
-		"node": "18.16.0"
+		"node": "18.x"
 	  },
 	"devDependencies": {
 		"@ionic/core": "^6.6.2",
