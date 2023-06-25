@@ -12,6 +12,9 @@
 		"prepare": "npm run smui-theme",
 		"smui-theme": "smui-theme compile static/smui.css -i src/theme"
 	},
+	"engines": {
+		"node": "18.16.0"
+	  },
 	"devDependencies": {
 		"@ionic/core": "^6.6.2",
 		"@picocss/pico": "^1.5.6",
