@@ -80,10 +80,11 @@ export async function reloadViewerGetObjectsByIds(
   ids,
   additionalStream
 ) {
-  console.log("branch in reloadv----", branch, speckleStream);
   const stm = fetchStreamData;
   const v = viewerI;
   const branch = await fetchStreamData(speckleStream);
+  console.log("branch in reloadv----", branch, speckleStream);
+
   await v.unloadAll();
   if (branch) {
     const obj = objUrl(speckleStream, branch.commits.items[0].referencedObject);
