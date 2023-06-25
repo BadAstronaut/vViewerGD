@@ -82,6 +82,7 @@ export async function reloadViewerGetObjectsByIds(
 ) {
   const stm = fetchStreamData;
   const v = viewerI;
+  console.log("currentT", token);
   const branch = await fetchStreamData(speckleStream);
   console.log("branch in reloadv----", branch, speckleStream);
 
@@ -295,7 +296,7 @@ async function fetchStreamData(speckleStream) {
 
         let mainBranch = streamData.branches.items.find((b) => b.name == "main");
         branch = mainBranch;
-        //console.log('Branch:', branch)
+        console.log('Branch:', branch)
       }
       else {
         //fix later not sure why this happens
