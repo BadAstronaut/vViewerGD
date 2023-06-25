@@ -8,6 +8,7 @@
 
 	let _propValue = '';
 	let _urlProp = false;
+	let icon = "/icons/arrow-badge-right.svg"
 
 	function truncateString(str, maxLength) {
 		let truncatedString = '';
@@ -27,6 +28,7 @@
 	//if not return the prop value
 	function checkIfUrl(propValue) {
 		if (propValue.includes('http') || propValue.includes('https')) {
+			_urlProp = true;
 			return `<a href="${propValue}">${propValue}</a>`;
 		} else {
 			return propValue;
@@ -36,10 +38,9 @@
 	onMount(() => {
 		//check if propValue is string
 		let _propValueType = typeof propValue === 'string' ? propValue : true;
-		console.log(_propValueType, 'propValue');
-		if (_propValueType) {
-			_urlProp = checkIfUrl(propValue) ? true : false;
-            console.log(_urlProp, 'propValue');
+		if (typeof propValue === 'string' || propValue instanceof String) {
+			//console.log('propValue is string', propValue);
+			return checkIfUrl(propValue)
 		}else
         {
             _propValue = propValue;
@@ -48,11 +49,12 @@
 </script>
 
 <li class="row-container">
-	<span>{propName} : </span>
+	<img src={icon} alt="-" />
+	<span class="prop-style" >{propName} : </span>
 	{#if _urlProp}
-		<a a href={propValue} target="_blank">{truncateString(propValue, 20)}</a>
+		<a class="prop-style" a href={propValue} target="_blank">{truncateString(propValue, 20)}</a>
 	{:else}
-		<p>{truncateString(propValue, 20)}</p>
+		<p class="prop-style">{truncateString(propValue, 20)}</p>
 	{/if}
 </li>
 
@@ -60,16 +62,18 @@
 	.row-container {
 		display: flex;
 		flex-direction: row;
-		align-items: center;
+		align-items: start;
 		justify-content: flex-start;
 		width: 100%;
-		height: 1em;
-		gap: 5px;
-		border: 1px solid rgba(0, 0, 0, 0.1);
+		height: 0.9em;
 		border-radius: 5px;
-		padding-left: 5px;
+		margin: 0;
 	}
-    p{
-        margin: 0;
-    }
+	.prop-style{
+		font-size: 0.9em;
+		font-weight: 300;
+		line-height: 1.2em;
+
+
+	}
 </style>

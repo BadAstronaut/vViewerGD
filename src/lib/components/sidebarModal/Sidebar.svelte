@@ -23,7 +23,7 @@
 	currentLote.subscribe((v) => {
 		if (v) {
 			lote = v;
-			console.log('-------', lote);
+			//console.log('-------', lote);
 			proto = null;
 		}
 	});

@@ -63,15 +63,15 @@ function colorByPropertyAvailability(){
         const colors = get(colorValueDisponibility)
         const dispQueryObject = {
             objectIds: disponibles,
-            color:colors.colorDisponible
+            color:colors.Disponible
         }
         const ocupQueryObject = {
             objectIds: ocupados,
-            color: colors.colorOcupado
+            color: colors.Ocupado
         }
         const resQueryObject = {
             objectIds: reservados,
-            color: colors.colorReservado
+            color: colors.Reservado
         }
         console.log("states of color disponible and ocupado",disponibles, ocupados);
         activeV.setUserObjectColors([ocupQueryObject,dispQueryObject])
