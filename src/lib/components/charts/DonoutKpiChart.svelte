@@ -3,6 +3,7 @@
 	import './../../../css/styles.css';
 	import { onMount } from 'svelte';
 	import { Chart, registerables } from 'chart.js';
+	import { changeElementColorByIds } from '$lib/speckle/speckleHandler.js';
 	import { colorValueDisponibility, viewerLotes } from '/src/stores/toolStore.js';
 	Chart.register(...registerables);
 
@@ -18,8 +19,8 @@
 	let chart;
 	let disponibleValue = '';
 	//create a function to process the
-    //this is the only way to update the chart, if we subscribe to the parent level
-    //the value is not updated in the component 
+	//this is the only way to update the chart, if we subscribe to the parent level
+	//the value is not updated in the component
 	viewerLotes.subscribe((v) => {
 		console.log('from the store', v);
 		dataList = v;
@@ -35,10 +36,10 @@
 			disponibleValue = chartData[disponibleIndex].value;
 
 			//console.log(chartLabels, chartValues, 'charting .... ');
-            if (chart) {
-                chart.update();
-            }
-        }
+			if (chart) {
+				chart.update();
+			}
+		}
 	});
 	onMount(async (promise) => {
 		console.log('dataList comes empty somethinmes ? ', dataList);
@@ -50,7 +51,11 @@
 				datasets: [
 					{
 						label: 'Estado',
-						backgroundColor: ['rgba(192,102,111,0.6)','rgba(111,192,102,0.6)', 'rgba(102,111,192,0.6)'],
+						backgroundColor: [
+							'rgba(192,102,111,0.6)',
+							'rgba(111,192,102,0.6)',
+							'rgba(102,111,192,0.6)'
+						],
 						borderColor: 'rgba(94,104,121,0.388)',
 						borderWidth: 0.1,
 						pointRadius: 0.1,
@@ -61,6 +66,7 @@
 				]
 			},
 			options: {
+				onClick: handleClick,
 				responsive: true,
 				maintainAspectRatio: false,
 				plugins: {
@@ -79,7 +85,6 @@
 				//animation.animateRotate: true,
 			}
 		});
-
 	});
 
 	//create a function that extract an array of unique values from the dataList using the dataProp as filter counting how many occurrencies there area
@@ -120,6 +125,28 @@
 		chartArray.sort((a, b) => (a.value > b.value ? -1 : 1));
 		console.log(dataList, 'chartArray');
 		return chartArray;
+	}
+	function handleClick(event, elements) {
+		if (elements.length > 0) {
+			let segmentIndex = elements[0].index;
+			let segmentLabel = chart.data.labels[segmentIndex];
+			//get the color from the colorValueDisponibility store based on the segment label
+			let color = getColorByKey(segmentLabel);
+			console.log('color', color);
+			//get the ids based on the Estado property from the dataList
+			let ids = dataList.filter((item) => item[dataProp] === segmentLabel).map((item) => item.id);
+			console.log('Clicked on segment:', ids);
+			changeElementColorByIds(ids, color);
+		}
+	}
+	function getColorByKey(key) {
+		let color;
+		colorValueDisponibility.subscribe((values) => {
+			if (key in values) {
+				color = values[key];
+			}
+		});
+		return color;
 	}
 </script>
 

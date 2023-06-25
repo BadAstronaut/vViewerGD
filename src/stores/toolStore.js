@@ -64,7 +64,7 @@ export const currentProto = writable(null)
 export const sidebar_show = writable(false)
 
 export const colorValueDisponibility = writable({
-    colorDisponible: 0x6fc066,
-    colorOcupado: 0xc0666f,
-    colorReservado: 0x666fc0,
+    Disponible: 0x6fc066,
+    Ocupado: 0xc0666f,
+    Reservado: 0x666fc0,
 })

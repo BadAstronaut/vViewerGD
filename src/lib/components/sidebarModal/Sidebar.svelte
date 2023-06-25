@@ -13,6 +13,7 @@
 		currentProto
 	} from '/src/stores/toolStore';
 	import { SpriteMaterial } from 'three';
+	import SideBarRow from './SideBarRow.svelte';
 
 	export let show = false;
 	let modal_show = false;
@@ -57,24 +58,18 @@
 	<nav transition:fly={{ x: 250, opacity: 1 }}>
 		{#if lote}
 			<span>Info Lote: {lote.LoteID}</span>
-			<div class="side-container">
+			<ol class="side-container">
 				{#each Object.entries(lote) as [propName, propValue]}
-					<div class="row-container">
-						<span>{propName} : </span>
-						<span>{truncateString(propValue, 20)}</span>
-					</div>
+				<SideBarRow propName = {propName} propValue = {propValue}/>
 				{/each}
-			</div>
+			</ol>
 		{/if}
 
 		{#if proto}
 			<span>Info Proto: {proto.Nombre}</span>
 			<div class="side-container">
 				{#each Object.entries(proto) as [propName, propValue]}
-					<div class="row-container">
-						<span>{propName} : </span>
-						<span>{truncateString(propValue, 20)}</span>
-					</div>
+				<SideBarRow propName = {propName} propValue = {propValue}/>
 				{/each}
 			</div>
 		{/if}
