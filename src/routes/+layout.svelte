@@ -28,6 +28,8 @@
 		flex-direction: row;
 		padding-top: 0.5rem;
 		padding-bottom: 0.5rem;
+		width: 100%;
+		height: 1vh;
 	}
 	.title {
 		font-size: 0.9rem;
@@ -72,10 +74,13 @@
 		flex-direction: column;
 		justify-content: flex-start;
 		align-items: flex-start;
-		height: 98vh;
+		height: 100vh;
+		width: 120vw;
+		margin: 0;
+		padding: 0;
 	}
 	main {
-		height: 100%;
+		height: 98vh;
 		width: 100%;
 		display: flex;
 		flex-direction: column;
@@ -94,5 +99,6 @@
 		height: 1vh;
 		width: 100%;
 		z-index: 1000;
+		margin: 0;
 	}
 </style>
