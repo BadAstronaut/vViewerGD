@@ -189,7 +189,7 @@
 	.donout-kpi-holder {
 		height: 12em;
 		position: absolute;
-		left: 3em;
+		left: 2em;
 		bottom: 1.5em;
 		width: 12em;
 		margin: 0.4em;

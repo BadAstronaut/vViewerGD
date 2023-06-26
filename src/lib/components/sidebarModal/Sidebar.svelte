@@ -102,9 +102,9 @@
 	}
 	nav {
 		position: absolute;
-		top: 0;
+		top: 3rem;
 		right: 0;
-		height: 100vh;
+		height: 100%;
 		padding: 2rem 1rem 0.6rem;
 		box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
 		overflow-y: auto;

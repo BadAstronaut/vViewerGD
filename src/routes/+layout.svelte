@@ -74,11 +74,13 @@
 		overflow-y: scroll;
 	}
 	main {
-		height: 100vh;
+		height: 100%;
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
 		align-items: flex-start;
+		margin: 0;
+		padding: 0;
 
 
 	}
@@ -89,8 +91,7 @@
 		color: rgba(94, 104, 121, 0.388);
 		padding: 0;
 		bottom: 0;
-		left: 50%;
-		max-height: 4vh;
+		left: 40%;
 		z-index: 1000;
 	}
 </style>

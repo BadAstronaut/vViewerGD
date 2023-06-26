@@ -17,16 +17,18 @@
 		currentLote,
 		currentProto
 	} from '../stores/toolStore';
-	
+
 	import UtilityBar from '$lib/components/modelViewer/UtilityBar.svelte';
 	import DonoutKpiChart from '$lib/components/charts/DonoutKpiChart.svelte';
 	import Sidebar from '$lib/components/sidebarModal/Sidebar.svelte';
+	import { Circle2 } from 'svelte-loading-spinners';
+	import { navigating } from '$app/stores';
 
 	export let data;
 
 	let speckleStramToPass = '';
 	let speckleViewerRunning = '';
-	let loadCompleted = false;
+	let loadCompleted = $finishLoading;
 	let _sidebar_show = get(sidebar_show);
 	let selectedElement = [];
 	let _viewerLotes = [];
@@ -72,7 +74,7 @@
 			speckleViewerRunning = sv;
 			//console.log('from the store', get(speckleViewer));
 		});
-		
+
 		// speckleStream.subscribe((v) => {
 		// 	speckleStramToPass = v;
 		// 	let viewer = get(speckleViewer).speckleViewer;
@@ -82,21 +84,38 @@
 		// 		viewer.on('load-complete', (arg) => {
 		// 			speckleDatatree.set(viewer.getDataTree());
 		// 			const dtBuilder = buildViewerData();
-					
+
 		// 		});
 		// 	}
 		// });
 	});
-
+	finishLoading.subscribe((v) => {
+		console.log('finishLoading', v);
+		if (v) {
+			loadCompleted = true;
+		} else {
+			loadCompleted = false;
+		}
+	});
 </script>
-
-<UtilityBar />
 
 <SpeckleViewer speckleStream={$speckleStream} />
 
-<DonoutKpiChart  dataProp={'Estado'} tittle="Disponibilidad:" />
-
-<Sidebar bind:show={_sidebar_show} />
+{#if loadCompleted}
+	<UtilityBar />
+	<DonoutKpiChart dataProp={'Estado'} tittle="Disponibilidad:" />
+	<Sidebar bind:show={_sidebar_show} />
+{:else}
+	<div class="center-loader">
+		<Circle2 size="60" color="#FF3E00" unit="px" duration="1.5s" />
+	</div>
+{/if}
 
 <style>
+	.center-loader {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
 </style>
