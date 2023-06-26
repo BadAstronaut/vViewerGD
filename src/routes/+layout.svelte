@@ -22,19 +22,12 @@
 
 <style>
 	nav {
-		position: absolute;
 		display: flex;
 		align-items: flex-start;
 		justify-content: flex-start;
 		flex-direction: row;
 		padding-top: 0.5rem;
 		padding-bottom: 0.5rem;
-	}
-	footer {
-		text-transform: uppercase;
-		font-size: 0.7rem;
-		letter-spacing: 0.1px;
-		font-weight: 500;
 	}
 	.title {
 		font-size: 0.9rem;
@@ -71,10 +64,19 @@
 	:global(html) {
 		/* scrollbar-gutter: stable; */
 		overflow: hidden;
-		overflow-y: scroll;
+		overflow-y: hidden;
+	}
+	:global(body){
+		/* scrollbar-gutter: stable; */
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: flex-start;
+		height: 98vh;
 	}
 	main {
 		height: 100%;
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
@@ -87,11 +89,10 @@
 
 	footer {
 		text-align: center;
-		position: absolute;
 		color: rgba(94, 104, 121, 0.388);
 		padding: 0;
-		bottom: 0;
-		left: 40%;
+		height: 1vh;
+		width: 100%;
 		z-index: 1000;
 	}
 </style>

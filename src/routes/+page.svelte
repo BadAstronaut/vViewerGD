@@ -98,13 +98,14 @@
 		}
 	});
 </script>
-
 <SpeckleViewer speckleStream={$speckleStream} />
+
 {#if loadCompleted}
 	<UtilityBar />
 	<DonoutKpiChart dataProp={'Estado'} tittle="Disponibilidad:" />
 	<Sidebar bind:show={_sidebar_show} />
 {:else}
+
 	<div class="center-loader">
 		<Circle2 size="60" color="#FF3E00" unit="px" duration="1.5s" />
 	</div>
