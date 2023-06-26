@@ -100,7 +100,6 @@
 </script>
 
 <SpeckleViewer speckleStream={$speckleStream} />
-
 {#if loadCompleted}
 	<UtilityBar />
 	<DonoutKpiChart dataProp={'Estado'} tittle="Disponibilidad:" />

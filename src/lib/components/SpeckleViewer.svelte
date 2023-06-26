@@ -76,7 +76,7 @@
 		//Espacio Colaborativo
 		const speckObj = reloadViewerGetObjectsByIds(v, speckleStream, [], []);
 		//console.log("speckleObj",v.speckleRenderer._scene);
-		twoDCard(v);
+		//twoDCard(v);
 	});
 
 	function twoDCard(v) {
