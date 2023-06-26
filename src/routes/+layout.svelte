@@ -80,6 +80,8 @@
 		padding: 0;
 	}
 	main {
+		position: relative;
+		
 		height: 98vh;
 		width: 100%;
 		display: flex;
