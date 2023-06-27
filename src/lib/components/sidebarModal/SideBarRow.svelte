@@ -68,6 +68,7 @@
 		height: 0.9em;
 		border-radius: 5px;
 		margin: 0;
+		padding: 0.7em;
 	}
 	.prop-style{
 		font-size: 0.9em;
@@ -75,5 +76,11 @@
 		line-height: 1.2em;
 
 
+	}
+	span {
+		font-size: 0.9em;
+		font-weight: 500;
+		line-height: 1.2em;
+		align-self: self-start;
 	}
 </style>

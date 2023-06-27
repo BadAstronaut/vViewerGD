@@ -77,17 +77,6 @@
 {/if}
 
 <style>
-	.row-container {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: flex-start;
-		width: 100%;
-		gap: 5px;
-		border: 1px solid rgba(0, 0, 0, 0.1);
-		border-radius: 5px;
-		padding-left: 5px;
-	}
 	.side-container {
 		display: flex;
 		flex-direction: column;
@@ -105,14 +94,14 @@
 		right: 0;
 		top:3rem;
 		bottom: 0;
-		height: 100%;
+		height: 90%;
 		padding: 2rem 1rem 0.6rem;
 		box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
 		overflow-y: auto;
 		width: 20em;
 		display: flex;
 		flex-direction: column;
-		align-items: start;
+		align-items: flex-start;
 		justify-content: flex-start;
 		z-index: 5;
 		border-radius: 5px;
@@ -120,6 +109,5 @@
 		background: rgba(255, 255, 255, 0.7);
 		backdrop-filter: blur(3px);
 		-webkit-backdrop-filter: blur(3px);
-		gap: 5px;
 	}
 </style>
