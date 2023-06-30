@@ -8,7 +8,10 @@
 		finishLoading,
 		viewerLotes,
 		speckleParqueLotes,
-		colorValueDisponibility
+		colorValueDisponibility,
+		sidebar_show,
+		servicesSelected,
+		currentSelection
 	} from '/src/stores/toolStore.js';
 	import {
 		selectElementsByPropNameValue,
@@ -18,6 +21,7 @@
 	let setTopView = '/icons/top.svg';
 	let colorBySector = '/icons/brand-google-maps.svg';
 	let homeView = '/icons/home-2.svg';
+	let services = '/icons/bolt.svg';
 
 	let colorByProperty = '/icons/traffic-lights.svg';
 	let filterOff = '/icons/filter-off.svg';
@@ -155,6 +159,20 @@
 			//console.log("activeV",Selements);
 		}
 	}
+	//filter by service, the funtion will trigger the side pannel displaying the multiselect. we will pass a initial serivce like "agua"
+	function filterByService(service) {
+		const _sidebar_show = get(sidebar_show);
+		if (_sidebar_show) {
+			console.log('filter by service', service);
+
+			sidebar_show.set(false);
+			servicesSelected.set([]);
+			currentSelection.set([]);
+		} else {
+			sidebar_show.set(true);
+			servicesSelected.set(["Agua"]);
+		}
+	}
 </script>
 
 <div class="utility-bar">
@@ -171,6 +189,12 @@
 		toExecute={colorByPropertySector}
 		active={false}
 		commandName="Color por Sectores"
+	/>
+	<ToolBarButton
+		icon={services}
+		toExecute={filterByService}
+		active={false}
+		commandName="Filter Reset"
 	/>
 	<ToolBarButton
 		icon={filterOff}
@@ -196,7 +220,7 @@
 		-webkit-backdrop-filter: blur(3px);
 		width: 3em;
 		height: 100%;
-        top: 3rem;
+		top: 3rem;
 		gap: 5px;
 	}
 </style>

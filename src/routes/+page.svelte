@@ -75,19 +75,6 @@
 			//console.log('from the store', get(speckleViewer));
 		});
 
-		// speckleStream.subscribe((v) => {
-		// 	speckleStramToPass = v;
-		// 	let viewer = get(speckleViewer).speckleViewer;
-		// 	console.log('viewer from page', v);
-		// 	if (viewer != null) {
-		// 		//reloadViewer(speckleStramToPass);
-		// 		viewer.on('load-complete', (arg) => {
-		// 			speckleDatatree.set(viewer.getDataTree());
-		// 			const dtBuilder = buildViewerData();
-
-		// 		});
-		// 	}
-		// });
 	});
 	finishLoading.subscribe((v) => {
 		console.log('finishLoading', v);
@@ -97,6 +84,11 @@
 			loadCompleted = false;
 		}
 	});
+	sidebar_show.subscribe((v) => {
+		console.log('sidebar_show', v);
+		_sidebar_show = v;
+	});
+
 </script>
 <SpeckleViewer speckleStream={$speckleStream} />
 
