@@ -1,10 +1,12 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { fly } from 'svelte/transition';
+    import { get } from 'svelte/store';
     export let id = '';
     export let value = [];
     export let readonly = false;
     export let placeholder = '';
+    export let onChange
   
     let input, 
       inputValue, 
@@ -15,14 +17,16 @@
       first = true,
       slot 
     const iconClearPath = 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z';
-  
+    $: onChange(selected);
     onMount(() => {
       slot.querySelectorAll('option').forEach(o => {
         o.selected && !value.includes(o.value) && (value = [...value, o.value]);
         options = [...options, {value: o.value, name: o.textContent}]
+
       });
       value && (selected = options.reduce((obj, op) => value.includes(op.value) ? {...obj, [op.value]: op} : obj, {}));
       first = false;
+      //console.log ("loaaading", selected)
     });
   
     $: if (!first) value = Object.values(selected).map(o => o.value);
@@ -32,12 +36,16 @@
   
     function add(token) {
       if (!readonly) selected[token.value] = token;
+      //console.log('addddddselected');
+
     }
   
     function remove(value) {
       if (!readonly) {
         const {[value]: val, ...rest} = selected;
         selected = rest;
+        //console.log('remoooooveeeselected', selected);
+
       }
     }
   
@@ -81,6 +89,8 @@
         inputValue = '';
       } else {
         optionsVisibility(true);
+        //console.log("current seeeelectedeeee",selected);
+
       }
     }
   

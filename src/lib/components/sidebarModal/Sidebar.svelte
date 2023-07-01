@@ -7,13 +7,19 @@
 		finishLoading,
 		viewerProtos,
 		viewerLotes,
+		speckleViewer,
 		sidebar_show,
 		currentSelection,
 		currentLote,
 		currentProto,
 		servicesSelected,
-		servicesAvailable
+		servicesAvailable,
+		colorValueDisponibility
 	} from '/src/stores/toolStore';
+	import {
+		selectElementsByPropNameValue,
+		resetViewerFilters
+	} from '/src/lib/speckle/speckleHandler.js';
 	import { SpriteMaterial } from 'three';
 	import SideBarRow from './SideBarRow.svelte';
 	import MultiSelect from './MultiSelect.svelte';
@@ -23,7 +29,7 @@
 	let proto = get(currentProto);
 	let lote = get(currentLote);
 	let filterService = false;
-	let filterSelectedServices = ['Agua'];
+	let _servicesSelected = $servicesSelected;
 
 	currentLote.subscribe((v) => {
 		if (v) {
@@ -44,13 +50,13 @@
 	});
 
 	servicesSelected.subscribe((v) => {
+		//console.log('service selected change', v,_servicesSelected);
 		//check if the array is empty
 		if (v.length != 0) {
-			console.log('empty array', v);
 			filterService = true;
-		}
-		else {
+		} else {
 			filterService = false;
+			//console.log('filterService hidden', v);
 		}
 	});
 
@@ -68,10 +74,48 @@
 		}
 		return truncatedString;
 	}
+	//here we will write the function that filters the viewer elements based on containing a service or not
+	function viewerFilterByServices(selectedArray) {
+		const selectedArrayKeys = Object.keys(selectedArray);
+		const colors = get(colorValueDisponibility);
+		const activeV = get(speckleViewer).speckleViewer;
+		const _viewerLotes = get(viewerLotes);
+		if (selectedArrayKeys.length != 0 && get(finishLoading)) {
+			//for each _viewerLotes we need to check Servicios prop and see which of the selected filters are in the array if they are all present select it if not pass it
+			const filteredLotes = _viewerLotes.filter((lote) => {
+				const hasSelectedServices = selectedArrayKeys.every((selectedService) => {
+					return lote.Servicios.includes(selectedService);
+				});
+				//console.log('hasSelectedServices',hasSelectedServices);
+				return hasSelectedServices;
+			});
+			//get the array of ids from the filteredLotes
+			const filteredLotesIds = filteredLotes.map((lote) => lote.id);
+			const dispQueryObject = {
+				objectIds: filteredLotesIds,
+				color: colors.Disponible
+			};
+			activeV.setUserObjectColors([dispQueryObject])
+			console.log('viewerLotes', filteredLotesIds);
+		}
+		else{
+			resetViewerFilters();
+		}
+	}
 </script>
 
 {#if show}
 	<nav class="side-bar" transition:fly={{ x: 250, opacity: 1 }}>
+		{#if filterService}
+			<span>Filtro por Servicio:</span>
+			<div class="side-service-filter">
+				<MultiSelect id="lang" onChange={(selectedArray) => viewerFilterByServices(selectedArray)}>
+					{#each get(servicesAvailable) as service}
+						<option value={service}>{service}</option>
+					{/each}
+				</MultiSelect>
+			</div>
+		{/if}
 		{#if lote}
 			<span>Info Lote: {lote.LoteID}</span>
 			<ol class="side-container">
@@ -87,16 +131,6 @@
 				{#each Object.entries(proto) as [propName, propValue]}
 					<SideBarRow {propName} {propValue} />
 				{/each}
-			</div>
-		{/if}
-		{#if filterService}
-			<span>Filtro por Servicio:</span>
-			<div class="side-service-filter">
-				<MultiSelect id="lang" bind:filterSelectedServices>
-					{#each get(servicesAvailable) as service}
-						<option value={service}>{service}</option>
-					{/each}
-				</MultiSelect>
 			</div>
 		{/if}
 	</nav>

@@ -18,7 +18,8 @@
 		speckleDatatree,
 		currentLote,
 		currentProto,
-		sidebar_show
+		sidebar_show,
+		servicesSelected,
 	} from '../../stores/toolStore';
 	export let speckleStream;
 	//const speckleViewer = toolStore.speckleViewer
@@ -53,6 +54,7 @@
 				currentSelection.set([]);
 				currentLote.set(null);
 				currentProto.set(null);
+				servicesSelected.set([]);
 			}
 			//console.log(v.needsRender);
 		});

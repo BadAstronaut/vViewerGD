@@ -71,4 +71,5 @@ export const colorValueDisponibility = writable({
 //create the services available array
 export const servicesAvailable = readable(["Agua", "Electricidad", "Red Sanitaria"])
 //this variable will hold the service selected array from the filter 
-export const servicesSelected = writable([])
+export const servicesSelected = writable(["Agua"])
+

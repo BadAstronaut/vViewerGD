@@ -15,7 +15,7 @@
 		viewerLotes,
 		sidebar_show,
 		currentLote,
-		currentProto
+		currentProto, 
 	} from '../stores/toolStore';
 
 	import UtilityBar from '$lib/components/modelViewer/UtilityBar.svelte';
