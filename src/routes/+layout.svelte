@@ -59,7 +59,7 @@
 		position: absolute;
 		top: -5px;
 		left: 0;
-		max-width: 3.5em;
+		width: 4.5em;
 		height: auto;
 		padding: 5px;
 	}
