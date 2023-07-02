@@ -28,8 +28,9 @@ function processGoogleCalendarEvents(events) {
             const baseCalendarObject = {
                 start: new Date(event.start.dateTime),
                 end: new Date(event.end.dateTime),
-                eventName: event.organizer.displayName,
-                eventType: event.eventType
+                eventName: event.summary,
+                eventType: event.eventType,
+                eventSpace: event.description
             }
             //console.log("event.start", baseCalendarObject);
             baseCalendarArray.push(baseCalendarObject)

@@ -24,7 +24,7 @@
 	import Sidebar from '$lib/components/sidebarModal/Sidebar.svelte';
 	import { Circle2 } from 'svelte-loading-spinners';
 	import { navigating } from '$app/stores';
-
+	import GoogleCalendarInfoContainer from '$lib/components/googleComponents/GoogleCalendarInfoContainer.svelte';
 	export let data;
 
 	let speckleStramToPass = '';
@@ -97,6 +97,7 @@
 
 {#if loadCompleted}
 	<UtilityBar />
+	<GoogleCalendarInfoContainer />
 	<DonoutKpiChart dataProp={'Estado'} tittle="Disponibilidad:" />
 	<Sidebar bind:show={_sidebar_show} />
 {:else}
