@@ -1,7 +1,6 @@
 import { error } from '@sveltejs/kit';
 import {get} from 'svelte/store';
-import {speckleStream, daluxSafetyDataActiveProject} from "../stores/toolStore";
- 
+import {speckleStream, daluxSafetyDataActiveProject, } from "../stores/toolStore";
 /** @type {import('./$types').PageLoad} */
 //vivienda interface 
 const viviendaInterface = {

@@ -73,3 +73,6 @@ export const servicesAvailable = readable(["Agua", "Electricidad", "Red Sanitari
 //this variable will hold the service selected array from the filter 
 export const servicesSelected = writable(["Agua"])
 
+export const parkOperationCalendarID = readable("c_aaf71807274436569a51ea7e5cd5ba450cf11c70c083ac632a68cc4b9ff60dfc@group.calendar.google.com")
+
+export const googleCalendarEventsByDay = writable([])

@@ -16,8 +16,9 @@
 		sidebar_show,
 		currentLote,
 		currentProto, 
+		parkOperationCalendarID,
 	} from '../stores/toolStore';
-
+	import {fetchGoogleCalendarByID} from "$lib/components/google/googleCalendar.js";
 	import UtilityBar from '$lib/components/modelViewer/UtilityBar.svelte';
 	import DonoutKpiChart from '$lib/components/charts/DonoutKpiChart.svelte';
 	import Sidebar from '$lib/components/sidebarModal/Sidebar.svelte';
@@ -32,9 +33,11 @@
 	let _sidebar_show = get(sidebar_show);
 	let selectedElement = [];
 	let _viewerLotes = [];
-
+	const _calendarID= get(parkOperationCalendarID);
 	//implement onMount function
 	onMount(async () => {
+		//load calendar data 
+		fetchGoogleCalendarByID(_calendarID);
 		//handle sidebar show and hide
 		currentSelection.subscribe((v) => {
 			selectedElement = v;
