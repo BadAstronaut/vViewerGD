@@ -11,7 +11,8 @@
 		colorValueDisponibility,
 		sidebar_show,
 		servicesSelected,
-		currentSelection
+		currentSelection,
+		chatMessages
 	} from '/src/stores/toolStore.js';
 	import {
 		selectElementsByPropNameValue,
@@ -22,6 +23,7 @@
 	let colorBySector = '/icons/brand-google-maps.svg';
 	let homeView = '/icons/home-2.svg';
 	let services = '/icons/bolt.svg';
+	let chatIcon = '/icons/robot.svg';
 
 	let colorByProperty = '/icons/traffic-lights.svg';
 	let filterOff = '/icons/filter-off.svg';
@@ -170,8 +172,38 @@
 			currentSelection.set([]);
 		} else {
 			sidebar_show.set(true);
-			servicesSelected.set(["Agua"]);
+			servicesSelected.set(['Agua']);
 		}
+	}
+
+	function resetSidebar() {
+		if ($sidebar_show) {
+			sidebar_show.set(false);
+			servicesSelected.set([]);
+			currentSelection.set([]);
+		} else {
+			sidebar_show.set(true);
+			servicesSelected.set([]);
+			currentSelection.set([]);
+		}
+	}
+
+	//create a function to get the api/bimbot response passing the viewerLotes inpunt
+	function getBimbotResponse() {
+		resetSidebar();
+		console.log('chatMessages elssseee', chatMessages);
+		sidebar_show.set(true);
+		const welcomM = [
+			{
+				messageId: 420,
+				message: 'Hola! soy CrisBot! te ayudo con info de lotes del parque CTEC :)',
+				timestamp: 1587139349155.217,
+				sentByMe: false,
+				timeRead: 1587139359024.353
+			}
+		];
+		chatMessages.set(welcomM);
+		//return bimbotResponseFiltered;
 	}
 </script>
 
@@ -201,6 +233,12 @@
 		toExecute={removeFilterViewer}
 		active={false}
 		commandName="Filter Reset"
+	/>
+	<ToolBarButton
+		icon={chatIcon}
+		toExecute={getBimbotResponse}
+		active={false}
+		commandName="Chat Bot"
 	/>
 </div>
 

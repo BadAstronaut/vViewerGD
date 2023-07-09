@@ -25,6 +25,7 @@
 	import { Circle2 } from 'svelte-loading-spinners';
 	import { navigating } from '$app/stores';
 	import GoogleCalendarInfoContainer from '$lib/components/googleComponents/GoogleCalendarInfoContainer.svelte';
+	
 	export let data;
 
 	let speckleStramToPass = '';

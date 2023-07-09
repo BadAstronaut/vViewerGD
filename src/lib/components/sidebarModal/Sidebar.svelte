@@ -14,7 +14,8 @@
 		currentProto,
 		servicesSelected,
 		servicesAvailable,
-		colorValueDisponibility
+		colorValueDisponibility,
+		chatMessages
 	} from '/src/stores/toolStore';
 	import {
 		selectElementsByPropNameValue,
@@ -23,6 +24,7 @@
 	import { SpriteMaterial } from 'three';
 	import SideBarRow from './SideBarRow.svelte';
 	import MultiSelect from './MultiSelect.svelte';
+	import ChatUi from '../gptChat/ChatUi.svelte';
 
 	export let show = false;
 	let modal_show = false;
@@ -30,6 +32,7 @@
 	let lote = get(currentLote);
 	let filterService = false;
 	let _servicesSelected = $servicesSelected;
+	let chatUi = $chatMessages;
 
 	currentLote.subscribe((v) => {
 		if (v) {
@@ -96,7 +99,7 @@
 				color: colors.Disponible
 			};
 			activeV.setUserObjectColors([dispQueryObject])
-			console.log('viewerLotes', filteredLotesIds);
+			//console.log('viewerLotes', filteredLotesIds);
 		}
 		else{
 			resetViewerFilters();
@@ -132,6 +135,10 @@
 					<SideBarRow {propName} {propValue} />
 				{/each}
 			</div>
+		{/if}
+		{#if chatUi}
+			<span>GPT Chat:</span>
+			<ChatUi />
 		{/if}
 	</nav>
 {/if}

@@ -22,10 +22,10 @@
 	//this is the only way to update the chart, if we subscribe to the parent level
 	//the value is not updated in the component
 	viewerLotes.subscribe((v) => {
-		console.log('from the store', v);
+		//console.log('from the store', v);
 		dataList = v;
 		const chartData = getChartArray();
-		console.log('chartDataddd', chartData);
+		//console.log('chartDataddd', chartData);
 		if (chartData.length > 0) {
 			chartData.forEach((item) => {
 				chartLabels.push(item.label);
@@ -42,7 +42,7 @@
 		}
 	});
 	onMount(async (promise) => {
-		console.log('dataList comes empty somethinmes ? ', dataList);
+		//console.log('dataList comes empty somethinmes ? ', dataList);
 		ctx = chartCanvas.getContext('2d');
 		chart = new Chart(ctx, {
 			type: 'doughnut',
@@ -95,7 +95,7 @@
 			ids: []
 		};
 		let chartArray = [];
-		console.log('dataList', dataList);
+		//console.log('dataList', dataList);
 		if (dataList && dataList.length > 0) {
 			dataList.forEach((item) => {
 				//console.log("item", item);
@@ -123,7 +123,7 @@
 		}
 		//sort chartArray by value
 		chartArray.sort((a, b) => (a.value > b.value ? -1 : 1));
-		console.log(dataList, 'chartArray');
+		//console.log(dataList, 'chartArray');
 		return chartArray;
 	}
 	function handleClick(event, elements) {
@@ -132,10 +132,10 @@
 			let segmentLabel = chart.data.labels[segmentIndex];
 			//get the color from the colorValueDisponibility store based on the segment label
 			let color = getColorByKey(segmentLabel);
-			console.log('color', color);
+			//console.log('color', color);
 			//get the ids based on the Estado property from the dataList
 			let ids = dataList.filter((item) => item[dataProp] === segmentLabel).map((item) => item.id);
-			console.log('Clicked on segment:', ids);
+			//console.log('Clicked on segment:', ids);
 			changeElementColorByIds(ids, color);
 		}
 	}

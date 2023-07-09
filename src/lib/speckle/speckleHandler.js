@@ -104,7 +104,7 @@ export async function reloadViewerGetObjectsByIds(
     })
     const speckObjects = v.getDataTree();
     const objects = "ok"
-    return [objects];
+    return speckObjects;
   } else {
     return null;
   }

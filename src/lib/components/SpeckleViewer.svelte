@@ -21,6 +21,8 @@
 		sidebar_show,
 		servicesSelected,
 	} from '../../stores/toolStore';
+	
+
 	export let speckleStream;
 	//const speckleViewer = toolStore.speckleViewer
 	//console.log(toolStore.speckleViewer)
