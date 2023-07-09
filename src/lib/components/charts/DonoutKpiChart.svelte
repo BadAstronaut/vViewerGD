@@ -52,8 +52,8 @@
 					{
 						label: 'Estado',
 						backgroundColor: [
-							'rgba(192,102,111,0.6)',
 							'rgba(111,192,102,0.6)',
+							'rgba(192,102,111,0.6)',
 							'rgba(102,111,192,0.6)'
 						],
 						borderColor: 'rgba(94,104,121,0.388)',

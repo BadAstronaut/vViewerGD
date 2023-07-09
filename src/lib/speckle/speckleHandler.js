@@ -28,9 +28,24 @@ export function selectElementsById(id) {
   return speckleObjectList;
 }
 
-export function colorById(objectIds, color){
+export async function lookTopView() { 
   const v = get(speckleViewer).speckleViewer;
-  v.setUserObjectColors(objectIds,color)
+  if (v) {
+    v.setView('top', true);
+    v.zoom([], 0.75);
+    //console.log(activeV, "cosonle log ");
+    //console.log("showing sensor animation",get(activeIoTIndicators));
+  }
+}
+export async function colorById(objectIds, color){
+  const v = get(speckleViewer).speckleViewer;
+  await resetViewerFilters();
+  const QueryObjects = {
+    objectIds: objectIds,
+    color: color
+  };
+
+  v.setUserObjectColors([QueryObjects])
 }
 //select elements by property value
 export function selectElementsByPropNameValue(propNAme, propValue) {

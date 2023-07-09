@@ -1,22 +1,29 @@
 <script>
 	import ChatMessage from './ChatMessage.svelte';
 	import TodayDivider from './TodayDivider.svelte';
+	import { Circle2 } from 'svelte-loading-spinners';
+	import { writable } from 'svelte/store';
+	import { afterUpdate } from 'svelte';
 	import Fa from 'svelte-fa';
 	import {
 		faUsers,
 		faCompressArrowsAlt,
 		faComments,
-		faEnvelope
+		faEnvelope,
+		faL
 	} from '@fortawesome/free-solid-svg-icons';
-	import { chatMessages, viewerLotes } from '/src/stores/toolStore.js';
+	import { chatMessages, viewerLotes, colorValueDisponibility } from '/src/stores/toolStore.js';
+	import { loader } from './loader.js';
+	import { colorById, lookTopView } from '$lib/speckle/speckleHandler.js';
 
 	let nameMe = 'Me';
-	let profilePicMe =
-		'https://p0.pikist.com/photos/474/706/boy-portrait-outdoors-facial-men-s-young-t-shirt-hair-person-thumbnail.jpg';
+	let profilePicMe = '/icons/user.svg';
 
 	let nameChatPartner = 'Cris';
 	let profilePicChatPartner = '/icons/robot.svg';
 	let currentInput = '';
+	let loadinMessage = writable(true);
+	let chatContainer;
 
 	//base mesage ui
 	const baseM = {
@@ -28,6 +35,7 @@
 	};
 	//chatMessages.set(messages);
 	function addMessage() {
+		loadinMessage.set(true);
 		//add new message to the store
 		console.log(currentInput.value);
 		if (currentInput.value) {
@@ -38,9 +46,16 @@
 			askBot();
 		}
 	}
+
+	afterUpdate(() => {
+		//scroll to the bottom of the chat
+		if (chatContainer) {
+			chatContainer.scrollTop = chatContainer.scrollHeight;
+		}
+	});
 	function askBot() {
 		//create a fetch request to the api	/bimbot
-		fetch('http://localhost:5173/api/bimbot', {
+		fetch('/api/bimbot', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -54,7 +69,8 @@
 					_baseM.message = data.message.choices[0].message.content;
 					_baseM.sentByMe = false;
 					chatMessages.update((messages) => [...messages, _baseM]);
-					console.log('Success-------------------------:', data.message.choices[0].message.content);
+					console.log('Success-------------------------:', _baseM.message);
+					aiViewerIsolateByIds(_baseM.message);
 				}
 			})
 			.catch((error) => {
@@ -62,12 +78,46 @@
 			});
 		//console.log('chattt messages', $chatMessages);
 	}
+	//here we will have the function that will check the rule to see if it isolate elements in the viewer or not
+	//if it does will execute the viewer isolate function if not will do nothing
+	//the rule is. if it can split by : and the element at index 1 is an array  execute
+	function aiViewerIsolateByIds(message) {
+		//try casting the message as an array
+		let arrayData;
+
+		try {
+			arrayData = eval(message);
+		} catch (error) {
+			// Handle the error or provide fallback behavior
+			arrayData = false;
+		}
+		console.log('test is array ', arrayData);
+		if (arrayData) {
+			lookTopView();
+			const ids = arrayData[0];
+			console.log('ids-------------', ids);
+			colorById(ids, $colorValueDisponibility.Disponible);
+		}
+	}
+
 	//$: console.log($chatMessages);
+	setInterval(() => {
+		//console.log(n => !n, "setInterval")
+		//if loasingMeesage is true, set it to false
+		if (loadinMessage) loadinMessage.set(false);
+		else loadinMessage.set(true);
+	}, 2500);
+
+	function handleKeyDown(event) {
+		if (event.key === 'Enter') {
+			addMessage();
+		}
+	}
 </script>
 
 <div class="card-container">
 	<div class="card-body">
-		<div class="direct-chat-messages">
+		<div class="direct-chat-messages" bind:this={chatContainer}>
 			{#each $chatMessages as message}
 				<ChatMessage
 					{nameMe}
@@ -80,12 +130,14 @@
 					timeRead={message.timeRead}
 				/>
 			{/each}
+			<div class="loading-wrapper" use:loader={loadinMessage} />
 		</div>
 	</div>
 	<div class="card-footer">
 		<div class="input-group">
 			<input
 				bind:this={currentInput}
+				on:keydown={handleKeyDown}
 				type="text"
 				placeholder="Type Message ..."
 				class="form-control"
@@ -103,6 +155,7 @@
 		margin-bottom: 1rem;
 		width: 100%;
 		height: auto;
+		max-height: 80%;
 	}
 
 	.card-header {

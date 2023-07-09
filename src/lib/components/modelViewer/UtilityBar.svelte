@@ -172,7 +172,7 @@
 			currentSelection.set([]);
 		} else {
 			sidebar_show.set(true);
-			servicesSelected.set(['Agua']);
+			servicesSelected.set([]);
 		}
 	}
 
@@ -190,9 +190,14 @@
 
 	//create a function to get the api/bimbot response passing the viewerLotes inpunt
 	function getBimbotResponse() {
-		resetSidebar();
+		if($sidebar_show){
+			resetSidebar();
+		}else{
+			sidebar_show.set(true);
+		}
+
+		//resetSidebar();
 		console.log('chatMessages elssseee', chatMessages);
-		sidebar_show.set(true);
 		const welcomM = [
 			{
 				messageId: 420,

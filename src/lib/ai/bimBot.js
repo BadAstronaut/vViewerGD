@@ -25,8 +25,7 @@ const openai = new OpenAIApi(configuration);
 //so we need to pass the data tree from the store to the model so we can ask questions later 
 //we are using natural https://naturalnode.github.io/natural/ to vectorize the json data so lets create a function for that 
 const systemBaseContet = "Hola soy Cris, un asistente virtual que te ayudara a navegar la informacion de los lotes del centro tecnologico para la innovacion en la construccion CTEC."
-export async function bimBotBasePromp(lotes) {
-    const lotesBasePropn = bimBotDeconstructLotes(lotes);
+function bimBotBasePromp() {
     //console.log("lotesBaseProp----------------n", lotesBasePropn);
     let basePromp = `La informacion que se presenta a continuacion corresponde a los lotes con los que cuenta el centro tecnologico para la innovacion en la construccion CTEC\
                      para alquiler para propositos de prototipado. cada lote en el parque cuenta con parametros como LoteID, el cual representa el numero del lote, tambien existen\
@@ -37,7 +36,7 @@ export async function bimBotBasePromp(lotes) {
                     Por lo que si un usuario consulta cuales lotes tienen un area mayor a 100 metros cuadrados la respuesta se generaria filtrando del listado los lotes que cumplan con el area mayor a 100 metros cuadrados. \
                     La respuesta incluiria el LoteID para transmitir al usuario cuales lotes tienen un area mayor a 100 metros cuadrados, ademas se incluira el area total \
                     de los lostes que cumplan esa condicion. a continuacion se presenta el listado de lotes:\
-                    ${lotesBasePropn}`;
+                    `;
     //console.log("data......", basePromp);
     //const embeding = getEmbedding(basePromp)
     //const chatResponse = generateChatResponse(embeding, "Cuales lotes estan disponibles?");
@@ -70,34 +69,53 @@ async function getEmbedding(text) {
         return null;
     }
 }
-function messageBuilder(basePromp, messages){
+function messageBuilder(baseElements, messages) {
     let messagesToAnget = []
+    const basePromp = bimBotBasePromp();
+    const baseElementsPromp = bimBotDeconstructLotes(baseElements);
+    const lotesSystemPrompData = baseElementsPromp.map((subList) => {
+        return { "role": "system", "content": subList }
+    });
+    //console.log("lotesSystemPrompData-------", lotesSystemPrompData)
+
     messages.forEach(m => {
-        if (m.sentByMe){
-            messagesToAnget.push({ "role": "user", "content": m.message,  })
-        } else
-        {
-            messagesToAnget.push({ "role": "system", "content": m.message,  })
+        if (m.sentByMe) {
+            messagesToAnget.push({ "role": "user", "content": m.message, })
+        } else {
+            messagesToAnget.push({ "role": "system", "content": m.message, })
         }
     });
+    const _retreiveIdsByPromp = retriveIdsByPromps()
+    let messagesUpdated = [
+        { "role": "system", "content": basePromp },
+        { "role": "system", "content": _retreiveIdsByPromp },
+        { "role": "system", "content": systemBaseContet },
+    ]
+    //merge the messageUpdated with the lotesSystemPrompData
+    messagesUpdated.push(...lotesSystemPrompData)
+    //console.log( "cehccccc", basePromp ,systemBaseContet )
+    //console.log("_retreiveIdsByPromp-------", _retreiveIdsByPromp)            //{ "role": "system", "content": _retreiveIdsByPromp },
 
-    let messagesUpdated = []
-    if(messagesToAnget.length <1){
-        messagesUpdated = [
-            { "role": "system", "content": basePromp },
-            { "role": "system", "content": systemBaseContet },
-            { "role": "user", "content": text,  },
-        ]
-    } else
-    {
-        messagesUpdated = [
-            { "role": "system", "content": basePromp },
-            { "role": "system", "content": systemBaseContet },
-            ...messagesToAnget
-        ]
+    if (messagesToAnget.length < 1) {
+        messagesUpdated.push({ "role": "user", "content": text })
+
+    } else {
+        messagesUpdated.push(...messagesToAnget)
     }
     //console.log("messagesUpdated-------", messagesUpdated)
     return messagesUpdated
+}
+
+function chunkString(str, chunkSize) {
+    const chunks = [];
+    let index = 0;
+
+    while (index < str.length) {
+        chunks.push(str.substr(index, chunkSize));
+        index += chunkSize;
+    }
+
+    return chunks;
 }
 
 export async function generateChatResponse(basePromp, chatMessages) {
@@ -111,12 +129,13 @@ export async function generateChatResponse(basePromp, chatMessages) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model:"gpt-3.5-turbo",
-                messages:_messageBuilder
+                model: "gpt-3.5-turbo",
+                messages: _messageBuilder
             }),
         });
 
         if (!response.ok) {
+            console.log(response.body, 'response///////////');
             throw new Error('Error generating chat response: ' + response.status);
         }
 
@@ -130,16 +149,40 @@ export async function generateChatResponse(basePromp, chatMessages) {
 
 }
 
+//
+function retriveIdsByPromps() {
+    return `Solo cuando el usuario solicite: Muestrame, Filtra, aisla lotes que cumplan \
+            la condicion establecida por el usuario se debera generara una respuesta siempre en formato de array \
+            este array contendra en el indice 0 una lista de los ids de lotes que cumplen con la condicion consultada por el usuario\
+            en el indice 1 se entregara la respuesta, comentando al final que se han aislado los elementos en el visualizador\
+            ejemplo:pregunta:"muestra el lote mas grande", respuesta:"[['b31eb9758679dcd52034f345bfde1152'], 'El LoteID 12 + Se han aislado los elementos en el visualizador']" \
+            tu respuesta siempre tendra el formato "[[ids], respuesta]"\
+            el contenido de tu respuesta debera ser solo esta infomracion sin complemetar nada adicional por parte del agente`
+}
+
 //create a function to decontruct the arrray of lotes and generate a list of string 
 //detailing the loteID and parameters 
 const bimBotDeconstructLotes = (viewerLotes) => {
-    let lotesPrompBase = "";
+    const baseDescriptiveProp = `El lote Numero: {LoteID} tiene un area de {Area} metros cuadrados\
+                                se encuentra con estado {Estado} para alquilar, esto significa que un lote Ocupado no puede ser alquilado a otro cliente\
+                                y un lote Reservado no puede ser alquilado a otro cliente hasta que el cliente que lo reservo lo alquile o lo libere.\
+                                El lote cuenta con un parametro llamado Sector, {Sector} el cual representa la ubicacion del lote dentro del parque.\
+                                El lote tambien cuenta con un parametro llamado Servicios, {Servicios} el cual representa los servicios que se encuentran disponibles en el lote.\
+                                por ejemplo si un lote tiene Agua y Electricidad esos valores apareceran en servicios separados por ,.\
+                                tambien existe una propiedad denominada {id} la cual es importante ya que permite interactural con el visualizador\
+                                cuando el usuario solicite que se muestre, aisle, coloree o enseñe la ubicacion de un lote este parametro sera de interes;\
+                                a continuacion un listado de todos los lotes del parque:\n`
+    
+   let lotesPrompBase = "";
+    //console.log("viewerLotes", viewerLotes);
     viewerLotes.forEach(element => {
-        let subString = `El lote con LoteID: ${element.LoteID} tiene un area de ${element.Area.toFixed(2)} metros cuadrados\
-         se encuentra con estado ${element.Estado} para alquilar, `;
+        let subString = `LoteID: ${element.LoteID}, Area: ${element.Area.toFixed(2)}, Estado: ${element.Estado}, Sector: ${element.Sector}, Servicios: ${element.Servicios}, id:${element.id} \n`
         lotesPrompBase = lotesPrompBase + subString;
     });
-    return lotesPrompBase;
+    const _chucks = chunkString(baseDescriptiveProp + lotesPrompBase, 4000)
+    console.log("lotesPrompBase", _chucks);
+
+    return _chucks;
 };
 
 
