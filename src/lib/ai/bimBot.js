@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { get } from 'svelte/store';
 import { json } from '@sveltejs/kit';
-import { OpenAI } from 'langchain/llms/openai';
-import { loadSummarizationChain } from 'langchain/chains';
-import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
-import { AnalyzeDocumentChain } from 'langchain/chains';
+//import { OpenAI } from 'langchain/llms/openai';
+//import { loadSummarizationChain } from 'langchain/chains';
+//import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
+//import { AnalyzeDocumentChain } from 'langchain/chains';
 import { speckleDatatree, viewerLotes, viewerProtos } from "/src/stores/toolStore";
 import { Configuration, OpenAIApi } from 'openai';
 //import { PDFLoader } from 'langchain/document_loaders';
@@ -24,7 +24,7 @@ const openai = new OpenAIApi(configuration);
 //that has the components needed to generate the chat ui. but first we need to train the model with data json
 //so we need to pass the data tree from the store to the model so we can ask questions later 
 //we are using natural https://naturalnode.github.io/natural/ to vectorize the json data so lets create a function for that 
-const systemBaseContet = "Hola soy BimBot, un asistente virtual que te ayudara a navegar la informacion de los lotes del centro tecnologico para la innovacion en la construccion CTEC."
+const systemBaseContet = "Hola soy Cris, un asistente virtual que te ayudara a navegar la informacion de los lotes del centro tecnologico para la innovacion en la construccion CTEC."
 export async function bimBotBasePromp(lotes) {
     const lotesBasePropn = bimBotDeconstructLotes(lotes);
     //console.log("lotesBaseProp----------------n", lotesBasePropn);

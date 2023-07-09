@@ -36,7 +36,6 @@
 		"gsap": "^3.11.4",
 		"ionic-svelte": "^0.5.72",
 		"langchain": "^0.0.104",
-		"node-nlp": "^4.27.0",
 		"openai": "^3.3.0",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
@@ -49,7 +48,6 @@
 	},
 	"dependencies": {
 		"@neodrag/svelte": "^2.0.3",
-		"@nlpjs/basic": "^4.27.0",
 		"@speckle/viewer": "^2.14.7",
 		"google-auth-library": "^8.7.0",
 		"sveltejs-tippy": "^3.0.0"
