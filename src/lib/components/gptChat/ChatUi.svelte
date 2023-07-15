@@ -15,6 +15,7 @@
 	import { chatMessages, viewerLotes, colorValueDisponibility } from '/src/stores/toolStore.js';
 	import { loader } from './loader.js';
 	import { colorById, lookTopView } from '$lib/speckle/speckleHandler.js';
+	import {functionOrchestrator} from '$lib/ai/functionCalls.js';
 
 	let nameMe = 'Me';
 	let profilePicMe = '/icons/user.svg';
@@ -37,7 +38,7 @@
 	function addMessage() {
 		loadinMessage.set(true);
 		//add new message to the store
-		console.log(currentInput.value);
+		//console.log(currentInput.value);
 		if (currentInput.value) {
 			const _baseM = { ...baseM };
 			_baseM.message = currentInput.value;
@@ -66,11 +67,19 @@
 			.then((data) => {
 				if (data.message) {
 					const _baseM = { ...baseM };
-					_baseM.message = data.message.choices[0].message.content;
+					data.message.choices.forEach((choice) => {
+						console.log('choice.....',data, );
+					});
+					if(data.message.choices[0].finish_reason == "function_call"){
+						_baseM.message  = functionOrchestrator(data);
+					} else {
+
+						_baseM.message = data.message.choices[0].message.content;
+					}
 					_baseM.sentByMe = false;
 					chatMessages.update((messages) => [...messages, _baseM]);
-					console.log('Success-------------------------:', _baseM.message);
-					aiViewerIsolateByIds(_baseM.message);
+					//console.log('Success-------------------------:', _baseM.message);
+					//aiViewerIsolateByIds(_baseM.message);
 				}
 			})
 			.catch((error) => {

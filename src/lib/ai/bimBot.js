@@ -7,8 +7,7 @@ import { json } from '@sveltejs/kit';
 //import { AnalyzeDocumentChain } from 'langchain/chains';
 import { speckleDatatree, viewerLotes, viewerProtos } from "/src/stores/toolStore";
 import { Configuration, OpenAIApi } from 'openai';
-//import { PDFLoader } from 'langchain/document_loaders';
-//import { writeFile } from 'fs/promises';
+import { viewerFunctions, viewerFunctions_system_prompt} from "./functions/isolateElements";
 
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY
 
@@ -20,6 +19,7 @@ const configuration = new Configuration({
 // create a new instance of OpenAIApi by passing the configuration object.
 const openai = new OpenAIApi(configuration);
 
+let viewerFilterResult = [];
 //for the front end use https://svelte.dev/repl/ce61cb87ea604812a1d1639de66f7a5d?version=3.46.3 
 //that has the components needed to generate the chat ui. but first we need to train the model with data json
 //so we need to pass the data tree from the store to the model so we can ask questions later 
@@ -85,10 +85,11 @@ function messageBuilder(baseElements, messages) {
             messagesToAnget.push({ "role": "system", "content": m.message, })
         }
     });
-    const _retreiveIdsByPromp = retriveIdsByPromps()
+    //const _retreiveIdsByPromp = retriveIdsByPromps()
     let messagesUpdated = [
         { "role": "system", "content": basePromp },
-        { "role": "system", "content": _retreiveIdsByPromp },
+        { "role": "system", "content": viewerFunctions_system_prompt },
+        //{ "role": "system", "content": _retreiveIdsByPromp },
         { "role": "system", "content": systemBaseContet },
     ]
     //merge the messageUpdated with the lotesSystemPrompData
@@ -120,7 +121,7 @@ function chunkString(str, chunkSize) {
 
 export async function generateChatResponse(basePromp, chatMessages) {
     const _messageBuilder = messageBuilder(basePromp, chatMessages)
-    console.log("messageBuilder-------", _messageBuilder)
+    //console.log("messageBuilder-------", _messageBuilder)
     try {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
@@ -130,7 +131,9 @@ export async function generateChatResponse(basePromp, chatMessages) {
             },
             body: JSON.stringify({
                 model: "gpt-3.5-turbo",
-                messages: _messageBuilder
+                messages: _messageBuilder,
+                temperature: 0.5,
+                functions: viewerFunctions
             }),
         });
 
@@ -138,9 +141,15 @@ export async function generateChatResponse(basePromp, chatMessages) {
             console.log(response.body, 'response///////////');
             throw new Error('Error generating chat response: ' + response.status);
         }
+        
+        //const func_call = await response.json();
+        //const func_args = func_call;
+        //console.log(func_args, ' functional arguments response///////////');
 
         const data = await response.json();
-        //console.log(data, 'response///////////');
+        // resolve data prommise and console log 
+        
+        //console.log(data, 'response//dddd/////////');
 
         return data;
     } catch (error) {
@@ -180,7 +189,7 @@ const bimBotDeconstructLotes = (viewerLotes) => {
         lotesPrompBase = lotesPrompBase + subString;
     });
     const _chucks = chunkString(baseDescriptiveProp + lotesPrompBase, 4000)
-    console.log("lotesPrompBase", _chucks);
+    //console.log("lotesPrompBase", _chucks);
 
     return _chucks;
 };
