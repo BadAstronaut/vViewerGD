@@ -1,6 +1,6 @@
 //here we will create class that takes the name of the function that needs to execute 
 //and calls it based on its name. all the functions will be in this file 
-
+import { colorById, lookTopView, resetViewerFilters } from '$lib/speckle/speckleHandler.js';
 //and will be called from here.
 export function functionOrchestrator(data) {
     console.log(data, 'functionName from orchestrator');
@@ -25,7 +25,9 @@ export function functionOrchestrator(data) {
 //functions 
 function isolateElements(elementIds, message ) {
     //const { elementIds, message } = parameters;
-    console.log(elementIds, 'no way this runs .... elementIds');
+    console.log(elementIds, 'elements ids from orchestration elementIds');
+    colorById(elementIds, 0xff0000);
+    lookTopView();
    // return filteredElements;
     return message;
 }

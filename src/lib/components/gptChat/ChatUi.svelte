@@ -115,7 +115,7 @@
 		//if loasingMeesage is true, set it to false
 		if (loadinMessage) loadinMessage.set(false);
 		else loadinMessage.set(true);
-	}, 2500);
+	}, 4500);
 
 	function handleKeyDown(event) {
 		if (event.key === 'Enter') {
@@ -139,7 +139,7 @@
 					timeRead={message.timeRead}
 				/>
 			{/each}
-			<div class="loading-wrapper" use:loader={loadinMessage} />
+			<div class="loading-wrapper" duration ="10000" use:loader={loadinMessage} />
 		</div>
 	</div>
 	<div class="card-footer">

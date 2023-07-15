@@ -4,7 +4,7 @@
 export const viewerFunctions = [
     {
         "name": 'isolate-elements',
-        "description": 'filtra los elements del modelo por id de elementos. el agente genera lista de ids segun requerimientos de usuario',
+        "description": `La función se ejecutará únicamente cuando el usuario incluya la palabra 'filtrar' en su solicitud. El asistente generará una lista de IDs de acuerdo con los requisitos especificados por el usuario.`,
         "parameters": {
             "type": "object",
             "properties": {
@@ -12,7 +12,7 @@ export const viewerFunctions = [
                     "type": 'array',
                     "items": {
                         "type": "string",
-                        "description": "id de elementos en el modelo "
+                        "description": "propiedad {id} de lotes"
                     }
                 },
                 "message": {
@@ -34,4 +34,5 @@ export const viewerFunctions = [
 
 // system prompt as additional guard rail for function call
 export const viewerFunctions_system_prompt = `Si el usuario quiere filtrar lotes o elementos,
-                                            el asistente ejecutara la funcion isolate-elements usando los ids de LotesIds consultados por el usuario.`
+                                            el asistent ejecutara la funcion isolate-elements usando los ids de lotes consultados por el usuario.
+                                            la funcion no se ejecutara si el usuario pregunta cuantos lotes, o cuales lotes`
