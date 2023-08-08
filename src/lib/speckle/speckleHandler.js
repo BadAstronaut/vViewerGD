@@ -3,6 +3,7 @@ import { getStreamCommits, getUserData } from "./speckleUtils.js";
 import { get } from "svelte/store";
 import { speckleViewer, finishLoading, speckleStream, speckleDatatree } from "../../stores/toolStore";
 import { buildViewerData } from '$lib/speckle/viewerBuilder';
+import { json } from "@sveltejs/kit";
 const token = import.meta.env.VITE_SPECKLE_TOCKEN;
 
 export async function fetchUserData() {
@@ -28,7 +29,7 @@ export function selectElementsById(id) {
   return speckleObjectList;
 }
 
-export async function lookTopView() { 
+export async function lookTopView() {
   const v = get(speckleViewer).speckleViewer;
   if (v) {
     v.setView('top', true);
@@ -37,7 +38,131 @@ export async function lookTopView() {
     //console.log("showing sensor animation",get(activeIoTIndicators));
   }
 }
-export async function colorById(objectIds, color){
+// function calll to filter by properties 
+// function calll to filter by properties  filtra el lote con numero igual a 12
+export async function filterByPromptConditions(categoryName, propertyName, propertyValue, condition) {
+  const v = get(speckleViewer).speckleViewer;
+  const speckledataTree = get(speckleDatatree);
+  let selectedCategoryElements = [];
+  try {
+    console.log(categoryName, propertyName, propertyValue, condition, "input properties.........");
+    speckledataTree.root.children[0].children.forEach((child) => {
+      console.log(child, "child");
+      if (child.model.children.length > 0 && child.model.children[0].data.category === categoryName) {
+        selectedCategoryElements = child.model.children;
+        //console.log(child.model.children[0].data.category, "category");
+
+      }
+    });
+  }
+  catch (error) {
+    console.log(error, "error");
+  }
+  const elementIds = promptParameterExtractor(selectedCategoryElements, propertyName, propertyValue, condition);
+  return elementIds;
+  //console.log(selectedCategoryElements, "selectedCategoryElements");
+
+};
+function promptParameterExtractor(speckledataTreeCategory, propertyName, propertyValue, condition) {
+  //iterate over speckledataThreeCategory and get the elements that match the condition speckle.data.definition
+  //this is too slow will need to refactor later speed important
+  let matchElementIds = [];
+  speckledataTreeCategory.forEach((element) => {
+    const elementProperties = element.data.definition;
+    //iterate over elementproperties object and check if propertyname matches the condition
+    for (const [key, value] of Object.entries(elementProperties)) {
+      if (key === propertyName) {
+        //console.log(key, value, "key and value");
+        //check if the condition is met
+        //we are force to add possible condition for the bot answers since its not trained on this pattern 
+        if (condition === "equal" || condition === "equals" ) {
+          if (value === propertyValue) {
+            matchElementIds.push(element.data.id);
+            console.log("condition met", element);
+          }
+        }
+        else if (condition === "greater") {
+          if (value > propertyValue) {
+            console.log("condition met");
+          }
+        }
+        else if (condition === "less") {
+          if (value < propertyValue) {
+            console.log("condition met");
+          }
+        }
+        else if (condition === "greaterOrEqual") {
+          if (value >= propertyValue) {
+            console.log("condition met");
+          }
+        }
+        else if (condition === "lessOrEqual") {
+          if (value <= propertyValue) {
+            console.log("condition met");
+          }
+        }
+      }
+    }
+    //console.log(matchElementIds, "elementProperties.......");
+  });
+  colorById(matchElementIds, 0x8bc34a);
+  return matchElementIds;
+  //console.log(matchElementIds, "matchElementIds.......");
+}
+
+//get a list of present categories in data tree 
+//const checkCategories = speckledataTree.child
+//console.log (speckledataTree, "speckle data tree.........");
+//console.log (categoryName, propertyName, propertyValue, condition, "filter by conditions");
+
+
+
+
+// function calll to filter by properties 
+// function calll to filter by properties 
+export async function lookView(view) {
+  const v = get(speckleViewer).speckleViewer;
+  if (v) {
+    switch (view) {
+      case 'front':
+        v.setView('front', true);
+        break;
+      case 'back':
+        v.setView('back', true);
+        break;
+      case 'up':
+        v.setView('up', true);
+        break;
+      case 'top':
+        v.setView('top', true);
+        break;
+      case 'down':
+        v.setView('down', true);
+        break;
+      case 'bottom':
+        v.setView('bottom', true);
+        break;
+      case 'right':
+        v.setView('right', true);
+        break;
+      case 'left':
+        v.setView('left', true);
+        break;
+      case '3d':
+        v.setView('3d', true);
+        break;
+      default:
+        break;
+    }
+
+    v.zoom([], 0.75);
+    //console.log(activeV, "cosonle log ");
+    //console.log("showing sensor animation",get(activeIoTIndicators));
+  }
+}
+
+
+export async function colorById(objectIds, color) {
   const v = get(speckleViewer).speckleViewer;
   await resetViewerFilters();
   const QueryObjects = {
@@ -111,7 +236,7 @@ export async function reloadViewerGetObjectsByIds(
     await v.init();
     let p = Promise.resolve(v);
     p.then(() => {
-      speckleViewer.set({'speckleViewer':v})
+      speckleViewer.set({ 'speckleViewer': v })
       speckleDatatree.set(v.getDataTree());
       buildViewerData();
       finishLoading.set(true);
@@ -170,7 +295,7 @@ export async function getPropertiesByTypeParameter(pName, pValueList) {
 export function filterByCategoryNames(DT, categoryNames) {
   const objects = DT.findAll((uui, obj) => {
     //console.log("-------",obj, );
-    if (obj.category && obj.speckle_type == "Objects.Other.Revit.RevitInstance" ) {
+    if (obj.category && obj.speckle_type == "Objects.Other.Revit.RevitInstance") {
       const catName = obj.category;
       //console.log("-------",obj, );
       return categoryNames.includes(catName);

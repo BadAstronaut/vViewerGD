@@ -36,7 +36,7 @@
 	};
 	//chatMessages.set(messages);
 	function addMessage() {
-		loadinMessage.set(true);
+		//loadinMessage.set(false);
 		//add new message to the store
 		//console.log(currentInput.value);
 		if (currentInput.value) {
@@ -56,6 +56,7 @@
 	});
 	function askBot() {
 		//create a fetch request to the api	/bimbot
+		loadinMessage.set(true);
 		fetch('/api/bimbot', {
 			method: 'POST',
 			headers: {
@@ -68,7 +69,7 @@
 				if (data.message) {
 					const _baseM = { ...baseM };
 					data.message.choices.forEach((choice) => {
-						console.log('choice.....',data, );
+						//console.log('choice.....',data, );
 					});
 					if(data.message.choices[0].finish_reason == "function_call"){
 						_baseM.message  = functionOrchestrator(data);
@@ -78,6 +79,8 @@
 					}
 					_baseM.sentByMe = false;
 					chatMessages.update((messages) => [...messages, _baseM]);
+					loadinMessage.set(false);
+
 					//console.log('Success-------------------------:', _baseM.message);
 					//aiViewerIsolateByIds(_baseM.message);
 				}
@@ -139,7 +142,7 @@
 					timeRead={message.timeRead}
 				/>
 			{/each}
-			<div class="loading-wrapper" duration ="10000" use:loader={loadinMessage} />
+			<div class="loading-wrapper" duration = '5s' use:loader={loadinMessage} />
 		</div>
 	</div>
 	<div class="card-footer">

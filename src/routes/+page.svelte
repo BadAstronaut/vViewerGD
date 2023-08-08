@@ -17,6 +17,7 @@
 		currentLote,
 		currentProto, 
 		parkOperationCalendarID,
+		socketIoUrl,
 	} from '../stores/toolStore';
 	import {fetchGoogleCalendarByID} from "$lib/components/google/googleCalendar.js";
 	import UtilityBar from '$lib/components/modelViewer/UtilityBar.svelte';
@@ -25,7 +26,7 @@
 	import { Circle2 } from 'svelte-loading-spinners';
 	import { navigating } from '$app/stores';
 	import GoogleCalendarInfoContainer from '$lib/components/googleComponents/GoogleCalendarInfoContainer.svelte';
-	
+	import { io } from 'socket.io-client';
 	export let data;
 
 	let speckleStramToPass = '';
@@ -35,6 +36,17 @@
 	let selectedElement = [];
 	let _viewerLotes = [];
 	const _calendarID= get(parkOperationCalendarID);
+	
+	//socket to change stream dynamically
+	const socket = io(get(socketIoUrl));
+	socket.on('dataUpdated', (message) => {
+		console.log(message.speckleUrl, 'data updated from socket');
+		speckleStream.set(message.speckleUrl);
+		
+
+	});
+
+
 	//implement onMount function
 	onMount(async () => {
 		//load calendar data 
@@ -92,13 +104,17 @@
 		console.log('sidebar_show', v);
 		_sidebar_show = v;
 	});
+	speckleStream.subscribe((speckleS) => {
+		console.log('speckleStream........', speckleS);
+		speckleStramToPass = speckleS;
+	});
 
 </script>
 <SpeckleViewer speckleStream={$speckleStream} />
 
 {#if loadCompleted}
 	<UtilityBar />
-	<GoogleCalendarInfoContainer />
+	<!-- <GoogleCalendarInfoContainer /> -->
 	<DonoutKpiChart dataProp={'Estado'} tittle="Disponibilidad:" />
 	<Sidebar bind:show={_sidebar_show} />
 {:else}

@@ -6,6 +6,8 @@ export const speckleViewer = writable({
 
 })
 
+export const socketIoUrl = readable("http://localhost:3000")
+
 export const activeIoTIndicators = writable([])
 
 export const finishLoading = writable(false);

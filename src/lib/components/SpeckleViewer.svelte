@@ -10,7 +10,7 @@
 		handleBeaconOrigin,
 		reloadViewer
 	} from '$lib/speckle/speckleHandler';
-
+	
 	import {
 		speckleViewer,
 		finishLoading,
@@ -19,9 +19,8 @@
 		currentLote,
 		currentProto,
 		sidebar_show,
-		servicesSelected,
+		servicesSelected
 	} from '../../stores/toolStore';
-	
 
 	export let speckleStream;
 	//const speckleViewer = toolStore.speckleViewer
@@ -35,6 +34,8 @@
 	let v;
 	let coor = [];
 	let labelRenderer;
+
+	
 
 	onMount(() => {
 		//console.log('viewer dynamic update' , speckleStreams[idUpdate]);
@@ -73,7 +74,7 @@
 			intensity: 9,
 			radius: 0
 		});
-		console.log("viewer here.....", speckleStream);
+		console.log('viewer here.....', speckleStream);
 		//let branch =  fetchStreamData(speckleStreams.NLW01);
 		//let userD = fetchUserData();
 		//console.log("user data");

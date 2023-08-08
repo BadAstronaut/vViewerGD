@@ -7,7 +7,7 @@ import { json } from '@sveltejs/kit';
 //import { AnalyzeDocumentChain } from 'langchain/chains';
 import { speckleDatatree, viewerLotes, viewerProtos } from "/src/stores/toolStore";
 import { Configuration, OpenAIApi } from 'openai';
-import { viewerFunctions, viewerFunctions_system_prompt } from "./functions/isolateElements";
+import { viewerFunctions, viewerFunctions_system_prompt } from "./functions/viewerFuntionCalls";
 
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY
 
@@ -17,14 +17,14 @@ const configuration = new Configuration({
 });
 
 // create a new instance of OpenAIApi by passing the configuration object.
-const openai = new OpenAIApi(configuration);
+const openai = new OpenAIApi(configuration);3
 
 let viewerFilterResult = [];
 //for the front end use https://svelte.dev/repl/ce61cb87ea604812a1d1639de66f7a5d?version=3.46.3 
 //that has the components needed to generate the chat ui. but first we need to train the model with data json
 //so we need to pass the data tree from the store to the model so we can ask questions later 
 //we are using natural https://naturalnode.github.io/natural/ to vectorize the json data so lets create a function for that 
-const systemBaseContet = "Hola soy Cris, un asistente virtual que te ayudara a navegar la informacion de los lotes del centro tecnologico para la innovacion en la construccion CTEC."
+const systemBaseContet = "Hola soy Cris, un asistente virtual que te ayudara a navegar la informacion de los lotes y prototipos del centro tecnologico para la innovacion en la construccion CTEC ubicado en Laguna Caren Santiago, Chile."
 function bimBotBasePromp() {
     //console.log("lotesBaseProp----------------n", lotesBasePropn);
     let basePromp = `La siguiente información corresponde a los lotes disponibles para alquiler en el Centro Tecnológico para la Innovación en la Construcción (CTEC). Cada lote en el parque tiene parámetros como LoteID, 
@@ -89,7 +89,7 @@ function messageBuilder(baseElements, messages) {
     const _loteConstrain = contrainLoteIDvsID()
     let messagesUpdated = [
         { "role": "system", "content": basePromp },
-        { "role": "system", "content": viewerFunctions_system_prompt },
+        // { "role": "system", "content": viewerFunctions_system_prompt },
         { "role": "system", "content": _loteConstrain },
         { "role": "system", "content": systemBaseContet },
     ]
@@ -174,6 +174,13 @@ function retriveIdsByPromps() {
 const contrainLoteIDvsID = () => {
     return `los lotes tienen una propiedad LoteID que representa el numero del lote. LoteID no es el id unico. El id unico es la propiedad{id}. {id} sera utilizada para operaciones de filtrado del asistent`
 }
+
+const trainingFunctionFilterPromp = () => {
+    return `El usuario puede filtrar los lotes por parametros, por ejemplo:\
+            Muestrame los lotes que tengan un area mayor a 100 metros cuadrados\
+            `;
+}
+
 //create a function to decontruct the arrray of lotes and generate a list of string 
 //detailing the loteID and parameters 
 const bimBotDeconstructLotes = (viewerLotes) => {
