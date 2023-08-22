@@ -13,6 +13,7 @@
 	
 	import {
 		speckleViewer,
+		speckleStream,
 		finishLoading,
 		currentSelection,
 		speckleDatatree,
@@ -22,9 +23,9 @@
 		servicesSelected
 	} from '../../stores/toolStore';
 
-	export let speckleStream;
+	export let _speckleStream;
 	//const speckleViewer = toolStore.speckleViewer
-	//console.log(toolStore.speckleViewer)
+	console.log(speckleStream, "from viwer updated.......")
 
 	let viewerVal;
 	let maxRad = 4;
@@ -74,12 +75,12 @@
 			intensity: 9,
 			radius: 0
 		});
-		console.log('viewer here.....', speckleStream);
+		console.log('viewer here.....', _speckleStream);
 		//let branch =  fetchStreamData(speckleStreams.NLW01);
 		//let userD = fetchUserData();
 		//console.log("user data");
 		//Espacio Colaborativo
-		const speckObj = reloadViewerGetObjectsByIds(v, speckleStream, [], []);
+		const speckObj = reloadViewerGetObjectsByIds(v, _speckleStream, [], []);
 		//console.log("speckleObj",v.speckleRenderer._scene);
 		//twoDCard(v);
 	});
@@ -138,6 +139,13 @@
 		sphere.layers.set(2);
 		return sphere;
 	}
+	speckleStream.subscribe((speckleS) => {
+		console.log('speckleStream........', speckleS);
+		if (v && speckleS) {
+			const speckObj = reloadViewerGetObjectsByIds(v, speckleS, [], []);
+		}
+		
+	});
 </script>
 
 <div bind:this={viewerVal} class="viewer" />

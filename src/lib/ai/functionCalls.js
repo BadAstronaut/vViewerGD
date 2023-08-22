@@ -28,14 +28,14 @@ export function functionOrchestrator(data) {
 }
 
 //functions 
-function isolateElements(elementIds, message) {
-    //const { elementIds, message } = parameters;
-    console.log(elementIds, 'elements ids from orchestration elementIds');
-    colorById(elementIds, 0xff0000);
-    lookTopView();
-    // return filteredElements;
-    return message;
-}
+// function isolateElements(elementIds, message) {
+//     //const { elementIds, message } = parameters;
+//     console.log(elementIds, 'elements ids from orchestration elementIds');
+//     colorById(elementIds, 0xff0000);
+//     lookTopView();
+//     // return filteredElements;
+//     return message;
+// }
 
 export function controlCamera(view, message) {
     console.log(view, 'view from orchestration  control view.......view');
@@ -47,6 +47,7 @@ export function controlCamera(view, message) {
 function filterByConditions(categoryName, propertyName, propertyValue, condition) {
     const validCategory = validateCategory(categoryName);
     const validParameter = validateParameter(propertyName);
+    console.log(validCategory, validParameter, 'valid category from filter by conditions');
     if (!validCategory) {
         return 'no category found';
     }
@@ -79,7 +80,7 @@ function validateCategory(categoryName) {
 
 function validateParameter(parameterName) {
     //extract to an interface or something later on . 
-    const parameters = [{"type":["loteid"]} ];
+    const parameters = [{"LoteID":["loteid","id","numero"]} , {"Servicios":["servicios","servicio"]}];
 
     //console.log(categoryName, 'category name from validate category');
     let foundParameter = null;

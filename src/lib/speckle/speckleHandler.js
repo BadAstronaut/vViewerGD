@@ -1,7 +1,7 @@
 import { ViewerEvent } from "@speckle/viewer";
 import { getStreamCommits, getUserData } from "./speckleUtils.js";
 import { get } from "svelte/store";
-import { speckleViewer, finishLoading, speckleStream, speckleDatatree } from "../../stores/toolStore";
+import { speckleViewer, finishLoading, speckleStream, speckleDatatree, viewerLotes } from "../../stores/toolStore";
 import { buildViewerData } from '$lib/speckle/viewerBuilder';
 import { json } from "@sveltejs/kit";
 const token = import.meta.env.VITE_SPECKLE_TOCKEN;
@@ -43,41 +43,52 @@ export async function lookTopView() {
 export async function filterByPromptConditions(categoryName, propertyName, propertyValue, condition) {
   const v = get(speckleViewer).speckleViewer;
   const speckledataTree = get(speckleDatatree);
-  let selectedCategoryElements = [];
-  try {
-    console.log(categoryName, propertyName, propertyValue, condition, "input properties.........");
-    speckledataTree.root.children[0].children.forEach((child) => {
-      console.log(child, "child");
-      if (child.model.children.length > 0 && child.model.children[0].data.category === categoryName) {
-        selectedCategoryElements = child.model.children;
-        //console.log(child.model.children[0].data.category, "category");
+  let elementIds = [];
+  console.log(categoryName, propertyName, propertyValue, condition, "input properties.........");
+  // try {
+  //   speckledataTree.root.children[0].children.forEach((child) => {
+  //     console.log(child, "child");
+  //     if (child.model.children.length > 0 && child.model.children[0].data.category === categoryName) {
+  //       selectedCategoryElements = child.model.children;
+  //       //console.log(child.model.children[0].data.category, "category");
 
-      }
-    });
+  //     }
+  //   });
+  // }
+  // catch (error) {
+  //   console.log(error, "error");
+  // }
+  //change logic to work with only one category at the time 
+  if(categoryName==="Emplazamiento"){
+    elementIds = promptParameterExtractorEmplazamiento(propertyName, propertyValue, condition);
   }
-  catch (error) {
-    console.log(error, "error");
-  }
-  const elementIds = promptParameterExtractor(selectedCategoryElements, propertyName, propertyValue, condition);
+    //const elementIds = promptParameterExtractor(selectedCategoryElements, propertyName, propertyValue, condition);
   return elementIds;
   //console.log(selectedCategoryElements, "selectedCategoryElements");
 
 };
-function promptParameterExtractor(speckledataTreeCategory, propertyName, propertyValue, condition) {
+function promptParameterExtractorEmplazamiento(propertyName, propertyValue, condition) {
   //iterate over speckledataThreeCategory and get the elements that match the condition speckle.data.definition
   //this is too slow will need to refactor later speed important
+  const lotes =  get(viewerLotes)
   let matchElementIds = [];
-  speckledataTreeCategory.forEach((element) => {
-    const elementProperties = element.data.definition;
-    //iterate over elementproperties object and check if propertyname matches the condition
-    for (const [key, value] of Object.entries(elementProperties)) {
+  lotes.forEach((element) => {
+    for (const [key, value] of Object.entries(element)) {
+      //console.log(key, value, "key and value");
       if (key === propertyName) {
         //console.log(key, value, "key and value");
         //check if the condition is met
         //we are force to add possible condition for the bot answers since its not trained on this pattern 
         if (condition === "equal" || condition === "equals" ) {
           if (value === propertyValue) {
-            matchElementIds.push(element.data.id);
+            matchElementIds.push(element.id);
+            console.log("condition met", element);
+          }
+        }
+        else if (condition === "contains" || condition === "includes" ) {
+          //console.log(value, propertyValue, "value and property value.........");
+          if (value.includes(propertyValue)) {
+            matchElementIds.push(element.id);
             console.log("condition met", element);
           }
         }
@@ -105,11 +116,27 @@ function promptParameterExtractor(speckledataTreeCategory, propertyName, propert
     }
     //console.log(matchElementIds, "elementProperties.......");
   });
+  console.log(matchElementIds, "matchElementIds.......");
   colorById(matchElementIds, 0x8bc34a);
   return matchElementIds;
   //console.log(matchElementIds, "matchElementIds.......");
 }
 
+//function to deconstruct speckle object and return custom object with properties of interest
+//custom per use case. 
+export function lightSpeckleGenerator(speckleObjectDataTree) {
+  let lightSpeckleObject = {
+    id: speckleObject.id,
+    type: speckleObject.type,
+    category: speckleObject.category,
+    area: speckleObject.area,
+    estado: speckleObject.estado,
+    servicios: speckleObject.servicios,
+    sector: speckleObject.sector,
+    loteid: speckleObject.loteid,
+  };
+  let lightspeckleArray = [];
+}
 //get a list of present categories in data tree 
 //const checkCategories = speckledataTree.child
 //console.log (speckledataTree, "speckle data tree.........");

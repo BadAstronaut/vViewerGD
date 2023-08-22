@@ -42,6 +42,7 @@
 	socket.on('dataUpdated', (message) => {
 		console.log(message.speckleUrl, 'data updated from socket');
 		speckleStream.set(message.speckleUrl);
+		reloadViewer();
 		
 
 	});
@@ -104,13 +105,10 @@
 		console.log('sidebar_show', v);
 		_sidebar_show = v;
 	});
-	speckleStream.subscribe((speckleS) => {
-		console.log('speckleStream........', speckleS);
-		speckleStramToPass = speckleS;
-	});
+	
 
 </script>
-<SpeckleViewer speckleStream={$speckleStream} />
+<SpeckleViewer _speckleStream={$speckleStream} />
 
 {#if loadCompleted}
 	<UtilityBar />
