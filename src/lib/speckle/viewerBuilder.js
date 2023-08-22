@@ -1,47 +1,41 @@
 import { ViewerEvent } from "@speckle/viewer";
 import { getStreamCommits, getUserData } from "./speckleUtils.js";
 import { get } from "svelte/store";
-import { speckleViewer, finishLoading, speckleStream, speckleDatatree, lotesProps, protosProps, speckleParqueLotes, speckleParqueProtos, viewerLotes, viewerProtos } from "../../stores/toolStore";
+import { speckleViewer, finishLoading, speckleStream, speckleDatatree, revitProps, protosProps, speckleParqueLotes, speckleParqueProtos, viewerLotes, viewerProtos, revitPassportParameterName, viewerPMasElements, viewerPMasRevinedElements } from "../../stores/toolStore";
 import {
     getPropertiesByTypeParameter,
-    filterByCategoryNames
-  } from "$lib/speckle/speckleHandler";
+    filterByCategoryNames,
+    filterByCustomPropertyName,
+    checkCustomPropertyByName
+} from "$lib/speckle/speckleHandler";
 
 
 
 export async function buildViewerData() {
     const speckleDT = get(speckleDatatree)
     setSpeckleObjects(speckleDT)
-    getViewerObjects()
-    //console.log("lotessss",speckleDT)
+    const pMasRefinedObjects = getViewerObjects()
+    console.log("redeffinedd",get(viewerPMasElements))
 
 }
 //this function builds the speckle base objects in the scene (lotes and protos)
-function setSpeckleObjects(speckleDT){
-    const propsToQuery = get(lotesProps)
-    const catNames = ["Emplazamiento", "Site"]
-    const protoCatNames = ["Masa", "Mass"]
-    const siteCats = filterByCategoryNames(speckleDT,catNames)
-    const protoCats = filterByCategoryNames(speckleDT,protoCatNames)
-    speckleParqueLotes.set(siteCats)
-    speckleParqueProtos.set(protoCats)
+function setSpeckleObjects(speckleDT) {
+    const propsToQuery = get(revitProps)
+    const passportProp = get(revitPassportParameterName)
+    const passportElements = filterByCustomPropertyName(speckleDT, passportProp)
+    viewerPMasElements.set(passportElements)
 }
 
-function getViewerObjects(){
-    const loteParams = get(lotesProps)
-    const protoParams = get(protosProps)
-    const speckleLote = get(speckleParqueLotes)
-    const speckleProto = get(speckleParqueProtos)
-
-    const loteViewerObjects = extractParamData(speckleLote, loteParams, "Lote")
-    const protoViewerObjects = extractParamData(speckleProto, protoParams, "Proto")
-    
-    viewerLotes.set(loteViewerObjects)
-    viewerProtos.set(protoViewerObjects)
+function getViewerObjects() {
+    const _revitProps = get(revitProps)
+    const pmasObjects = get(viewerPMasElements)
+    //to do modify this to ad props to render in front end. 
+    const pMasViewerObjects = extractParamData(pmasObjects, _revitProps, "PMas")
+    viewerPMasElements.set(pMasViewerObjects)
     //console.log("loteViewerObjects",loteViewerObjects)
 }
 
-function extractParamData(speckleObjects, params, type){
+function extractParamData(speckleObjects, params, type) {
     const paramData = []
 
     speckleObjects.forEach(obj => {
@@ -51,22 +45,14 @@ function extractParamData(speckleObjects, params, type){
         _viewerObj.id = obj.id
         _viewerObj.category = obj.category
         _viewerObj.tipo = type
+        _viewerObj.family = obj.family
+        _viewerObj.name = obj.type
         //console.log("====obj",obj.parameters["Area"])
-        params.forEach(param => {
-            //console.log("====prop",prop)
-            if(props[param]){
-                _viewerObj[param] = props[param].value
-            
-            }})
-        if(type === "Lote"){
-            //console.log("lot]]]]]]]]]]]]]e",obj)
-            _viewerObj.LoteID = obj.definition.type
-        }
-        else if(type === "Proto"){
-           
-        }
+        const checkCustomPMas = checkCustomPropertyByName(props, get(revitPassportParameterName))
+        _viewerObj.IDPasaporte = checkCustomPMas ? checkCustomPMas : "No ID"
+        //console.log("checkCustomPMas", checkCustomPMas)
         paramData.push(_viewerObj)
     })
-
+    //console.log("paramData", paramData)
     return paramData
 }

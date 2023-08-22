@@ -9,7 +9,7 @@ const viviendaInterface = {
   speckleStream: "",
   daluxSafetyData: "",
 }
-const _speckleStream ='aa043c36dd';
+const _speckleStream ='48713f3b32';
 
 
 

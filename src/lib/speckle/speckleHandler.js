@@ -4,6 +4,7 @@ import { get } from "svelte/store";
 import { speckleViewer, finishLoading, speckleStream, speckleDatatree, viewerLotes } from "../../stores/toolStore";
 import { buildViewerData } from '$lib/speckle/viewerBuilder';
 import { json } from "@sveltejs/kit";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 const token = import.meta.env.VITE_SPECKLE_TOCKEN;
 
 export async function fetchUserData() {
@@ -59,10 +60,10 @@ export async function filterByPromptConditions(categoryName, propertyName, prope
   //   console.log(error, "error");
   // }
   //change logic to work with only one category at the time 
-  if(categoryName==="Emplazamiento"){
+  if (categoryName === "Emplazamiento") {
     elementIds = promptParameterExtractorEmplazamiento(propertyName, propertyValue, condition);
   }
-    //const elementIds = promptParameterExtractor(selectedCategoryElements, propertyName, propertyValue, condition);
+  //const elementIds = promptParameterExtractor(selectedCategoryElements, propertyName, propertyValue, condition);
   return elementIds;
   //console.log(selectedCategoryElements, "selectedCategoryElements");
 
@@ -70,7 +71,7 @@ export async function filterByPromptConditions(categoryName, propertyName, prope
 function promptParameterExtractorEmplazamiento(propertyName, propertyValue, condition) {
   //iterate over speckledataThreeCategory and get the elements that match the condition speckle.data.definition
   //this is too slow will need to refactor later speed important
-  const lotes =  get(viewerLotes)
+  const lotes = get(viewerLotes)
   let matchElementIds = [];
   lotes.forEach((element) => {
     for (const [key, value] of Object.entries(element)) {
@@ -79,13 +80,13 @@ function promptParameterExtractorEmplazamiento(propertyName, propertyValue, cond
         //console.log(key, value, "key and value");
         //check if the condition is met
         //we are force to add possible condition for the bot answers since its not trained on this pattern 
-        if (condition === "equal" || condition === "equals" ) {
+        if (condition === "equal" || condition === "equals") {
           if (value === propertyValue) {
             matchElementIds.push(element.id);
             console.log("condition met", element);
           }
         }
-        else if (condition === "contains" || condition === "includes" ) {
+        else if (condition === "contains" || condition === "includes") {
           //console.log(value, propertyValue, "value and property value.........");
           if (value.includes(propertyValue)) {
             matchElementIds.push(element.id);
@@ -331,6 +332,47 @@ export function filterByCategoryNames(DT, categoryNames) {
   });
   return objects;
 }
+//implement logic to filter objects based on property name considering 
+export function filterByCustomPropertyName(DT, propertyName) {
+  //considering that custom properties contain more tha 1 "-" occurrency in props
+  const seek = '-'
+  const objects = DT.findAll((uui, obj) => {
+    //console.log("-------",obj, );
+    const catName = obj.category;
+    const elementParameters = obj.parameters
+    //console.log("-------",elementParameters);
+    if (elementParameters) {
+      const customPropCheck = checkCustomPropertyByName(elementParameters, propertyName)
+      if (customPropCheck) {
+        return true
+      }
+      else {
+        return false
+      }
+    }
+
+  });
+  //console.log("-------", objects);
+  return objects;
+}
+
+export function checkCustomPropertyByName(elementParamters, propertyName) {
+  const customPropCheck = Object.keys(elementParamters).filter(key => {
+    const checkCustomProp = (key.match(/-/g) || []).length > 2;
+    if (checkCustomProp && elementParamters[key].name == propertyName) {
+      return true
+    }
+  });
+  const propValue = elementParamters[customPropCheck[0]]
+  if (propValue) {
+    return propValue.value
+  }
+  else {
+    //console.log("-------value", elementParamters);
+    return null
+  }
+}
+
 
 //X ray functionality it will take a list of categories,
 //and list of current selected elements

@@ -12,7 +12,8 @@
 		sidebar_show,
 		servicesSelected,
 		currentSelection,
-		chatMessages
+		chatMessages,
+		viewerPMasElements
 	} from '/src/stores/toolStore.js';
 	import {
 		selectElementsByPropNameValue,
@@ -53,46 +54,53 @@
 			//console.log("showing sensor animation",get(activeIoTIndicators));
 		}
 	}
+	//generate a function that returns a random color in hex
+	function getRandomColor() {
+		var letters = '0123456789abcdef';
+		var color = '#'; // Changed this line
+		for (var i = 0; i < 6; i++) {
+			color += letters[Math.floor(Math.random() * 16)];
+		}
+		console.log('color', color);
+		return color;
+	}
 
 	//create a function that isole and filter ofjects based on propertyes
-	function colorByPropertyAvailability() {
+	function colorByPassport() {
 		const activeV = get(speckleViewer).speckleViewer;
-		const specklePropName = 'passportID';
-		const disponibles = [];
-		const ocupados = [];
-		const reservados = [];
+		let groupedByPassport = [];
+		const colorPassportObject = {
+			IDPasaporte: '',
+			color: '',
+			objectIds: []
+		};
 		if (activeV && get(finishLoading)) {
-			const lotes = get(viewerLotes);
-			//get groups of elements ids based on the state property
-			lotes.forEach((lote) => {
-				if (lote.Estado == 'Disponible') {
-					disponibles.push(lote.id);
-				} else if (lote.Estado == 'Ocupado') {
-					ocupados.push(lote.id);
-				} else if (lote.Estado == 'Reservado') {
-					reservados.push(lote.id);
+			const pMasElements = get(viewerPMasElements);
+			//iterate over pMasElements and group them by passport
+			pMasElements.forEach((element) => {
+				//console.log("element",element);
+				const passportID = element.IDPasaporte;
+				const color = getRandomColor();
+				//check if object with passportID exists in groupedByPassport
+				const passportObject = groupedByPassport.find(
+					(passport) => passport.IDPasaporte == passportID
+				);
+				if (passportObject) {
+					//console.log("passportObject",passportObject);
+					passportObject.objectIds.push(element.id);
+				} else {
+					//console.log("passportObject",passportObject);
+					const newPassportObject = {
+						IDPasaporte: passportID,
+						color: color,
+						objectIds: [element.id]
+					};
+					groupedByPassport.push(newPassportObject);
 				}
 			});
-			const colors = get(colorValueDisponibility);
-			const dispQueryObject = {
-				objectIds: disponibles,
-				color: colors.Disponible
-			};
-			const ocupQueryObject = {
-				objectIds: ocupados,
-				color: colors.Ocupado
-			};
-			const resQueryObject = {
-				objectIds: reservados,
-				color: colors.Reservado
-			};
-			console.log('states of color disponible and ocupado', disponibles, ocupados);
-			activeV.setUserObjectColors([ocupQueryObject, dispQueryObject]);
-			//activeV.setUserObjectColors([dispQueryObject])
-
-			//need to get all the speckle elements that have the property of passport and filter them
-			//const Selements = selectElementsByPropNameValue(specklePropName,passport.passportID)
-			//console.log("activeV",Selements);
+			console.log('groupedByPassport', groupedByPassport);
+			//need to implement a function instead to isolated elements in viewer and filter 
+			activeV.setUserObjectColors(groupedByPassport);
 		}
 	}
 	function removeFilterViewer() {
@@ -187,29 +195,6 @@
 			currentSelection.set([]);
 		}
 	}
-
-	//create a function to get the api/bimbot response passing the viewerLotes inpunt
-	function getBimbotResponse() {
-		if($sidebar_show){
-			resetSidebar();
-		}else{
-			sidebar_show.set(true);
-		}
-
-		//resetSidebar();
-		console.log('chatMessages elssseee', chatMessages);
-		const welcomM = [
-			{
-				messageId: 420,
-				message: 'Hola! soy CrisBot! te ayudo con info de lotes del parque CTEC :)',
-				timestamp: 1587139349155.217,
-				sentByMe: false,
-				timeRead: 1587139359024.353
-			}
-		];
-		chatMessages.set(welcomM);
-		//return bimbotResponseFiltered;
-	}
 </script>
 
 <div class="utility-bar">
@@ -217,33 +202,15 @@
 	<ToolBarButton icon={homeView} toExecute={setHome} active={false} commandName="Set Home View" />
 	<ToolBarButton
 		icon={colorByProperty}
-		toExecute={colorByPropertyAvailability}
+		toExecute={colorByPassport}
 		active={false}
-		commandName="Color por Ocupado, Disponible Reservado"
-	/>
-	<ToolBarButton
-		icon={colorBySector}
-		toExecute={colorByPropertySector}
-		active={false}
-		commandName="Color por Sectores"
-	/>
-	<ToolBarButton
-		icon={services}
-		toExecute={filterByService}
-		active={false}
-		commandName="Filter Reset"
+		commandName="Colorear Pasaportes"
 	/>
 	<ToolBarButton
 		icon={filterOff}
 		toExecute={removeFilterViewer}
 		active={false}
 		commandName="Filter Reset"
-	/>
-	<ToolBarButton
-		icon={chatIcon}
-		toExecute={getBimbotResponse}
-		active={false}
-		commandName="Chat Bot"
 	/>
 </div>
 

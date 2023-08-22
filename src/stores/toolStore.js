@@ -47,15 +47,21 @@ export const passportProps = writable({
     greenStatus: "Bueno",
 })
 
-export const lotesProps = writable(["type", "Area", "Estado","Servicios","Sector"]) 
-export const protosProps = writable(["LoteID", "Nombre", "Empresas","Fecha Ingreso", "Fecha Egreso", "Contacto", "Planos de Proyecto"])   
+export const revitProps = writable(["type", "category"]) 
 
+export const protosProps = writable(["type", "category", "IDPasaporte"]) 
 
 export const speckleParqueLotes = writable([])
+
+export const revitPassportParameterName = readable("IDPasaporte")
 
 export const speckleParqueProtos = writable([])
 
 export const viewerLotes = writable([])
+
+export const viewerPMasElements = writable([])
+
+export const viewerPMasRevinedElements = writable([])
 
 export const viewerProtos = writable([])
 

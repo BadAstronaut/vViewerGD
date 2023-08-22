@@ -4,7 +4,7 @@
 
 // Svelte Colors!
 @use '@material/theme/index' as theme with (
-  $primary: #8d93a7,
+  $primary: #00384a,
   $secondary: #676778,
   $surface: #fff,
   $background: #e5e5e5,
@@ -14,7 +14,7 @@
 
 h1, h2, h3, h4, h5, h6, body, p, td, tr, th{
   font-family: 'Poppins', sans-serif;
-  color: #8d93a7;
+  color: #00384a;
 }
 
 html,

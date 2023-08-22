@@ -46,28 +46,22 @@
 		
 
 	});
-
+	
 
 	//implement onMount function
 	onMount(async () => {
 		//load calendar data 
-		fetchGoogleCalendarByID(_calendarID);
 		//handle sidebar show and hide
 		currentSelection.subscribe((v) => {
 			selectedElement = v;
 			const viewerProtosData = get(viewerProtos);
-			const viewerLotesData = get(viewerLotes);
-
 			if (selectedElement && selectedElement.length > 0) {
 				const viewerProtosDataIds = viewerProtosData.map((item) => item.id);
-				const viewerLotesDataIds = viewerLotesData.map((item) => item.id);
 				const viewerDataIds = [...viewerProtosDataIds, ...viewerLotesDataIds];
-				//console.log(viewerDataIds.includes(selectedElement[0]?.id), viewerDataIds)
 				if (viewerDataIds.includes(selectedElement[0]?.id)) {
 					console.log('found showing sidebar', selectedElement[0]?.id);
 					_sidebar_show = true;
 					const selectedProto = viewerProtosData.find((item) => item.id === selectedElement[0]?.id);
-					const selectedLote = viewerLotesData.find((item) => item.id === selectedElement[0]?.id);
 					//console.log(selectedProto, selectedLote,"========");
 					if (selectedProto) {
 						currentProto.set(selectedProto);
@@ -113,10 +107,8 @@
 {#if loadCompleted}
 	<UtilityBar />
 	<!-- <GoogleCalendarInfoContainer /> -->
-	<DonoutKpiChart dataProp={'Estado'} tittle="Disponibilidad:" />
 	<Sidebar bind:show={_sidebar_show} />
 {:else}
-
 	<div class="center-loader">
 		<Circle2 size="60" color="#FF3E00" unit="px" duration="1.5s" />
 	</div>
