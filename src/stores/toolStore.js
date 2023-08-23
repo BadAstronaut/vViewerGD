@@ -53,6 +53,8 @@ export const protosProps = writable(["type", "category", "IDPasaporte"])
 
 export const speckleParqueLotes = writable([])
 
+export const selectedPassports = writable([])
+
 export const revitPassportParameterName = readable("IDPasaporte")
 
 export const speckleParqueProtos = writable([])
@@ -61,7 +63,7 @@ export const viewerLotes = writable([])
 
 export const viewerPMasElements = writable([])
 
-export const viewerPMasRevinedElements = writable([])
+export const viewerPMasGroupedPassports = writable([])
 
 export const viewerProtos = writable([])
 

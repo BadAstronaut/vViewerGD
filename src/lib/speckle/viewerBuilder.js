@@ -1,21 +1,21 @@
 import { ViewerEvent } from "@speckle/viewer";
 import { getStreamCommits, getUserData } from "./speckleUtils.js";
 import { get } from "svelte/store";
-import { speckleViewer, finishLoading, speckleStream, speckleDatatree, revitProps, protosProps, speckleParqueLotes, speckleParqueProtos, viewerLotes, viewerProtos, revitPassportParameterName, viewerPMasElements, viewerPMasRevinedElements } from "../../stores/toolStore";
+import { speckleViewer, finishLoading, speckleStream, speckleDatatree, revitProps, protosProps, speckleParqueLotes, speckleParqueProtos, viewerLotes, viewerProtos, revitPassportParameterName, viewerPMasElements,viewerPMasGroupedPassports } from "../../stores/toolStore";
 import {
     getPropertiesByTypeParameter,
     filterByCategoryNames,
     filterByCustomPropertyName,
-    checkCustomPropertyByName
+    checkCustomPropertyByName, 
+    groupBuilderPassports
 } from "$lib/speckle/speckleHandler";
 
 
 
-export async function buildViewerData() {
-    const speckleDT = get(speckleDatatree)
+export async function buildViewerData(speckleDT) {
     setSpeckleObjects(speckleDT)
-    const pMasRefinedObjects = getViewerObjects()
-    console.log("redeffinedd",get(viewerPMasElements))
+    //const pMasRefinedObjects = getViewerObjects()
+    //console.log("redeffinedd",get(viewerPMasElements))
 
 }
 //this function builds the speckle base objects in the scene (lotes and protos)
@@ -23,15 +23,18 @@ function setSpeckleObjects(speckleDT) {
     const propsToQuery = get(revitProps)
     const passportProp = get(revitPassportParameterName)
     const passportElements = filterByCustomPropertyName(speckleDT, passportProp)
+    const _pMasObjects = getViewerObjects(passportElements)
     viewerPMasElements.set(passportElements)
+    const groupedPass = groupBuilderPassports(_pMasObjects)
+    viewerPMasGroupedPassports.set(groupedPass)
+    //console.log("groupedPass from builder",groupedPass, "passport EEE")    
 }
 
-function getViewerObjects() {
+function getViewerObjects(pmasObjects) {
     const _revitProps = get(revitProps)
-    const pmasObjects = get(viewerPMasElements)
     //to do modify this to ad props to render in front end. 
     const pMasViewerObjects = extractParamData(pmasObjects, _revitProps, "PMas")
-    viewerPMasElements.set(pMasViewerObjects)
+    return pMasViewerObjects
     //console.log("loteViewerObjects",loteViewerObjects)
 }
 

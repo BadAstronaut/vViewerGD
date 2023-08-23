@@ -17,7 +17,9 @@
 	} from '/src/stores/toolStore.js';
 	import {
 		selectElementsByPropNameValue,
-		resetViewerFilters
+		groupBuilderPassports,
+		resetViewerFilters,
+		colorByGroupedPassport
 	} from '/src/lib/speckle/speckleHandler.js';
 
 	let setTopView = '/icons/top.svg';
@@ -55,53 +57,13 @@
 		}
 	}
 	//generate a function that returns a random color in hex
-	function getRandomColor() {
-		var letters = '0123456789abcdef';
-		var color = '#'; // Changed this line
-		for (var i = 0; i < 6; i++) {
-			color += letters[Math.floor(Math.random() * 16)];
-		}
-		console.log('color', color);
-		return color;
-	}
 
 	//create a function that isole and filter ofjects based on propertyes
 	function colorByPassport() {
 		const activeV = get(speckleViewer).speckleViewer;
-		let groupedByPassport = [];
-		const colorPassportObject = {
-			IDPasaporte: '',
-			color: '',
-			objectIds: []
-		};
-		if (activeV && get(finishLoading)) {
-			const pMasElements = get(viewerPMasElements);
-			//iterate over pMasElements and group them by passport
-			pMasElements.forEach((element) => {
-				//console.log("element",element);
-				const passportID = element.IDPasaporte;
-				const color = getRandomColor();
-				//check if object with passportID exists in groupedByPassport
-				const passportObject = groupedByPassport.find(
-					(passport) => passport.IDPasaporte == passportID
-				);
-				if (passportObject) {
-					//console.log("passportObject",passportObject);
-					passportObject.objectIds.push(element.id);
-				} else {
-					//console.log("passportObject",passportObject);
-					const newPassportObject = {
-						IDPasaporte: passportID,
-						color: color,
-						objectIds: [element.id]
-					};
-					groupedByPassport.push(newPassportObject);
-				}
-			});
-			console.log('groupedByPassport', groupedByPassport);
-			//need to implement a function instead to isolated elements in viewer and filter 
-			activeV.setUserObjectColors(groupedByPassport);
-		}
+		const groupedByPassport = groupBuilderPassports();
+		console.log('groupedByPassport', groupedByPassport);
+		colorByGroupedPassport(groupBuilderPassports)
 	}
 	function removeFilterViewer() {
 		resetViewerFilters();

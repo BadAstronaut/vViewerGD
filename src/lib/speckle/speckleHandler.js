@@ -1,7 +1,7 @@
 import { ViewerEvent } from "@speckle/viewer";
 import { getStreamCommits, getUserData } from "./speckleUtils.js";
 import { get } from "svelte/store";
-import { speckleViewer, finishLoading, speckleStream, speckleDatatree, viewerLotes } from "../../stores/toolStore";
+import { speckleViewer, finishLoading, speckleStream, speckleDatatree, viewerLotes, viewerPMasElements } from "../../stores/toolStore";
 import { buildViewerData } from '$lib/speckle/viewerBuilder';
 import { json } from "@sveltejs/kit";
 import { faL } from "@fortawesome/free-solid-svg-icons";
@@ -189,6 +189,67 @@ export async function lookView(view) {
   }
 }
 
+function getRandomColor() {
+  var letters = '0123456789abcdef';
+  var color = '#'; // Changed this line
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  //console.log('color', color);
+  return color;
+}
+
+export function groupBuilderPassports(pMasElements) {
+  const activeV = get(speckleViewer).speckleViewer;
+  let groupedByPassport = [];
+  const colorPassportObject = {
+    IDPasaporte: '',
+    color: '',
+    objectIds: []
+  };
+  //console.log("check from handler", pMasElements);
+  if (activeV) {
+    //console.log("pMasElementsfrom handler",pMasElements);
+    //iterate over pMasElements and group them by passport
+    pMasElements.forEach((element) => {
+      //console.log("element",element);
+      const passportID = element.IDPasaporte;
+      const color = getRandomColor();
+      //check if object with passportID exists in groupedByPassport
+      const passportObject = groupedByPassport.find(
+        (passport) => passport.IDPasaporte == passportID
+      );
+      if (passportObject) {
+        //console.log("passportObject",passportObject);
+        passportObject.objectIds.push(element.id);
+      } else {
+        //console.log("passportObject",passportObject);
+        if (passportID) {
+          const newPassportObject = {
+            IDPasaporte: passportID,
+            color: color,
+            objectIds: [element.id]
+          };
+          groupedByPassport.push(newPassportObject);
+        }
+
+      }
+    });
+  }
+  //console.log("groupedByPassport",groupedByPassport);
+  return groupedByPassport;
+}
+
+export async function colorByGroupedPassport(groupedList) {
+  const v = get(speckleViewer).speckleViewer;
+  //flatten the groupedList array and keep only objectsIds
+  const flatList = groupedList.map((group) => {
+    return group.objectIds
+  })
+  v.isolateObjects(flatList);
+  v.setUserObjectColors(groupedList)
+}
+
 
 export async function colorById(objectIds, color) {
   const v = get(speckleViewer).speckleViewer;
@@ -266,7 +327,7 @@ export async function reloadViewerGetObjectsByIds(
     p.then(() => {
       speckleViewer.set({ 'speckleViewer': v })
       speckleDatatree.set(v.getDataTree());
-      buildViewerData();
+      buildViewerData(v.getDataTree());
       finishLoading.set(true);
       console.log("speckleViewer-----", get(speckleDatatree));
     })
@@ -289,6 +350,7 @@ export async function reloadViewer(speckleStream) {
     const obj = objUrl(speckleStream, branch.commits.items[0].referencedObject);
     await v.loadObject(obj, token);
     v.zoom(1);
+    finishLoading.set(true);
   }
 
 }
@@ -509,7 +571,7 @@ async function fetchStreamData(speckleStream) {
       }
       else {
         //fix later not sure why this happens
-        console.log('No stream data fix later...', speckleStream)
+        //console.log('No stream data fix later...', speckleStream)
       }
     }
   );

@@ -5,9 +5,9 @@
 <nav class="layout">
 	<!-- add logoCTEC as a a logo in the top left corner of the nav bar -->
 	<img class="logo" src="/logo.svg" alt="logoCTEC" width="auto" height="auto" />
-	<div class="head-title">
+	<!-- <div class="head-title">
 		<h1 class="title">Pasaporte de Materiales</h1>
-	</div>
+	</div> -->
 	<!-- <a data-sveltekit-preload-data="tap" href="/">Mod Habitar</a> Laguna Caren 33°26'12.2"S 70°50'20.0"W Pudahuel, 9020000, Región Metropolitana
   <a data-sveltekit-preload-data="tap" href="/viviendas/vivienda-1">Vivienda 1</a>
   <a data-sveltekit-preload-data="tap" href="/viviendas/vivienda-2">Vivienda 2</a> -->

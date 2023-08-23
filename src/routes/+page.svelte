@@ -3,21 +3,24 @@
 	import { onMount } from 'svelte';
 	import SpeckleViewer from '$lib/components/SpeckleViewer.svelte';
 	import { get } from 'svelte/store';
-	import { reloadViewer } from '$lib/speckle/speckleHandler';
+	import { reloadViewer, groupBuilderPassports, colorByGroupedPassport } from '$lib/speckle/speckleHandler';
 	import {
 		speckleStream,
 		speckleViewer,
 		currentSelection,
-		speckleDatatree,
-		finishLoading,
-		speckleParqueLotes,
-		viewerProtos,
-		viewerLotes,
-		sidebar_show,
 		currentLote,
 		currentProto, 
-		parkOperationCalendarID,
+		finishLoading,
+		viewerProtos,
+		viewerLotes,
+		viewerPMasElements,
+		viewerPMasGroupedPassports,
+		sidebar_show,
+		speckleDatatree,
+		speckleParqueLotes,
 		socketIoUrl,
+		selectedPassports,
+		parkOperationCalendarID,
 	} from '../stores/toolStore';
 	import {fetchGoogleCalendarByID} from "$lib/components/google/googleCalendar.js";
 	import UtilityBar from '$lib/components/modelViewer/UtilityBar.svelte';
@@ -38,14 +41,54 @@
 	const _calendarID= get(parkOperationCalendarID);
 	
 	//socket to change stream dynamically
+	//add code to get the passport from the socket
+	//load the passport to a store and filter elements in model each time store changes. 
+	//each time a passport is pass it should reset filters, filter by new value and color based on passport Colors. 
 	const socket = io(get(socketIoUrl));
 	socket.on('dataUpdated', (message) => {
-		console.log(message.speckleUrl, 'data updated from socket');
-		speckleStream.set(message.speckleUrl);
-		reloadViewer();
+		const _speckleStream = message.speckleUrl;
+		const _passportIDs = message.passports;
+		const currentStream = get(speckleStream);
+		if (_speckleStream && currentStream !== _speckleStream) {
+			//console.log(_speckleStream, _passportIDs, 'data updated from socket');
+			speckleStream.set(_speckleStream);
+			selectedPassports.set(_passportIDs);
+			finishLoading.set(false);
+			reloadViewer();
+		} else{
+			selectedPassports.set(_passportIDs);
+			
+		}
 		
 
 	});
+
+	// viewerPMasGroupedPassports.subscribe((vGroup) => {
+	// 	console.log(vGroup, 'updated group........');
+	// });
+
+	selectedPassports.subscribe((newPass) => {
+		const _finishLoading = get(finishLoading);
+		const pmasElements  = get(viewerPMasElements)
+		const getGrouped = get(viewerPMasGroupedPassports);
+		console.log(getGrouped, _finishLoading, 'updated group........');
+		const selectedGroups = [];
+		if(finishLoading){
+			newPass.forEach(value => {
+				//iterate over the array of objects getGrouped and filter the group with IDPasaporte equal to value
+				const element = getGrouped.find(item => item.IDPasaporte === value);
+				//console.log(element, 'getGrouped');
+				//console.log(element, 'element');
+				if(element){
+					selectedGroups.push(element);
+				}
+			})
+		}
+		if( selectedGroups.length >0){
+			colorByGroupedPassport(selectedGroups);
+		}
+		console.log("selected group ", selectedGroups);
+	})
 	
 
 	//implement onMount function
