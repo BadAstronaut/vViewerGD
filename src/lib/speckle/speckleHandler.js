@@ -211,6 +211,7 @@ export function groupBuilderPassports(pMasElements) {
   if (activeV) {
     //console.log("pMasElementsfrom handler",pMasElements);
     //iterate over pMasElements and group them by passport
+    //console.log("pMasElements from filter....", pMasElements);
     pMasElements.forEach((element) => {
       //console.log("element",element);
       const passportID = element.IDPasaporte;
@@ -242,6 +243,7 @@ export function groupBuilderPassports(pMasElements) {
 
 export async function colorByGroupedPassport(groupedList) {
   const v = get(speckleViewer).speckleViewer;
+  //console.log("groupedList", groupedList);
   //flatten the groupedList array and keep only objectsIds
   const flatList = groupedList.map((group) => {
     return group.objectIds

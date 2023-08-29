@@ -50,7 +50,7 @@
 		const _passportIDs = message.passports;
 		const currentStream = get(speckleStream);
 		if (_speckleStream && currentStream !== _speckleStream) {
-			//console.log(_speckleStream, _passportIDs, 'data updated from socket');
+			console.log(_speckleStream, _passportIDs, 'data updated from socket');
 			speckleStream.set(_speckleStream);
 			selectedPassports.set(_passportIDs);
 			finishLoading.set(false);

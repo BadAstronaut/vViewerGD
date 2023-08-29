@@ -13,7 +13,8 @@
 		servicesSelected,
 		currentSelection,
 		chatMessages,
-		viewerPMasElements
+		viewerPMasElements,
+		viewerPMasGroupedPassports
 	} from '/src/stores/toolStore.js';
 	import {
 		selectElementsByPropNameValue,
@@ -61,9 +62,8 @@
 	//create a function that isole and filter ofjects based on propertyes
 	function colorByPassport() {
 		const activeV = get(speckleViewer).speckleViewer;
-		const groupedByPassport = groupBuilderPassports();
-		console.log('groupedByPassport', groupedByPassport);
-		colorByGroupedPassport(groupBuilderPassports)
+		const currentPassports = get(viewerPMasGroupedPassports);
+		colorByGroupedPassport(currentPassports)
 	}
 	function removeFilterViewer() {
 		resetViewerFilters();
