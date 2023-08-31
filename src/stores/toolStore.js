@@ -6,7 +6,7 @@ export const speckleViewer = writable({
 
 })
 
-export const socketIoUrl = readable("http://54.172.16.64:3000")
+export const socketIoUrl = readable("https://pmasapi.pasaportemateriales.cl")
 
 export const activeIoTIndicators = writable([])
 
