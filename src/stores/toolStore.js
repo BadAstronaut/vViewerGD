@@ -6,8 +6,11 @@ export const speckleViewer = writable({
 
 })
 
+export const userID = writable(null)
+//production socektIoUrl config 
 export const socketIoUrl = readable("https://pmasapi.pasaportemateriales.cl")
-
+//local socketIoUrl config
+//export const socketIoUrl = readable("http://localhost:3000")
 export const activeIoTIndicators = writable([])
 
 export const finishLoading = writable(false);
