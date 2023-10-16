@@ -4,7 +4,7 @@
 
 <nav class="layout">
 	<!-- add logoCTEC as a a logo in the top left corner of the nav bar -->
-	<img class="logo" src="/logo.svg" alt="logoCTEC" width="auto" height="auto" />
+	<!-- <img class="logo" src="/logo.svg" alt="logoCTEC" width="auto" height="auto" /> -->
 	<!-- <div class="head-title">
 		<h1 class="title">Pasaporte de Materiales</h1>
 	</div> -->
@@ -17,7 +17,7 @@
 	<slot />
 </main>
 
-<footer class="layout">©Vero Viewer 0.1</footer>
+<footer class="layout">©Viewer PMas 0.1</footer>
 
 <style>
 	nav {
@@ -98,6 +98,7 @@
 		color: rgba(94, 104, 121, 0.388);
 		padding: 0;
 		height: 1vh;
+		padding-bottom: 1vh;
 		width: 100%;
 		z-index: 1000;
 		margin: 0;
