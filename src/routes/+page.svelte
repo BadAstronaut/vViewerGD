@@ -20,13 +20,13 @@
 		userID,
 		viewerProtos,
 		viewerLotes,
-		viewerPMasElements,
+		viewerIoTElements,
 		viewerPMasGroupedPassports,
 		sidebar_show,
 		speckleDatatree,
 		speckleParqueLotes,
 		socketIoUrl,
-		selectedPassports,
+		selectedPassports as selectedSensor,
 		parkOperationCalendarID
 	} from '../stores/toolStore';
 	import { fetchGoogleCalendarByID } from '$lib/components/google/googleCalendar.js';
@@ -47,7 +47,7 @@
 	let _viewerLotes = [];
 	const _calendarID = get(parkOperationCalendarID);
 
-	//handle userID to from iframe url
+	//handle userID to from iframe url http://localhost:5173/?userId=123&speckleUrl=ef054552c3
 	let _userId = $page.url.searchParams.get('userId');
 	let _currentSpeckleStream = $page.url.searchParams.get('speckleUrl');
 	if (_currentSpeckleStream) {
@@ -66,50 +66,40 @@
 
 	socket.on('dataUpdated', (message) => {
 		const _speckleStream = message.speckleUrl;
-		const _passportIDs = message.passports;
+		const _sensorID = message.sensorID;
 		const currentStream = get(speckleStream);
+		const _finishLoading = get(finishLoading);
+		const activeV = get(speckleViewer).speckleViewer;
+		const currentSensors = get(viewerIoTElements);
 
 		if (_speckleStream && currentStream !== _speckleStream) {
-			console.log(_speckleStream, _passportIDs, 'data updated from socket');
+			console.log(_speckleStream, _sensorID, 'data updated from socket');
 			speckleStream.set(_speckleStream);
-			selectedPassports.set(_passportIDs);
+			selectedSensor.set(_sensorID);
 			finishLoading.set(false);
 			reloadViewer();
 		} else {
-			selectedPassports.set(_passportIDs);
+			console.log(currentSensors, _sensorID, 'data updated from socket');
+			selectedSensor.set(_sensorID);
+			if (finishLoading) {
+				const flatList = currentSensors.map((sensor) => {
+					if (sensor.sensorID === _sensorID) {
+						return sensor.id;
+					}
+				});
+				console.log('flatList', flatList);
+				activeV.isolateObjects(flatList);
+			}
 		}
 	});
 
-	//clean up on destroy 
+	//clean up on destroy
 	onDestroy(() => {
 		socket.disconnect();
 	});
 	// viewerPMasGroupedPassports.subscribe((vGroup) => {
 	// 	console.log(vGroup, 'updated group........');
 	// });
-
-	selectedPassports.subscribe((newPass) => {
-		const _finishLoading = get(finishLoading);
-		const pmasElements = get(viewerPMasElements);
-		const getGrouped = get(viewerPMasGroupedPassports);
-		console.log(getGrouped, _finishLoading, 'updated group........');
-		const selectedGroups = [];
-		if (finishLoading) {
-			newPass.forEach((value) => {
-				//iterate over the array of objects getGrouped and filter the group with IDPasaporte equal to value
-				const element = getGrouped.find((item) => item.IDPasaporte === value);
-				//console.log(element, 'getGrouped');
-				//console.log(element, 'element');
-				if (element) {
-					selectedGroups.push(element);
-				}
-			});
-		}
-		if (selectedGroups.length > 0) {
-			colorByGroupedPassport(selectedGroups);
-		}
-		console.log('selected group ', selectedGroups);
-	});
 
 	//implement onMount function
 	onMount(async () => {
@@ -120,23 +110,6 @@
 			const viewerProtosData = get(viewerProtos);
 			if (selectedElement && selectedElement.length > 0) {
 				const viewerProtosDataIds = viewerProtosData.map((item) => item.id);
-				const viewerDataIds = [...viewerProtosDataIds, ...viewerLotesDataIds];
-				if (viewerDataIds.includes(selectedElement[0]?.id)) {
-					console.log('found showing sidebar', selectedElement[0]?.id);
-					_sidebar_show = true;
-					const selectedProto = viewerProtosData.find((item) => item.id === selectedElement[0]?.id);
-					//console.log(selectedProto, selectedLote,"========");
-					if (selectedProto) {
-						currentProto.set(selectedProto);
-					} else if (selectedLote) {
-						currentLote.set(selectedLote);
-					}
-				} else {
-					//console.log('not found hiding sidebar');
-					_sidebar_show = false;
-					currentLote.set(null);
-					currentProto.set(null);
-				}
 			} else {
 				_sidebar_show = false;
 				currentLote.set(null);
@@ -188,7 +161,7 @@
 		left: 50%;
 		transform: translate(-50%, -50%);
 	}
-	.no-model{
+	.no-model {
 		position: absolute;
 		top: 50%;
 		left: 50%;

@@ -85,60 +85,7 @@
 		//twoDCard(v);
 	});
 
-	function twoDCard(v) {
-		const scene = v.speckleRenderer._scene;
-		const earthDiv = document.createElement('div');
 
-		earthDiv.className = 'label';
-		earthDiv.textContent = 'Earttttttt9999999999999999999999999999ttth';
-		earthDiv.style.backgroundColor = 'Black';
-		earthDiv.style.color = 'white';
-		earthDiv.style.padding = '5px';
-		earthDiv.style.borderRadius = '5px';
-		earthDiv.style.fontSize = '120px';
-		earthDiv.style.fontFamily = 'sans-serif';
-		earthDiv.style.fontWeight = 'bold';
-		earthDiv.style.textAlign = 'center';
-		earthDiv.style.width = '100px';
-		earthDiv.style.height = '100px';
-		earthDiv.style.border = '1px solid black';
-
-		const earthLabel = new CSS2DObject(earthDiv);
-		earthLabel.position.set(10, 1, 0);
-		earthLabel.scale.set(50, 50, 50);
-		earthLabel.layers.set(2);
-
-		const sphere = ThreeSphere({ x: 0, y: 0, z: 0 });
-		scene.add(earthLabel);
-		console.log('sphere', sphere);
-		sphere.position.set(0, 10, 1);
-		//scene.add(sphere);
-
-		console.log('scene data tree', viewerVal.parentNode);
-
-		labelRenderer = new CSS2DRenderer(viewerVal.parentNode);
-		labelRenderer.setSize(window.innerWidth, window.innerHeight);
-		labelRenderer.domElement.style.position = 'absolute';
-		labelRenderer.domElement.style.top = '0px';
-		labelRenderer.domElement.style.pointerEvents = 'none';
-		labelRenderer.domElement.style.zIndex = '1';
-		viewerVal.parentNode.appendChild(labelRenderer.domElement);
-		v.requestRender();
-	}
-
-	function ThreeSphere(position) {
-		const sphere = new THREE.Mesh(
-			new THREE.SphereGeometry(5.25),
-			new THREE.MeshBasicMaterial({
-				color: 0xc1e0db,
-				opacity: 0.7,
-				transparent: false
-			})
-		);
-		sphere.position.set(position.x, position.y, position.z);
-		sphere.layers.set(2);
-		return sphere;
-	}
 	speckleStream.subscribe((speckleS) => {
 		console.log('speckleStream........', speckleS);
 		if (v && speckleS) {

@@ -13,7 +13,7 @@
 		servicesSelected,
 		currentSelection,
 		chatMessages,
-		viewerPMasElements,
+		viewerIoTElements,
 		viewerPMasGroupedPassports
 	} from '/src/stores/toolStore.js';
 	import {
@@ -62,8 +62,12 @@
 	//create a function that isole and filter ofjects based on propertyes
 	function colorByPassport() {
 		const activeV = get(speckleViewer).speckleViewer;
-		const currentPassports = get(viewerPMasGroupedPassports);
-		colorByGroupedPassport(currentPassports)
+		const currentSensors = get(viewerIoTElements);
+		const flatList = currentSensors.map((group) => {
+			return group.id;
+		});
+		console.log('flatList', flatList);
+		activeV.isolateObjects(flatList);
 	}
 	function removeFilterViewer() {
 		resetViewerFilters();
@@ -166,7 +170,7 @@
 		icon={colorByProperty}
 		toExecute={colorByPassport}
 		active={false}
-		commandName="Colorear Pasaportes"
+		commandName="Mostrar Sensores"
 	/>
 	<ToolBarButton
 		icon={filterOff}

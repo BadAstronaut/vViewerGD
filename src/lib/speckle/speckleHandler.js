@@ -1,7 +1,7 @@
 import { ViewerEvent } from "@speckle/viewer";
 import { getStreamCommits, getUserData } from "./speckleUtils.js";
 import { get } from "svelte/store";
-import { speckleViewer, finishLoading, speckleStream, speckleDatatree, viewerLotes, viewerPMasElements } from "../../stores/toolStore";
+import { speckleViewer, finishLoading, speckleStream, speckleDatatree, viewerLotes,viewerIoTElements } from "../../stores/toolStore";
 import { buildViewerData } from '$lib/speckle/viewerBuilder';
 import { json } from "@sveltejs/kit";
 import { faL } from "@fortawesome/free-solid-svg-icons";
@@ -422,8 +422,7 @@ export function filterByCustomPropertyName(DT, propertyName) {
 
 export function checkCustomPropertyByName(elementParamters, propertyName) {
   const customPropCheck = Object.keys(elementParamters).filter(key => {
-    const checkCustomProp = (key.match(/-/g) || []).length > 2;
-    if (checkCustomProp && elementParamters[key].name == propertyName) {
+    if (elementParamters[key] && elementParamters[key].name == propertyName) {
       return true
     }
   });
