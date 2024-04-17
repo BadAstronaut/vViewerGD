@@ -1,6 +1,7 @@
 <script>
 	// 	/** @type {import('./$types').PageData} */
 	import { onMount } from 'svelte';
+	import { CameraController, SelectionExtension, FilteringExtension } from '@speckle/viewer';
 	import SpeckleViewer from '$lib/components/SpeckleViewer.svelte';
 	import { page } from '$app/stores';
 	import { get } from 'svelte/store';
@@ -26,6 +27,7 @@
 		speckleDatatree,
 		speckleParqueLotes,
 		socketIoUrl,
+		socketIoUrlLocal,
 		selectedPassports as selectedSensor,
 		parkOperationCalendarID
 	} from '../stores/toolStore';
@@ -61,8 +63,14 @@
 	//load the passport to a store and filter elements in model each time store changes.
 	//each time a passport is pass it should reset filters, filter by new value and color based on passport Colors.
 	// Register the client with the server
-	const socket = io(get(socketIoUrl));
+
+	// production
+	//const socket = io(get(socketIoUrl));
+	// local
+	const socket = io(get(socketIoUrlLocal));
+
 	socket.emit('register', _userId);
+	console.log('socket connected', _userId);
 
 	socket.on('dataUpdated', (message) => {
 		const _speckleStream = message.speckleUrl;
@@ -82,13 +90,16 @@
 			console.log(currentSensors, _sensorID, 'data updated from socket');
 			selectedSensor.set(_sensorID);
 			if (finishLoading) {
-				const flatList = currentSensors.map((sensor) => {
-					if (sensor.sensorID === _sensorID) {
-						return sensor.id;
-					}
-				});
-				console.log('flatList', flatList);
-				activeV.isolateObjects(flatList);
+				//console.log('saved sensors', activeV);
+				// Filter sensors that match the _sensorID, then map their ids
+				const flatList = currentSensors
+					.filter((sensor) => sensor.sensorID === _sensorID)
+					.map((sensor) => sensor.id);
+
+				console.log('flat list after filtering', flatList);
+				const filteringExtension = activeV.extensions.Gi;
+				//console.log('filtering extension', flatList, filteringExtension);
+				filteringExtension.isolateObjects(flatList);
 			}
 		}
 	});

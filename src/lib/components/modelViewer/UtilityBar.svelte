@@ -1,5 +1,6 @@
 <script>
-	import ToolBarButton from './ToolBarButton.svelte';
+	
+	import { CameraController, SelectionExtension, FilteringExtension } from "@speckle/viewer";import ToolBarButton from './ToolBarButton.svelte';
 	import { get } from 'svelte/store';
 	import { sphereByIDList } from '/src/lib/animation/SphereByIDList.js';
 	import {
@@ -14,6 +15,7 @@
 		currentSelection,
 		chatMessages,
 		viewerIoTElements,
+		speckleViewerObjects,
 		viewerPMasGroupedPassports
 	} from '/src/stores/toolStore.js';
 	import {
@@ -33,28 +35,27 @@
 	let filterOff = '/icons/filter-off.svg';
 
 	let tempObjectIds = ['ee07ac99d4cfd23c59ef94bda65bdbe0', 'ccb4b5e5bf2ae2bfb1524e62462155d2'];
-
+	
+	const labelingExtension = get(speckleViewer).speckleViewer.extensions.Labelling;
 	//this function will create the spheres to be assign and hide the elements
 	function setTop() {
-		const activeV = get(speckleViewer);
-		console.log('activeV', activeV);
-		console.log(activeV, get(finishLoading), 'cosonle log ');
-		if (activeV.speckleViewer && get(finishLoading)) {
-			activeV.speckleViewer.setView('top', true);
-			activeV.speckleViewer.zoom([], 0.75);
-			//console.log(activeV, "cosonle log ");
-			//console.log("showing sensor animation",get(activeIoTIndicators));
+		const activeV = get(speckleViewer).speckleViewer;
+		const cameraX = activeV.extensions.hi;
+		console.log('activeV', cameraX);
+		//console.log(activeV, get(finishLoading), 'cosonle log ');
+		if (cameraX && get(finishLoading)) {
+			cameraX.setView('top', true);
+			cameraX.zoom([], 0.75);
 		}
 	}
 	function setHome() {
 		const activeV = get(speckleViewer);
+		const cameraX = activeV.extensions.hi;
 		//console.log("activeV",activeV);
-		console.log(activeV, get(finishLoading), 'cosonle log ');
-		if (activeV.speckleViewer && get(finishLoading)) {
-			activeV.speckleViewer.setView('3D', true);
-			activeV.speckleViewer.zoom([], 0.5);
-			//console.log(activeV, "cosonle log ");
-			//console.log("showing sensor animation",get(activeIoTIndicators));
+		//console.log(activeV, get(finishLoading), 'cosonle log ');
+		if (cameraX && get(finishLoading)) {
+			cameraX.setView('3D', true);
+			cameraX.zoom([], 0.5);
 		}
 	}
 	//generate a function that returns a random color in hex
@@ -62,15 +63,24 @@
 	//create a function that isole and filter ofjects based on propertyes
 	function colorByPassport() {
 		const activeV = get(speckleViewer).speckleViewer;
+		const sensorNodes = get(viewerIoTElements);
 		const currentSensors = get(viewerIoTElements);
 		const flatList = currentSensors.map((group) => {
 			return group.id;
 		});
-		console.log('flatList', flatList);
-		activeV.isolateObjects(flatList);
+		console.log('flatList', sensorNodes);
+		//filtering
+		const filteringExtension = activeV.extensions.Gi;
+		filteringExtension.isolateObjects(flatList, true,true);
+		currentSensors.map((s)=>{
+			labelingExtension.labelSensorData(s);
+		})
+		//add three js sphere 
+		//sphereByIDList(activeV,get(speckleViewerObjects));
 	}
 	function removeFilterViewer() {
 		resetViewerFilters();
+		labelingExtension.removeAllLabels();
 	}
 
 	//create a function to color elements based on the Sector property

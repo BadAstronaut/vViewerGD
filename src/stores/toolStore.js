@@ -11,6 +11,9 @@ export const userID = writable(null)
 //export const socketIoUrl = readable("https://pmasapi.pasaportemateriales.cl")
 //local socketIoUrl config
 export const socketIoUrl = readable("https://gemelodigitalapi.pasaportemateriales.cl")
+
+export const socketIoUrlLocal = readable("http://localhost:3000")
+
 export const activeIoTIndicators = writable([])
 
 export const finishLoading = writable(false);
@@ -65,6 +68,9 @@ export const speckleParqueProtos = writable([])
 export const viewerLotes = writable([])
 
 export const viewerIoTElements = writable([])
+
+export const speckleViewerObjects = writable([])
+
 
 export const viewerPMasGroupedPassports = writable([])
 

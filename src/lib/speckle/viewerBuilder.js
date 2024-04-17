@@ -1,7 +1,7 @@
 import { ViewerEvent } from "@speckle/viewer";
 import { getStreamCommits, getUserData } from "./speckleUtils.js";
 import { get } from "svelte/store";
-import { speckleViewer, finishLoading, speckleStream, speckleDatatree, revitProps, protosProps, speckleParqueLotes, speckleParqueProtos, viewerLotes, viewerProtos, revitPassportParameterName, viewerIoTElements,viewerPMasGroupedPassports } from "../../stores/toolStore";
+import { revitProps, revitPassportParameterName, viewerIoTElements,speckleViewerObjects} from "../../stores/toolStore";
 import {
     getPropertiesByTypeParameter,
     filterByCategoryNames,
@@ -23,8 +23,9 @@ function setSpeckleObjects(speckleDT) {
     const propsToQuery = get(revitProps)
     const iotProps = get(revitPassportParameterName)
     const iotSensors = filterByCustomPropertyName(speckleDT, iotProps)
+    speckleViewerObjects.set(iotSensors)
+    //console.log("iotSensors........", iotSensors)
     const _ioTObjects = getViewerObjects(iotSensors)
-    console.log("ioT Objects....",_ioTObjects)
     viewerIoTElements.set(_ioTObjects)
     //const groupedPass = groupBuilderPassports(_ioTObjects)
     //viewerPMasGroupedPassports.set(groupedPass)
@@ -41,14 +42,19 @@ function getViewerObjects(pmasObjects) {
 
 function extractParamData(speckleObjects, params, type) {
     const paramData = []
-
+    const iotProps = get(revitPassportParameterName)
     speckleObjects.forEach(obj => {
         //clone viewerObj
-        const props = obj.parameters
+        //console.log("obj",obj)
+        const props = obj.model.raw.parameters
         const _viewerObj = {}
-        _viewerObj.id = obj.id
-        _viewerObj.category = obj.category
+        _viewerObj.id = obj.model.raw.id
+        _viewerObj.category = obj.model.raw.category
         _viewerObj.tipo = type
+        _viewerObj.sensorManufacturer = checkCustomPropertyByName(props, "Sensor Manufacturer")
+        _viewerObj.sensorModel = checkCustomPropertyByName(props, "Sensor Model")
+        _viewerObj.sensorMeasurement = checkCustomPropertyByName(props, "Sensor Measurement")
+
         //_viewerObj.sensorType = obj.type
         //console.log("====obj",obj.parameters["Area"])
         const checkCustomPMas = checkCustomPropertyByName(props, get(revitPassportParameterName))

@@ -1,7 +1,9 @@
-import { ViewerEvent } from "@speckle/viewer";
+import { ViewerEvent, SpeckleLoader } from "@speckle/viewer";
+import { CameraController, SelectionExtension, FilteringExtension } from "@speckle/viewer";
+import { Labelling } from "../animation/Labeling";
 import { getStreamCommits, getUserData } from "./speckleUtils.js";
 import { get } from "svelte/store";
-import { speckleViewer, finishLoading, speckleStream, speckleDatatree, viewerLotes,viewerIoTElements } from "../../stores/toolStore";
+import { speckleViewer, finishLoading, speckleStream, speckleDatatree, viewerLotes, viewerIoTElements,  } from "../../stores/toolStore";
 import { buildViewerData } from '$lib/speckle/viewerBuilder';
 import { json } from "@sveltejs/kit";
 import { faL } from "@fortawesome/free-solid-svg-icons";
@@ -20,12 +22,14 @@ export async function fetchUserData() {
 }
 export function selectElementsById(id) {
   const v = get(speckleViewer).speckleViewer;
-  const speckDT = v.getDataTree();
+  const speckDT = v.getWorldTree();
   //this bit was key in making it work. the data tree 
-  const objPredicate = (uui, obj) => {
-    return obj.id === id;
+  const objPredicate = (node) => {
+    if (!node.model.id) return;
+    return node.model.id.includes(id);
   }
-  const speckleObjectList = speckDT.findFirst(objPredicate);
+  //console.log(speckDT, "speckDT");
+  const speckleObjectList = speckDT.findAll(objPredicate);
 
   return speckleObjectList;
 }
@@ -296,12 +300,13 @@ export function selectElementsByPropNameValue(propNAme, propValue) {
   }
 
 }
-
+// docs https://speckle.guide/viewer/filtering-extension-api.html
 export async function resetViewerFilters() {
   const v = get(speckleViewer).speckleViewer;
+  const filteringExtension = v.createExtension(FilteringExtension);
   if (v !== null) {
-    await v.resetFilters();
-    v.requestRender();
+    await filteringExtension.resetFilters();
+    //v.requestRender();
   }
 }
 
@@ -313,29 +318,45 @@ export async function reloadViewerGetObjectsByIds(
 ) {
   const stm = fetchStreamData;
   const v = viewerI;
-  console.log("currentT", token);
+  console.log("currentV", v);
   const branch = await fetchStreamData(speckleStream);
   console.log("branch in reloadv----", branch, speckleStream);
 
   await v.unloadAll();
   if (branch) {
-    const obj = objUrl(speckleStream, branch.commits.items[0].referencedObject);
-    console.log("obj", obj);
-    await v.loadObject(obj, token);
-    v.zoom(0.7);
 
     await v.init();
+    /** Add the stock camera controller extension */
+    v.createExtension(CameraController);
+    /** Add the selection extension for extra interactivity */
+    v.createExtension(SelectionExtension);
+    v.createExtension(FilteringExtension);
+    const labelling = v.createExtension(Labelling);
+    const obj = objUrl(speckleStream, branch.commits.items[0].referencedObject);
+    console.log("obj", obj);
+    //await v.loadObject(obj, token);
+
+    /** Create a loader for the speckle stream */
+    const loader = new SpeckleLoader(
+      v.getWorldTree(),
+      obj,
+      token
+    );
+    /** Load the speckle data */
+    await v.loadObject(loader, true);
+
     let p = Promise.resolve(v);
     p.then(() => {
       speckleViewer.set({ 'speckleViewer': v })
-      speckleDatatree.set(v.getDataTree());
-      buildViewerData(v.getDataTree());
+      console.log("world tree", v.getWorldTree());
+      speckleDatatree.set(v.getWorldTree());
+      buildViewerData(v.getWorldTree());
       finishLoading.set(true);
       console.log("speckleViewer-----", get(speckleDatatree));
     })
     const speckObjects = v.getDataTree();
     const objects = "ok"
-    return speckObjects;
+    return "speckObjects";
   } else {
     return null;
   }
@@ -398,25 +419,33 @@ export function filterByCategoryNames(DT, categoryNames) {
 }
 //implement logic to filter objects based on property name considering 
 export function filterByCustomPropertyName(DT, propertyName) {
-  //considering that custom properties contain more tha 1 "-" occurrency in props
-  const seek = '-'
-  const objects = DT.findAll((uui, obj) => {
-    //console.log("-------",obj, );
-    const catName = obj.category;
-    const elementParameters = obj.parameters
-    //console.log("-------",elementParameters);
-    if (elementParameters) {
-      const customPropCheck = checkCustomPropertyByName(elementParameters, propertyName)
-      if (customPropCheck) {
-        return true
-      }
-      else {
-        return false
+  // considering that custom properties contain more than 1 "-" occurrence in props
+  const seek = '-';
+  const v = get(speckleViewer).speckleViewer;
+  const objects = DT.findAll((node) => {
+    if (!node.model.raw.parameters) return;
+    else {
+      // Try to filter object with the given property name
+      // Uncomment the next line to debug the parameters object
+      // console.log("-------objects found in world tree", node.model.raw.parameters);
+      try {
+        if (node.model.raw.parameters) {
+          // Accessing the property dynamically using the propertyName variable
+          const customPropCheck = node.model.raw.parameters[propertyName];
+          if (customPropCheck) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      } finally {
+        // Uncomment to log the parameters for each object when an exception occurs
+        // console.log("-------objects found in world tree", node.model.raw.parameters);
       }
     }
-
   });
-  //console.log("-------", objects);
+  console.log("-------objects found in world tree", objects);
+
   return objects;
 }
 
@@ -426,6 +455,7 @@ export function checkCustomPropertyByName(elementParamters, propertyName) {
       return true
     }
   });
+  //console.log("-------value", elementParamters);
   const propValue = elementParamters[customPropCheck[0]]
   if (propValue) {
     return propValue.value

@@ -1,5 +1,6 @@
 <script>
-	import { Viewer, ViewerEvent } from '@speckle/viewer';
+	import { Viewer, DefaultViewerParams, SpeckleLoader , ViewerEvent} from "@speckle/viewer";
+	import { CameraController, SelectionExtension } from "@speckle/viewer";
 	import { onMount } from 'svelte';
 	import * as THREE from 'three';
 	import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
@@ -39,21 +40,25 @@
 	
 
 	onMount(() => {
+		 /** Configure the viewer params */
+		 const params = DefaultViewerParams;
+			params.showStats = false;
+			params.verbose = false;
 		//console.log('viewer dynamic update' , speckleStreams[idUpdate]);
 		v = new Viewer(viewerVal);
-		//console.log(v);
+		console.log("this is the viewerf",v);
 		v.on(ViewerEvent.ObjectClicked, (args) => {
 			if (args) {
 				//console.log(args,"clicked");
 				//this changed not sure why  args.userData.id
-				const clieckedElement = args.hits[0].object;
-				v.selectObjects([clieckedElement.id]);
+				const clieckedElement = args.hits[0].node;
+				console.log(clieckedElement, 'clicked!');
+				//v.selectObjects([clieckedElement.model.raw.id]);
 
 				// @ts-ignore
 				currentSelection.set([clieckedElement]);
-				console.log(clieckedElement, 'clicked!');
 			} else {
-				v.resetSelection();
+				//v.resetSelection();
 				// @ts-ignore
 				currentSelection.set([]);
 				currentLote.set(null);

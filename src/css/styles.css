@@ -24,3 +24,15 @@ h1, h2, h3, h4, h5, h6, body, p, li, td, tr, th{
   font-family: 'Poppins', sans-serif;
   color: #00384a;
 }
+
+.label {
+  font-size: 12px;  /* Set the desired font size */
+  color: white;     /* Optional: change the text color */
+  background-color: rgba(0, 0, 0, 0.5); /* Optional: add background with some transparency */
+  padding: 5px;    /* Optional: add some padding */
+  border-radius: 4px; /* Optional: round corners */
+  /* display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center */
+}
