@@ -65,9 +65,9 @@
 	// Register the client with the server
 
 	// production
-	//const socket = io(get(socketIoUrl));
+	const socket = io(get(socketIoUrl));
 	// local
-	const socket = io(get(socketIoUrlLocal));
+	//const socket = io(get(socketIoUrlLocal));
 
 	socket.emit('register', _userId);
 	console.log('socket connected', _userId);

@@ -1,6 +1,6 @@
 <script>
-	
-	import { CameraController, SelectionExtension, FilteringExtension } from "@speckle/viewer";import ToolBarButton from './ToolBarButton.svelte';
+	import { CameraController, SelectionExtension, FilteringExtension } from '@speckle/viewer';
+	import ToolBarButton from './ToolBarButton.svelte';
 	import { get } from 'svelte/store';
 	import { sphereByIDList } from '/src/lib/animation/SphereByIDList.js';
 	import {
@@ -22,7 +22,8 @@
 		selectElementsByPropNameValue,
 		groupBuilderPassports,
 		resetViewerFilters,
-		colorByGroupedPassport
+		colorByGroupedPassport, 
+		colorRoomByValueRange
 	} from '/src/lib/speckle/speckleHandler.js';
 
 	let setTopView = '/icons/top.svg';
@@ -35,7 +36,7 @@
 	let filterOff = '/icons/filter-off.svg';
 
 	let tempObjectIds = ['ee07ac99d4cfd23c59ef94bda65bdbe0', 'ccb4b5e5bf2ae2bfb1524e62462155d2'];
-	
+
 	const labelingExtension = get(speckleViewer).speckleViewer.extensions.Labelling;
 	//this function will create the spheres to be assign and hide the elements
 	function setTop() {
@@ -63,20 +64,36 @@
 	//create a function that isole and filter ofjects based on propertyes
 	function colorByPassport() {
 		const activeV = get(speckleViewer).speckleViewer;
-		const sensorNodes = get(viewerIoTElements);
 		const currentSensors = get(viewerIoTElements);
-		const flatList = currentSensors.map((group) => {
-			return group.id;
-		});
+		console.log('currentSensors', currentSensors);
+
+		const { roomNodes, sensorNodes } = currentSensors.reduce(
+			(acc, group) => {
+				console.log('group', group);
+				if (group.category === 'Room' || group.category === 'Habitaciones') {
+					acc.roomNodes.push(group.id);
+				} else {
+					acc.sensorNodes.push(group.id);
+				}
+				return acc;
+			},
+			{ roomNodes: [], sensorNodes: [] }
+		);
+
 		console.log('flatList', sensorNodes);
-		//filtering
+
+		// Filtering
 		const filteringExtension = activeV.extensions.Gi;
-		filteringExtension.isolateObjects(flatList, true,true);
-		currentSensors.map((s)=>{
-			labelingExtension.labelSensorData(s);
-		})
-		//add three js sphere 
-		//sphereByIDList(activeV,get(speckleViewerObjects));
+		filteringExtension.isolateObjects(sensorNodes, true, true);
+		colorRoomByValueRange(roomNodes, [10,30,40])
+		//labelingExtension.colorRoom(roomNodes[0]);
+		//console.log('threeRoom', threeRoom);
+		//temp comment to test roomg eometry
+		currentSensors.forEach((s) => {
+			if (s.category !== 'Room' && s.category !== 'Habitaciones') {
+				labelingExtension.labelSensorData(s);
+			}
+		});
 	}
 	function removeFilterViewer() {
 		resetViewerFilters();

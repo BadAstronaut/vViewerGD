@@ -62,6 +62,20 @@ export class Labelling extends Extension {
     this.viewer.getRenderer().scene.add(earthLabel);
   }
 
+  colorRoom(roomId) {
+    const color = new Vector3(0, 0, 0);
+    const box = new Box3();
+    const rvs = this.viewer
+    .getWorldTree()
+    .getRenderTree()
+    .getRenderViewsForNodeId(roomId);
+  rvs.forEach((rv) => {
+    console.log("three js elemento from room", rv);
+    box.union(rv.aabb);
+  });
+
+
+  }
   labelSensorData(sensor) {
     const box = new Box3();
     let primitiveCount = 0;

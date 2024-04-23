@@ -61,7 +61,7 @@ export const speckleParqueLotes = writable([])
 
 export const selectedPassports = writable([])
 
-export const revitPassportParameterName = readable("SensorID")
+export const revitPassportParameterName = readable(["SensorID", "Sensor Espacio"])
 
 export const speckleParqueProtos = writable([])
 

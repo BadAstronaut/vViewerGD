@@ -7,6 +7,7 @@ import { speckleViewer, finishLoading, speckleStream, speckleDatatree, viewerLot
 import { buildViewerData } from '$lib/speckle/viewerBuilder';
 import { json } from "@sveltejs/kit";
 import { faL } from "@fortawesome/free-solid-svg-icons";
+import { gsap } from 'gsap';
 const token = import.meta.env.VITE_SPECKLE_TOCKEN;
 
 export async function fetchUserData() {
@@ -417,21 +418,56 @@ export function filterByCategoryNames(DT, categoryNames) {
   });
   return objects;
 }
+
+export function colorRoomByValueRange(roomNodeIds, roomValues) {
+  const v = get(speckleViewer).speckleViewer;
+  const filteringExtension = v.extensions.Gi;
+
+  const minValue = Math.min(...roomValues);
+  const maxValue = Math.max(...roomValues);
+
+  const colorRange = roomValues.map((value) => {
+    const normalizedValue = (value - minValue) / (maxValue - minValue);
+    const hue = normalizedValue * 240; // Hue range from 0 to 240 (blue to red)
+    return `hsl(${hue}, 100%, 50%, 0.6)`;
+  });
+
+  const animation = gsap.timeline({ repeat: 2 });
+
+  colorRange.forEach((color, index) => {
+    animation.to(roomNodeIds, {
+      duration: 1,
+      onStart: () => {
+        filteringExtension.setUserObjectColors([
+          {
+            objectIds: roomNodeIds,
+            color: color,
+          },
+        ]);
+      },
+      onComplete: () => {
+        if (index === colorRange.length - 1) {
+          filteringExtension.removeUserObjectColors();
+        }
+      },
+    });
+  });
+}
 //implement logic to filter objects based on property name considering 
-export function filterByCustomPropertyName(DT, propertyName) {
+export function filterByCustomPropertyName(DT, propertyNames) {
   // considering that custom properties contain more than 1 "-" occurrence in props
   const seek = '-';
   const v = get(speckleViewer).speckleViewer;
   const objects = DT.findAll((node) => {
     if (!node.model.raw.parameters) return;
     else {
-      // Try to filter object with the given property name
-      // Uncomment the next line to debug the parameters object
       // console.log("-------objects found in world tree", node.model.raw.parameters);
       try {
         if (node.model.raw.parameters) {
-          // Accessing the property dynamically using the propertyName variable
-          const customPropCheck = node.model.raw.parameters[propertyName];
+          // Accessing the properties dynamically using the propertyNames array
+          const customPropCheck = propertyNames.some((propertyName) =>
+            node.model.raw.parameters.hasOwnProperty(propertyName)
+          );
           if (customPropCheck) {
             return true;
           } else {
@@ -445,7 +481,6 @@ export function filterByCustomPropertyName(DT, propertyName) {
     }
   });
   console.log("-------objects found in world tree", objects);
-
   return objects;
 }
 
