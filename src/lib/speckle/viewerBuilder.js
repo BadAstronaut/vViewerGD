@@ -36,6 +36,7 @@ function getViewerObjects(pmasObjects) {
     const _revitProps = get(revitProps)
     //to do modify this to ad props to render in front end. 
     const pMasViewerObjects = extractParamData(pmasObjects, _revitProps, "IoT")
+    console.log("sensorViewerObjects", pMasViewerObjects)
     return pMasViewerObjects
     //console.log("loteViewerObjects",loteViewerObjects)
 }

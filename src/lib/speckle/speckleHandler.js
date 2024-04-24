@@ -485,20 +485,15 @@ export function filterByCustomPropertyName(DT, propertyNames) {
 }
 
 export function checkCustomPropertyByName(elementParamters, propertyName) {
-  const customPropCheck = Object.keys(elementParamters).filter(key => {
-    if (elementParamters[key] && elementParamters[key].name == propertyName) {
-      return true
+  const propertyNames = Array.isArray(propertyName) ? propertyName : [propertyName];
+
+  for (const key in elementParamters) {
+    if (elementParamters.hasOwnProperty(key) && elementParamters[key] && propertyNames.includes(elementParamters[key].name)) {
+      return elementParamters[key].value;
     }
-  });
-  //console.log("-------value", elementParamters);
-  const propValue = elementParamters[customPropCheck[0]]
-  if (propValue) {
-    return propValue.value
   }
-  else {
-    //console.log("-------value", elementParamters);
-    return null
-  }
+
+  return null;
 }
 
 

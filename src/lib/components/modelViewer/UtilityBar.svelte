@@ -50,9 +50,9 @@
 		}
 	}
 	function setHome() {
-		const activeV = get(speckleViewer);
+		const activeV = get(speckleViewer).speckleViewer;
+		console.log("activeV",activeV);
 		const cameraX = activeV.extensions.hi;
-		//console.log("activeV",activeV);
 		//console.log(activeV, get(finishLoading), 'cosonle log ');
 		if (cameraX && get(finishLoading)) {
 			cameraX.setView('3D', true);

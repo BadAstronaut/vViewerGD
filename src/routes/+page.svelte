@@ -79,6 +79,7 @@
 		const _finishLoading = get(finishLoading);
 		const activeV = get(speckleViewer).speckleViewer;
 		const currentSensors = get(viewerIoTElements);
+		console.log('current viewer active V', activeV);
 
 		if (_speckleStream && currentStream !== _speckleStream) {
 			console.log(_speckleStream, _sensorID, 'data updated from socket');
