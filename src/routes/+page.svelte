@@ -24,6 +24,7 @@
 		viewerIoTElements,
 		viewerPMasGroupedPassports,
 		sidebar_show,
+		currentFilteringExtension,
 		speckleDatatree,
 		speckleParqueLotes,
 		socketIoUrl,
@@ -80,6 +81,8 @@
 		const activeV = get(speckleViewer).speckleViewer;
 		const currentSensors = get(viewerIoTElements);
 		console.log('current viewer active V', activeV);
+		console.log('current extension catcher', activeV.getExtension("Labelling"));
+
 
 		if (_speckleStream && currentStream !== _speckleStream) {
 			console.log(_speckleStream, _sensorID, 'data updated from socket');
@@ -98,21 +101,8 @@
 					.map((sensor) => sensor.id);
 
 				//console.log('flat list after filtering', flatList);
-				let filteringExtension;
-
-				// Check if the Gi extension exists
-				if (activeV.extensions.Gi) {
-					filteringExtension = activeV.extensions.Gi;
-				}
-				// Check if the WH extension exists
-				else if (activeV.extensions.WH) {
-					filteringExtension = activeV.extensions.WH;
-				}
-				if (filteringExtension) {
-					filteringExtension.isolateObjects(flatList);
-				} else {
-					console.log('Filtering extension not found');
-				}
+				let filteringExtension = get(currentFilteringExtension);
+				filteringExtension.isolateObjects(flatList);
 			}
 		}
 	});

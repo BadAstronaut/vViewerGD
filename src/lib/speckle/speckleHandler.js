@@ -328,10 +328,10 @@ export async function reloadViewerGetObjectsByIds(
 
     await v.init();
     /** Add the stock camera controller extension */
-    v.createExtension(CameraController);
+    const camExt = v.createExtension(CameraController);
     /** Add the selection extension for extra interactivity */
-    v.createExtension(SelectionExtension);
-    v.createExtension(FilteringExtension);
+    const selectExt = v.createExtension(SelectionExtension);
+    const filterExt =v.createExtension(FilteringExtension);
     const labelling = v.createExtension(Labelling);
     const obj = objUrl(speckleStream, branch.commits.items[0].referencedObject);
     console.log("obj", obj);
@@ -353,26 +353,8 @@ export async function reloadViewerGetObjectsByIds(
       speckleDatatree.set(v.getWorldTree());
       buildViewerData(v.getWorldTree());
       
-      let filteringExtension;
-      let cameraExtension;
-				// Check if the Gi extension exists
-				if (v.extensions.Gi) {
-					filteringExtension = v.extensions.Gi;
-				}
-				// Check if the WH extension exists
-				else if (v.extensions.WH) {
-					filteringExtension = v.extensions.WH;
-				}
-
-        if (v.extensions.hi) {
-					cameraExtension = v.extensions.hi;
-				}
-				// Check if the WH extension exists
-				else if (v.extensions.KH) {
-					cameraExtension = v.extensions.KH;
-				}
-      currentFilteringExtension.set(filteringExtension);
-      currentCameraExtension.set(cameraExtension);
+      currentFilteringExtension.set(filterExt);
+      currentCameraExtension.set(camExt);
       finishLoading.set(true);
       console.log("speckleViewer-----", get(speckleDatatree));
     })
