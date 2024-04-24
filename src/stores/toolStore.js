@@ -5,6 +5,9 @@ export const speckleViewer = writable({
     speckleViewer: null
 
 })
+export const currentFilteringExtension = writable(null)
+
+export const currentCameraExtension = writable(null)
 
 export const userID = writable(null)
 //production socektIoUrl config 

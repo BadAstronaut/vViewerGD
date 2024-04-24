@@ -15,6 +15,8 @@
 		currentSelection,
 		chatMessages,
 		viewerIoTElements,
+		currentFilteringExtension,
+		currentCameraExtension,
 		speckleViewerObjects,
 		viewerPMasGroupedPassports
 	} from '/src/stores/toolStore.js';
@@ -41,7 +43,7 @@
 	//this function will create the spheres to be assign and hide the elements
 	function setTop() {
 		const activeV = get(speckleViewer).speckleViewer;
-		const cameraX = activeV.extensions.hi;
+		const cameraX = get(currentCameraExtension);
 		console.log('activeV', cameraX);
 		//console.log(activeV, get(finishLoading), 'cosonle log ');
 		if (cameraX && get(finishLoading)) {
@@ -52,7 +54,7 @@
 	function setHome() {
 		const activeV = get(speckleViewer).speckleViewer;
 		console.log("activeV",activeV);
-		const cameraX = activeV.extensions.hi;
+		const cameraX = get(currentCameraExtension);
 		//console.log(activeV, get(finishLoading), 'cosonle log ');
 		if (cameraX && get(finishLoading)) {
 			cameraX.setView('3D', true);
@@ -83,7 +85,7 @@
 		console.log('flatList', sensorNodes);
 
 		// Filtering
-		const filteringExtension = activeV.extensions.Gi;
+		const filteringExtension = get(currentFilteringExtension)
 		filteringExtension.isolateObjects(sensorNodes, true, true);
 		colorRoomByValueRange(roomNodes, [10,30,40])
 		//labelingExtension.colorRoom(roomNodes[0]);

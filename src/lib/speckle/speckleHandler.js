@@ -3,7 +3,7 @@ import { CameraController, SelectionExtension, FilteringExtension } from "@speck
 import { Labelling } from "../animation/Labeling";
 import { getStreamCommits, getUserData } from "./speckleUtils.js";
 import { get } from "svelte/store";
-import { speckleViewer, finishLoading, speckleStream, speckleDatatree, viewerLotes, viewerIoTElements,  } from "../../stores/toolStore";
+import { speckleViewer, finishLoading, speckleStream, speckleDatatree, viewerLotes, viewerIoTElements, currentFilteringExtension, currentCameraExtension  } from "../../stores/toolStore";
 import { buildViewerData } from '$lib/speckle/viewerBuilder';
 import { json } from "@sveltejs/kit";
 import { faL } from "@fortawesome/free-solid-svg-icons";
@@ -304,7 +304,7 @@ export function selectElementsByPropNameValue(propNAme, propValue) {
 // docs https://speckle.guide/viewer/filtering-extension-api.html
 export async function resetViewerFilters() {
   const v = get(speckleViewer).speckleViewer;
-  const filteringExtension = v.createExtension(FilteringExtension);
+  const filteringExtension = get(currentFilteringExtension)
   if (v !== null) {
     await filteringExtension.resetFilters();
     //v.requestRender();
@@ -352,6 +352,27 @@ export async function reloadViewerGetObjectsByIds(
       console.log("world tree", v.getWorldTree());
       speckleDatatree.set(v.getWorldTree());
       buildViewerData(v.getWorldTree());
+      
+      let filteringExtension;
+      let cameraExtension;
+				// Check if the Gi extension exists
+				if (activeV.extensions.Gi) {
+					filteringExtension = activeV.extensions.Gi;
+				}
+				// Check if the WH extension exists
+				else if (activeV.extensions.WH) {
+					filteringExtension = activeV.extensions.WH;
+				}
+
+        if (activeV.extensions.hi) {
+					filteringExtension = activeV.extensions.hi;
+				}
+				// Check if the WH extension exists
+				else if (activeV.extensions.KH) {
+					filteringExtension = activeV.extensions.KH;
+				}
+      currentFilteringExtension.set(filteringExtension);
+      currentCameraExtension.set(cameraExtension);
       finishLoading.set(true);
       console.log("speckleViewer-----", get(speckleDatatree));
     })
