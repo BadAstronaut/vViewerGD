@@ -365,11 +365,11 @@ export async function reloadViewerGetObjectsByIds(
 				}
 
         if (activeV.extensions.hi) {
-					filteringExtension = activeV.extensions.hi;
+					cameraExtension = activeV.extensions.hi;
 				}
 				// Check if the WH extension exists
 				else if (activeV.extensions.KH) {
-					filteringExtension = activeV.extensions.KH;
+					cameraExtension = activeV.extensions.KH;
 				}
       currentFilteringExtension.set(filteringExtension);
       currentCameraExtension.set(cameraExtension);
