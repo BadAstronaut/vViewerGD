@@ -9,6 +9,8 @@ export const currentFilteringExtension = writable(null)
 
 export const currentCameraExtension = writable(null)
 
+export const currentLabelingExtension = writable(null)
+
 export const userID = writable(null)
 //production socektIoUrl config 
 //export const socketIoUrl = readable("https://pmasapi.pasaportemateriales.cl")

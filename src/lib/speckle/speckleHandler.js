@@ -3,7 +3,7 @@ import { CameraController, SelectionExtension, FilteringExtension } from "@speck
 import { Labelling } from "../animation/Labeling";
 import { getStreamCommits, getUserData } from "./speckleUtils.js";
 import { get } from "svelte/store";
-import { speckleViewer, finishLoading, speckleStream, speckleDatatree, viewerLotes, viewerIoTElements, currentFilteringExtension, currentCameraExtension  } from "../../stores/toolStore";
+import { speckleViewer, finishLoading, speckleStream, speckleDatatree, viewerLotes, viewerIoTElements, currentFilteringExtension, currentCameraExtension, currentLabelingExtension} from "../../stores/toolStore";
 import { buildViewerData } from '$lib/speckle/viewerBuilder';
 import { json } from "@sveltejs/kit";
 import { faL } from "@fortawesome/free-solid-svg-icons";
@@ -355,6 +355,7 @@ export async function reloadViewerGetObjectsByIds(
       
       currentFilteringExtension.set(filterExt);
       currentCameraExtension.set(camExt);
+      currentLabelingExtension.set(labelling);
       finishLoading.set(true);
       console.log("speckleViewer-----", get(speckleDatatree));
     })

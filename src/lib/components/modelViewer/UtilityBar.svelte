@@ -17,6 +17,7 @@
 		viewerIoTElements,
 		currentFilteringExtension,
 		currentCameraExtension,
+		currentLabelingExtension,
 		speckleViewerObjects,
 		viewerPMasGroupedPassports
 	} from '/src/stores/toolStore.js';
@@ -39,7 +40,7 @@
 
 	let tempObjectIds = ['ee07ac99d4cfd23c59ef94bda65bdbe0', 'ccb4b5e5bf2ae2bfb1524e62462155d2'];
 
-	const labelingExtension = get(speckleViewer).speckleViewer.extensions.Labelling;
+	const labelingExtension = get(currentLabelingExtension);
 	//this function will create the spheres to be assign and hide the elements
 	function setTop() {
 		const activeV = get(speckleViewer).speckleViewer;
