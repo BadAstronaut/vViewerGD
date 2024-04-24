@@ -97,10 +97,22 @@
 					.filter((sensor) => sensor.sensorID === _sensorID)
 					.map((sensor) => sensor.id);
 
-				console.log('flat list after filtering', flatList);
-				const filteringExtension = activeV.extensions.Gi;
-				//console.log('filtering extension', flatList, filteringExtension);
-				filteringExtension.isolateObjects(flatList);
+				//console.log('flat list after filtering', flatList);
+				let filteringExtension;
+
+				// Check if the Gi extension exists
+				if (activeV.extensions.Gi) {
+					filteringExtension = activeV.extensions.Gi;
+				}
+				// Check if the WH extension exists
+				else if (activeV.extensions.WH) {
+					filteringExtension = activeV.extensions.WH;
+				}
+				if (filteringExtension) {
+					filteringExtension.isolateObjects(flatList);
+				} else {
+					console.log('Filtering extension not found');
+				}
 			}
 		}
 	});
