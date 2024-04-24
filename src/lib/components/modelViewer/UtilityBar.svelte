@@ -45,7 +45,7 @@
 		const activeV = get(speckleViewer).speckleViewer;
 		const cameraX = get(currentCameraExtension);
 		console.log('activeV', cameraX);
-		//console.log(activeV, get(finishLoading), 'cosonle log ');
+		console.log(activeV, get(finishLoading), 'cosonle log ');
 		if (cameraX && get(finishLoading)) {
 			cameraX.setView('top', true);
 			cameraX.zoom([], 0.75);
