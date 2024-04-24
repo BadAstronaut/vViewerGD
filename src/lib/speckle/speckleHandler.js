@@ -356,20 +356,20 @@ export async function reloadViewerGetObjectsByIds(
       let filteringExtension;
       let cameraExtension;
 				// Check if the Gi extension exists
-				if (activeV.extensions.Gi) {
-					filteringExtension = activeV.extensions.Gi;
+				if (v.extensions.Gi) {
+					filteringExtension = v.extensions.Gi;
 				}
 				// Check if the WH extension exists
-				else if (activeV.extensions.WH) {
-					filteringExtension = activeV.extensions.WH;
+				else if (v.extensions.WH) {
+					filteringExtension = v.extensions.WH;
 				}
 
-        if (activeV.extensions.hi) {
-					cameraExtension = activeV.extensions.hi;
+        if (v.extensions.hi) {
+					cameraExtension = v.extensions.hi;
 				}
 				// Check if the WH extension exists
-				else if (activeV.extensions.KH) {
-					cameraExtension = activeV.extensions.KH;
+				else if (v.extensions.KH) {
+					cameraExtension = v.extensions.KH;
 				}
       currentFilteringExtension.set(filteringExtension);
       currentCameraExtension.set(cameraExtension);
