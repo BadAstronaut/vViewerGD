@@ -13,9 +13,9 @@ export const currentLabelingExtension = writable(null)
 
 export const userID = writable(null)
 //production socektIoUrl config 
-//export const socketIoUrl = readable("https://pmasapi.pasaportemateriales.cl")
+//export const socketIoUrl = readable("https://gemelodigitalapi.cteconstruccion.cl")
 //local socketIoUrl config
-export const socketIoUrl = readable("https://gemelodigitalapi.pasaportemateriales.cl")
+export const socketIoUrl = readable("https://gemelodigitalapi.cteconstruccion.cl")
 
 export const socketIoUrlLocal = readable("http://localhost:3000")
 
